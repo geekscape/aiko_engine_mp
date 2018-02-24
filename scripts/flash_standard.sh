@@ -20,7 +20,7 @@ ampy put configuration/boot.py      configuration/boot.py
 ampy put configuration/led.py       configuration/led.py
 ampy put configuration/lolibot.py   configuration/lolibot.py
 ampy put configuration/mqtt.py      configuration/mqtt.py
-ampy put configuration/net.py.cchs  configuration/net.py
+ampy put configuration/net.py       configuration/net.py
 ampy put configuration/oled.py      configuration/oled.py
 ampy put configuration/services.py  configuration/services.py
 
