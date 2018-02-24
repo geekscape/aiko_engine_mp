@@ -14,6 +14,7 @@ Pages
 <a name="overview" />
 Overview
 --------
+
 The Aiko Engine MP ([microPython](http://micropython.org)) provides ...
 
 - Modular [microPython](http://micropython.org) based framework
@@ -23,6 +24,7 @@ The Aiko Engine MP ([microPython](http://micropython.org)) provides ...
 <a name="resources" />
 Resources
 ---------
+
 Associated open-source ESP32 hardware ...
 
 - [John Spencer's](https://twitter.com/mage0r)
