@@ -1,4 +1,24 @@
-                    GNU AFFERO GENERAL PUBLIC LICENSE
+Aiko Engine MP license
+======================
+- GNU AFFERO GENERAL PUBLIC LICENSE Version 3, 19 November 2007
+  http://www.gnu.org/licenses/agpl-3.0.en.html
+
+- GNU Classpath license exception
+  http://www.gnu.org/software/classpath/license.html
+
+Source code contained in this repository is covered by the GNU AGPL Version 3.
+Repository: https://github.com/geekscape/aiko_engine_mp
+
+In addition, the copyright owner grants the GNU Classpath license
+(linking) exception as permitted by the GNU AGPL V3, section 5, clause "c".
+
+This means that your own (or third-party) independent modules may maintain
+their license and also be linked with the Aiko Engine.  This does not change
+the license granted for the Aiko Engine MP, which is still GNU APGL Version 3.
+
+-------------------------------------------------------------------------------
+
+GNU AFFERO GENERAL PUBLIC LICENSE
                        Version 3, 19 November 2007
 
  Copyright (C) 2007 Free Software Foundation, Inc. <http://fsf.org/>
@@ -659,3 +679,25 @@ specific requirements.
 if any, to sign a "copyright disclaimer" for the program, if necessary.
 For more information on this, and how to apply and follow the GNU AGPL, see
 <http://www.gnu.org/licenses/>.
+
+-------------------------------------------------------------------------------
+
+GNU Classpath license exception
+http://www.gnu.org/software/classpath/license.html
+
+Linking this library statically or dynamically with other modules is making
+a combined work based on this library. Thus, the terms and conditions of the
+GNU Affero General Public License Version 3 cover the whole combination.
+
+As a special exception, the copyright holders of this library give you
+permission to link this library with independent modules to produce an
+executable, regardless of the license terms of these independent modules,
+and to copy and distribute the resulting executable under terms of your
+choice, provided that you also meet, for each linked independent module,
+the terms and conditions of the license of that module. An independent
+module is a module which is not derived from or based on this library.
+If you modify this library, you may extend this exception to your version
+of the library, but you are not obligated to do so. If you do not wish to
+do so, delete this exception statement from your version.
+
+-------------------------------------------------------------------------------
