@@ -1,0 +1,12 @@
+# configuration/boot.py.lolibot: version: 2018-02-11 00:00
+
+settings = {
+  "gc_enabled":       False,
+  "lolibot_enabled":  True,
+  "oled_enabled":     False,
+  "services_enabled": False
+}
+
+def parameter(name, settings=settings):
+  if name in settings: return settings[name]
+  return False

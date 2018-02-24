@@ -1,0 +1,7 @@
+# configuration/led.py.lolibot: version: 2018-02-11 00:00
+
+settings = {    # LoliBot robot
+  "apa106":       True,
+  "dimension":    (3,),
+  "neopixel_pin": 2
+}

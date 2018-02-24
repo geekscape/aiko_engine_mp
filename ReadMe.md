@@ -1,4 +1,4 @@
-Aiko Engine MP
+Aiko Engine MP ([microPython](http://micropython.org))
 ==============
 
 Contents
@@ -15,7 +15,7 @@ Pages
 
 Overview
 --------
-The Aiko Engine MP ([microPython](http://micropython.org)) provides ...
+The Aiko Engine MP provides ...
 
 - Modular [microPython](http://micropython.org) based framework
 - Abstractions for event handling, networking and timers
