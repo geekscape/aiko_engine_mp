@@ -4,6 +4,7 @@ Aiko Engine MP ([microPython](http://micropython.org))
 Contents
 --------
 - [Overview](#overview)
+- [Installation](#installation)
 - [Resources](#resources)
 
 Pages
@@ -19,26 +20,45 @@ The Aiko Engine MP provides ...
 
 - Modular [microPython](http://micropython.org) based framework
 - Abstractions for event handling, networking and timers
-- Currently supports ESP32
+- Currently supported and tested on a range of ESP32 development boards
+- Support for low-level LED panel graphics functions
+- Support for OLED screens
+- Support Lolibot robotics project
 
-<a name="resources" />
+<a name="installation" />
 
 Installation
 -------------
 
-- Download the repository from https://github.com/geekscape/aiko_engine and cd into it: `git clone https://github.com/geekscape/aiko_engine && cd aiko_engine`
-- Ensure you have a [compatible board](https://micropython.org)
-- Make sure you have a python [virtual environment set up](http://docs.python-guide.org/en/latest/dev/virtualenvs/#lower-level-virtualenv) including [virtualenvwrapper](http://docs.python-guide.org/en/latest/dev/virtualenvs/#virtualenvwrapper)
-- Create (`mkvirtualenv upython`) and work on the new virtual environment `workon upython`
+- Download the source code from https://github.com/geekscape/aiko_engine_mp
+  and cd into it:
+  `git clone https://github.com/geekscape/aiko_engine_mp && cd aiko_engine_mp`
+- Ensure you have a
+  [compatible board](https://github.com/micropython/micropython/wiki/Boards-Summary) or
+  [compatible port](https://github.com/micropython/micropython/tree/master/ports)
+- Make sure you have a Python
+  [virtual environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/#lower-level-virtualenv) set-up, including
+  [virtualenvwrapper](http://docs.python-guide.org/en/latest/dev/virtualenvs/#virtualenvwrapper)
+- Create `mkvirtualenv upython` and work on the new virtual environment
+  `workon upython`
 - Install AMPY from Adafruit `pip install -U adafruit-ampy`
-- Plug in the ESP32 and make sure you can see it (eg `ls /dev/tty.*` provides eg `/dev/tty.wchserial1410`) 
-- Export the port to a variable so AMPY can see it (`export AMPY_PORT=[port]` where `port` is the device address you had previously
-- Run the aiko engine flash script `./scripts/flash_standard.sh`
+- Plug in your ESP32 device and make sure you can see it,
+  e.g `ls /dev/tty.*` provides e.g `/dev/tty.wchserial1410`
+- Export the serial port to an environment variable, so AMPY can use it,
+  e.g `export AMPY_PORT=<port>` where `port` is the device address shown
+  by the `ls` command above
+- Run the Aiko Engine MP flash script, i.e `./scripts/flash_standard.sh`
 
-Note for Lolin32lite boards - the serial port on this is notoriously problematic and requires a slight delay
-in order for the connection to occur properly. If you're seeing errors that look like `ampy.pyboard.PyboardError: could not enter raw repl` then this is probably related.
+Note: For Lolin32-Lite boards, the serial port is notoriously problematic
+and requires a slight delay in order for the connection to occur properly.
+If you're seeing errors that look like
+`ampy.pyboard.PyboardError: could not enter raw repl`
+then this is probably related.
 
-In this case set a delay to sleep the board as it's uploading the files: `export AMPY_DELAY=4` will usually do the trick.
+In this case, set a delay to sleep the program when it iss uploading the files:
+`export AMPY_DELAY=4` will usually do the trick.
+
+<a name="resources" />
 
 Resources
 ---------
