@@ -36,12 +36,13 @@ Installation
 - Ensure you have a
   [compatible board](https://github.com/micropython/micropython/wiki/Boards-Summary) or
   [compatible port](https://github.com/micropython/micropython/tree/master/ports)
-- Make sure you have a Python
+- Make sure you have a Python 2
   [virtual environment](http://docs.python-guide.org/en/latest/dev/virtualenvs/#lower-level-virtualenv) set-up, including
   [virtualenvwrapper](http://docs.python-guide.org/en/latest/dev/virtualenvs/#virtualenvwrapper)
 - Create `mkvirtualenv upython` and work on the new virtual environment
   `workon upython`
 - Install AMPY from Adafruit `pip install -U adafruit-ampy`
+- Install `esptool.py` `pip install -U esptool`
 - Plug in your ESP32 device and make sure you can see it,
   e.g `ls /dev/tty.*` provides e.g `/dev/tty.wchserial1410`
 - Export the serial port to an environment variable, so AMPY can use it,
