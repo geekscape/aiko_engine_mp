@@ -70,7 +70,7 @@ def write_title():
 
 def initialise(settings=configuration.oled.settings):
   global oled, width, height, font_size, bottom_row, lock_title
-  parameter = configuration.boot.parameter
+  parameter = configuration.main.parameter
 
   Pin(int(settings["enable_pin"]), Pin.OUT).value(1)
   scl_pin = int(settings["scl_pin"])

@@ -1,6 +1,7 @@
 #!/bin/sh
 
-ampy get boot.py | grep version:
+ampy get main.py | grep version:
+ampy get play.py | grep version:
 
 ampy get lib/lolibot.py | grep version:
 
@@ -12,7 +13,7 @@ ampy get lib/aiko/net.py           | grep version:
 ampy get lib/aiko/oled.py          | grep version:
 ampy get lib/aiko/services.py      | grep version:
 
-ampy get configuration/boot.py     | grep version:
+ampy get configuration/main.py     | grep version:
 ampy get configuration/led.py      | grep version:
 ampy get configuration/lolibot.py  | grep version:
 ampy get configuration/mqtt.py     | grep version:

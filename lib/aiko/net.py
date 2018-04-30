@@ -62,7 +62,7 @@ def net_led_handler():
 
 def net_manager():
   global led_color
-  parameter = configuration.boot.parameter
+  parameter = configuration.main.parameter
 
   while not wifi_connect(): sleep(0.5)
   led_color = led.blue

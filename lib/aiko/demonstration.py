@@ -18,6 +18,7 @@ from time import ticks_ms
 import urandom
 
 import aiko.led as led
+import aiko.mqtt as mqtt
 
 demonstration = None
 
@@ -30,6 +31,19 @@ def handler():
 def set_handler(demonstration_handler):
   global demonstration
   demonstration = demonstration_handler
+
+def on_demonstration_message(topic, payload_in):
+  if payload_in == "(demo:start)":
+    set_handler(pattern_1)
+    return True
+
+  if payload_in == "(demo:stop)":
+    set_handler(None)
+    return True
+
+  return False
+
+mqtt.add_message_handler(on_demonstration_message, "fryer_led")
 
 # pattern_1(): Random pixels
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~

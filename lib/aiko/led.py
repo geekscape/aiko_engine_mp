@@ -139,7 +139,7 @@ def pixel_xy(color, x=0, y=0, write=False):
 def initialise(settings=configuration.led.settings):
   global apa106, length, length_x, np, zigzag
 
-  parameter = configuration.boot.parameter
+  parameter = configuration.main.parameter
   apa106 = parameter("apa106", settings)
   zigzag = parameter("zigzag", settings)
 

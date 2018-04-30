@@ -1,6 +1,4 @@
-# This file is executed on every boot (including wake-boot from deepsleep)
-#
-# boot.py: version: 2018-02-11 00:00
+# main.py: version: 2018-04-30 00:00
 #
 # To Do
 # ~~~~~
@@ -8,9 +6,9 @@
 
 import aiko.event as event
 
-import configuration.boot
+import configuration.main
 configuration.globals = globals()         # used by aiko.mqtt.on_exec_message()
-parameter = configuration.boot.parameter
+parameter = configuration.main.parameter
 
 import gc
 def gc_event():

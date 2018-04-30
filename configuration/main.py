@@ -1,4 +1,4 @@
-# configuration/boot.py: version: 2018-02-11 00:00
+# configuration/main.py: version: 2018-04-30 00:00
 
 settings = {
   "gc_enabled":       False,  # Display Garbage Collector statistics
