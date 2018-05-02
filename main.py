@@ -28,12 +28,17 @@ if parameter("oled_enabled"):                                 # GC: 73088 22912
 import aiko.net as net                                        # GC: 54304 41696
 net.initialise()
 
-if parameter("lolibot_enabled"):
-  import lolibot
-  lolibot.initialise()
-else:
-  import aiko.demonstration as demo
-  demo.set_handler(demo.pattern_1)
-  event.add_event_handler(demo.handler, 100)
+# if parameter("lolibot_enabled"):
+#   import lolibot
+#   lolibot.initialise()
+# else:
+#   import aiko.demonstration as demo
+#   demo.set_handler(demo.pattern_1)
+#   event.add_event_handler(demo.handler, 100)
+
+if parameter("application"):
+  application_name = parameter("application")
+  application = __import__(application_name)
+  application.initialise()
 
 event.loop()
