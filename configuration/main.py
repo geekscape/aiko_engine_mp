@@ -2,10 +2,10 @@
 
 settings = {
   "application":     "aiko/demonstration",  # Application to run
+# "lolibot":         "lolibot",
 
   "gc_enabled":       False,  # Display Garbage Collector statistics
   "logger_enabled":   False,  # Display everyone's log output
-  "lolibot_enabled":  False,  # LoliBot application
   "oled_enabled":     False,  # OLED attached
   "services_enabled": False   # Use Aiko Services infrastructure
 }
