@@ -1,8 +1,9 @@
 # configuration/main.py: version: 2018-04-30 00:00
 
 settings = {
-  "application":     "aiko/demonstration",  # Application to run
-# "lolibot":         "lolibot",
+  "application":     "aiko/demonstration",      # Application to run
+# "application":     "applications/joysticks",
+# "application":     "lolibot",
 
   "gc_enabled":       False,  # Display Garbage Collector statistics
   "logger_enabled":   False,  # Display everyone's log output
