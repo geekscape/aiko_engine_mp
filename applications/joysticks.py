@@ -9,6 +9,8 @@ from machine import Pin
 import json
 
 import aiko.event as event
+import aiko.mqtt as mqtt
+import aiko.services as services
 
 pins = []
 pins_active = []
@@ -68,6 +70,16 @@ def button_publish(action, button, controller):
   payload["controller"] = controller
   payload_out = json.dumps(payload)
   print(payload_out)
+  mqtt.client.publish(services.topic_out, payload_out)
+
+def joystick_publish(axes, controller):
+  payload = {}
+  payload["action"] = "move"
+  payload["axes"] = axes
+  payload["controller"] = controller
+  payload_out = json.dumps(payload)
+  print(payload_out)
+  mqtt.client.publish(services.topic_out, payload_out)
 
 def handle_pin_change(pin):
   try:
@@ -100,12 +112,9 @@ def handle_pins_active():
 
       output_value = round(axis_value[axis_index], 3)
 
-      payload = {}
-      payload["action"] = "move"
-      payload["axes"] = [(axis_name[axis_index], output_value)]
-      payload["controller"] = axis_controller_map[axis_index]
-      payload_out = json.dumps(payload)
-      print(payload_out)
+      axes = [(axis_name[axis_index], output_value)]
+      controller = axis_controller_map[axis_index]
+      joystick_publish(axes, controller)
 
     else:
       button, button_index, controller = button_info(pin)
