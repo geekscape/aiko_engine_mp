@@ -11,6 +11,7 @@ ampy get lib/aiko/led.py           | grep version:
 ampy get lib/aiko/mqtt.py          | grep version:
 ampy get lib/aiko/net.py           | grep version:
 ampy get lib/aiko/oled.py          | grep version:
+ampy get lib/aiko/queue.py         | grep version:
 ampy get lib/aiko/services.py      | grep version:
 
 ampy get configuration/main.py     | grep version:

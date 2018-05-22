@@ -26,6 +26,7 @@ ampy put lib/aiko/led.py      lib/aiko/led.py
 ampy put lib/aiko/mqtt.py     lib/aiko/mqtt.py
 ampy put lib/aiko/net.py      lib/aiko/net.py
 ampy put lib/aiko/oled.py     lib/aiko/oled.py
+ampy put lib/aiko/queue.py    lib/aiko/queue.py
 ampy put lib/aiko/services.py lib/aiko/services.py
 
 echo '### Copy lolibot.py ###'

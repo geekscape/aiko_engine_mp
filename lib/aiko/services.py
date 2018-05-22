@@ -11,6 +11,7 @@
 # ~~~~~
 # * Implement tags, in "configuration/services.py"
 #
+# - Bootstrap protocol should include version number
 # - If bootstrap() timeout, then use default settings for namespace, host, port
 
 import configuration.services

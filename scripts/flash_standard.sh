@@ -7,6 +7,7 @@ echo '### Flash microPython ###'
 esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180120-v1.9.3-240-ga275cb0f.bin
 
 echo '### Make directories ###'
+ampy mkdir applications
 ampy mkdir configuration
 ampy mkdir lib
 ampy mkdir lib/aiko
@@ -28,6 +29,7 @@ ampy put lib/aiko/led.py            lib/aiko/led.py
 ampy put lib/aiko/mqtt.py           lib/aiko/mqtt.py
 ampy put lib/aiko/net.py            lib/aiko/net.py
 ampy put lib/aiko/oled.py           lib/aiko/oled.py
+ampy put lib/aiko/queue.py          lib/aiko/queue.py
 ampy put lib/aiko/services.py       lib/aiko/services.py
 
 echo '### Copy lolibot.py ###'

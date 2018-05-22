@@ -7,13 +7,14 @@
 from machine import Pin
 
 import json
+import machine
 
 import aiko.event as event
 import aiko.mqtt as mqtt
 import aiko.services as services
 
 pins = []
-pins_active = []
+pins_active = []  ### globally shared and writable by interrupt handler ###
 
 # Pin number 13 used for Wi-Fi LED and one of the joysticks !
 
@@ -68,40 +69,43 @@ def button_publish(action, button, controller):
   payload["action"] = action
   payload["button"] = button
   payload["controller"] = controller
-  payload_out = json.dumps(payload)
-  print(payload_out)
-  mqtt.client.publish(services.topic_out, payload_out)
+  message = json.dumps(payload)
+  print(message)
+  mqtt.client.publish(services.topic_out, message)
 
 def joystick_publish(axes, controller):
   payload = {}
   payload["action"] = "move"
   payload["axes"] = axes
   payload["controller"] = controller
-  payload_out = json.dumps(payload)
-  print(payload_out)
-  mqtt.client.publish(services.topic_out, payload_out)
+  message = json.dumps(payload)
+  print(message)
+  mqtt.client.publish(services.topic_out, message)
 
-def handle_pin_change(pin):
-  try:
-    pin_index = pins.index(pin)          # Will raise ValueError on unknown pin
+def handle_pin_change(pin):              ### hardware pin interrupt handler ###
+  if not pin.value():
+    if not pin in pins_active:
+      pins_active.append(pin)
 
-    if not pin.value():
-      if not pin in pins_active: pins_active.append(pin)
-    else:
-      if pin in pins_active:
-        pins_active.remove(pin)
-        if is_joystick(pin):
-          axis_value[pin_axis_map[pin_index]] = 0.0
-        else:
-          button, button_index, controller = button_info(pin)
-          button_state[button_index] = False
-          button_publish("release", button, controller)
+def handle_pins_active():                ### software timer event handler ###
+  irq_state = machine.disable_irq()
+  local_pins_active = [pin for pin in pins_active]
+  machine.enable_irq(irq_state)
 
-  except ValueError:
-    print("ERROR: handle_pin_change(): Unknown Pin argument received")
+  for pin in local_pins_active:
+    if pin.value():                      # Button or joystick no longer active
+      irq_state = machine.disable_irq()
+      pins_active.remove(pin)
+      machine.enable_irq(irq_state)
 
-def handle_pins_active():
-  for pin in pins_active:
+      if is_joystick(pin):
+        axis_value[pin_axis_map[pins.index(pin)]] = 0.0
+      else:
+        button, button_index, controller = button_info(pin)
+        button_state[button_index] = False
+        button_publish("release", button, controller)
+      break;
+
     pin_index = pins.index(pin)
 
     if is_joystick(pin):
