@@ -4,7 +4,7 @@ echo '### Erase flash ###'
 esptool.py --chip esp32 --port $AMPY_PORT erase_flash
 
 echo '### Flash microPython ###'
-esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180120-v1.9.3-240-ga275cb0f.bin
+esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180602-v1.9.4-113-g7d86ac6c.bin
 
 echo '### Make directories ###'
 ampy mkdir configuration
