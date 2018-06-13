@@ -4,20 +4,21 @@ echo '### Erase flash ###'
 esptool.py --chip esp32 --port $AMPY_PORT erase_flash
 
 echo '### Flash microPython ###'
-esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180120-v1.9.3-240-ga275cb0f.bin
+esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180511-v1.9.4.bin
 
 echo '### Make directories ###'
 ampy mkdir configuration
 ampy mkdir lib
 ampy mkdir lib/aiko
 ampy mkdir lib/umqtt
+ampy mkdir applications
 
 echo '### Copy configuration/*.py ###'
 ampy put configuration/main.py      configuration/main.py
 ampy put configuration/led.py       configuration/led.py
 ampy put configuration/lolibot.py   configuration/lolibot.py
 ampy put configuration/mqtt.py      configuration/mqtt.py
-ampy put configuration/net.py.cchs  configuration/net.py
+ampy put configuration/net.py  configuration/net.py
 ampy put configuration/oled.py      configuration/oled.py
 ampy put configuration/services.py  configuration/services.py
 
@@ -47,8 +48,9 @@ ampy put lib/umqtt/simple.py lib/umqtt/simple.py
 ampy put lib/umqtt/robust.py lib/umqtt/robust.py
 
 echo '### Copy play.py ###'
-ampy put play.py play.py
+#ampy put play.py play.py
 
+ampy put applications/logTemperature.py logTemperature.py
 echo '### Copy main.py ###'
 ampy put main.py main.py
 
