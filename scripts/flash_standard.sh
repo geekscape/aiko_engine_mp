@@ -43,6 +43,9 @@ ampy put lib/ssd1306.py lib/ssd1306.py
 echo '### Copy threading.py ###'
 ampy put lib/threading.py lib/threading.py
 
+echo '### Copy ms5611.py ###'
+ampy put lib/ms5611.py lib/ms5611.py
+
 echo '### Copy lib/umqtt ###'
 ampy put lib/umqtt/simple.py lib/umqtt/simple.py
 ampy put lib/umqtt/robust.py lib/umqtt/robust.py
@@ -50,9 +53,9 @@ ampy put lib/umqtt/robust.py lib/umqtt/robust.py
 echo '### Copy play.py ###'
 #ampy put play.py play.py
 
-ampy put applications/logTemperature.py logTemperature.py
+ampy put applications/logTemperature.py applications/logTemperature.py
 echo '### Copy main.py ###'
-ampy put main.py main.py
+ampy put main.py main_test.py
 
 echo '### Complete ###'
 
