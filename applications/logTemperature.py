@@ -3,7 +3,7 @@ import ms5611
 import time
 import aiko.event as event
 import aiko.mqtt as mqtt
-import aiko.services as services
+from time import sleep
 
 
 ms = None
@@ -11,7 +11,7 @@ ms = None
 def event_send_temp(): 
     temp, pres, atl = ms.read()
     print("Temp: " + str(temp) + " Time: " + str(time.ticks_ms() / 1000))
-    mqtt.client.publish(services.topic_out, temp)
+    mqtt.client.publish("out/a", str(temp))
 
 
 def initialise():
@@ -19,6 +19,7 @@ def initialise():
     print("initialising")
     i2c = machine.I2C(scl=machine.Pin(22), sda=machine.Pin(21))
     ms = ms5611.MS5611(i2c)
-    mqtt.initialise()
-    event.add_event_handler(event_send_temp, 1000)
+
+    sleep(10)
+    event.add_event_handler(event_send_temp, 10)
     event.loop() 
