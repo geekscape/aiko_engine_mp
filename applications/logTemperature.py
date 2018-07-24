@@ -10,9 +10,13 @@ ms = None
 
 def event_send_temp(): 
     temp, pres, atl = ms.read()
-    print("Temp: " + str(temp) + " Time: " + str(time.ticks_ms() / 1000))
-    mqtt.client.publish("out/a", str(temp))
-
+    
+    try: 
+        mqtt.client.publish("out/a", str(temp))
+        result = "Okay"
+    except Exception:
+        result = "Fail"
+    print(result + ": Temp: " + str(temp) + " Time: " + str(time.ticks_ms() / 1000))
 
 def initialise():
     global ms
@@ -20,6 +24,4 @@ def initialise():
     i2c = machine.I2C(scl=machine.Pin(22), sda=machine.Pin(21))
     ms = ms5611.MS5611(i2c)
 
-    sleep(10)
-    event.add_event_handler(event_send_temp, 10)
-    event.loop() 
+    event.add_event_handler(event_send_temp, 10000)
