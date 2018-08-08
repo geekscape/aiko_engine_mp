@@ -52,10 +52,17 @@ def handle_pins_input():                 ### software timer event handler ###
   local_pins_input = [pin for pin in pins_input]
   machine.enable_irq(irq_state)
 
+  pin_vals = ""
+  delimiter = ""
+
   for pin_number in local_pins_input:
     value = pins_info[pin_number]["pin"].value()
+    pin_vals = pin_vals + delimiter + "(" + str(pin_number) + " " + str(value) + ")"
+    delimiter = " "
+
+  if mqtt.client and pin_vals != "":
     mqtt.client.publish(mqtt.topic_path + "/out",
-      "(nb:pin_value " + str(pin_number) + " " + str(value) + ")")
+      "(nb:pin_value (" + pin_vals + "))")
 
 def on_nodebots_message(topic, payload_in):
   print("on_nodebots_message(): " + payload_in)
