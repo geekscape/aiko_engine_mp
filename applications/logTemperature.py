@@ -1,27 +1,42 @@
 import machine
-import ms5611
-import time
+import dht
+import onewire
+import ds18x20
+import utime
+import json
 import aiko.event as event
-import aiko.mqtt as mqtt
-from time import sleep
+#import aiko.mqtt as mqtt
 
 
-ms = None
+topTempHumid = None
+oneWires = None
+oneWireDevices = None
 
 def event_send_temp(): 
-    temp, pres, atl = ms.read()
-    
-    try: 
-        mqtt.client.publish("out/a", str(temp))
-        result = "Okay"
-    except Exception:
-        result = "Fail"
-    print(result + ": Temp: " + str(temp) + " Time: " + str(time.ticks_ms() / 1000))
+    payload = {}
+
+    topTempHumid.measure()
+    payload["topTemperature"] = topTempHumid.temperature()
+    payload["topHumidity"] = topTempHumid.humidity()
+
+    oneWires.convert_temp()
+    utime.sleep_ms(750)
+    payload["waterTemperature"] = oneWires.read_temp(oneWireDevices[0])
+
+    payload_out = json.dumps(payload)
+
+    print(payload_out)
+    #try: 
+        #mqtt.client.publish("out/a", payload_out)
+    #except Exception:
+    #    print("Failed To Publish")
 
 def initialise():
-    global ms
-    print("initialising")
-    i2c = machine.I2C(scl=machine.Pin(22), sda=machine.Pin(21))
-    ms = ms5611.MS5611(i2c)
+    global topTempHumid, oneWires, oneWireDevices
+    print("initialising Sensors")
+
+    topTempHumid = dht.DHT22(machine.Pin(16)) #DHT22
+    oneWires = ds18x20.DS18X20(onewire.OneWire(machine.Pin(17))) #onewire Probe
+    oneWireDevices = oneWires.scan()
 
     event.add_event_handler(event_send_temp, 10000)
