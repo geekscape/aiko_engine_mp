@@ -1,17 +1,17 @@
 #!/bin/sh
 
 echo '### Erase flash ###'
-esptool.py --chip esp32 --port $AMPY_PORT erase_flash
+#esptool.py --chip esp32 --port $AMPY_PORT erase_flash
 
 echo '### Flash microPython ###'
-esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180511-v1.9.4.bin
+#esptool.py --chip esp32 --port $AMPY_PORT write_flash -z 0x1000 firmware/esp32-20180511-v1.9.4.bin
 
 echo '### Make directories ###'
-ampy mkdir configuration
-ampy mkdir lib
-ampy mkdir lib/aiko
-ampy mkdir lib/umqtt
-ampy mkdir applications
+#ampy mkdir configuration
+#ampy mkdir lib
+#ampy mkdir lib/aiko
+#ampy mkdir lib/umqtt
+#ampy mkdir applications
 
 echo '### Copy configuration/*.py ###'
 ampy put configuration/main.py      configuration/main.py
@@ -45,6 +45,9 @@ ampy put lib/threading.py lib/threading.py
 
 echo '### Copy ms5611.py ###'
 ampy put lib/ms5611.py lib/ms5611.py
+
+echo '### Copy sgp30.py ###'
+ampy put lib/sgp30.py lib/sgp30.py
 
 echo '### Copy lib/umqtt ###'
 ampy put lib/umqtt/simple.py lib/umqtt/simple.py
