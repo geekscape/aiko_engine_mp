@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set P="-p COM9 -d 1"
+set P=-p COM9 -d 1
 
 echo "### Make directories ###"
 ampy %P% mkdir applications
