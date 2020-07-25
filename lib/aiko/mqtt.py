@@ -15,6 +15,7 @@
 import configuration.mqtt
 
 import machine
+import os
 
 from umqtt.robust import MQTTClient
 
@@ -36,6 +37,11 @@ def get_unique_id():
 def on_message(topic, payload_in):
   topic = topic.decode()
   payload_in = payload_in.decode()
+
+  if topic == topic_path + "/in" and payload_in == "(repl)":
+    file = open("repl", "w")
+    file.close()
+    machine.reset()
 
   for message_handler in message_handlers:
     match = True
