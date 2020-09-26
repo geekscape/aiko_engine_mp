@@ -78,6 +78,6 @@ def net_manager():
     mqtt.client.wait_msg()
 
 def initialise():
-  event.add_event_handler(net_led_handler, 100)
+  event.add_timer_handler(net_led_handler, 100)
   net_thread = Thread(target=net_manager)
   net_thread.start()

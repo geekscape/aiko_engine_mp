@@ -94,5 +94,5 @@ def on_nodebots_message(topic, payload_in):
     return True
 
 def initialise():
-  event.add_event_handler(handle_pins_input, 50)  # 20 Hz
+  event.add_timer_handler(handle_pins_input, 50)  # 20 Hz
   mqtt.add_message_handler(on_nodebots_message, "$me/in")
