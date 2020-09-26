@@ -8,14 +8,11 @@
 # def event_test(): 
 #   print("event_test(): " + str(time.ticks_ms() / 1000))
 #
-# event.add_event_handler(event_test, 1000)
+# event.add_timer_handler(event_test, 1000)
 # event.loop() 
 #
 # To Do
 # ~~~~~
-# - Rename "add_event_handler()" to "add_timer_handler()" everywhere.
-# - Rename "remove_event_handler()" to "remove_timer_handler()" everywhere.
-#
 # - Add flatout handler.
 # - Add "handler_count" and "loop(loop_when_no_handlers=False)"
 #
@@ -106,11 +103,11 @@ class EventList:
 event_enabled = False
 event_list = EventList()
 
-def add_event_handler(handler, time_period, immediate=False):
+def add_timer_handler(handler, time_period, immediate=False):
   event = Event(handler, time_period, immediate)
   event_list.add(event)
 
-def remove_event_handler(handler):
+def remove_timer_handler(handler):
   event_list.remove(handler)
 
 def loop():

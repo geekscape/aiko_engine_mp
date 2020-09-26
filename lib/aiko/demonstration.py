@@ -4,7 +4,7 @@
 # ~~~~~
 # import aiko.demonstration as demo
 # demo.set_handler(demo.pattern_1)
-# event.add_event_handler(demo.handler, 100)
+# event.add_timer_handler(demo.handler, 100)
 #
 # demo.set_handler(None)
 #
@@ -34,7 +34,7 @@ def set_handler(demonstration_handler):
 
 def initialise():
   set_handler(pattern_1)
-  event.add_event_handler(handler, 100)
+  event.add_timer_handler(handler, 100)
 
 # pattern_1(): Random pixels
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~

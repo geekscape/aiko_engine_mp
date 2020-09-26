@@ -80,7 +80,7 @@ def initialise(settings=configuration.mqtt.settings):
   client.set_last_will(topic_path + "/state", "nil")
   client.connect()  # TODO: Catch exception
 
-  event.add_event_handler(mqtt_ping_handler, keepalive * 1000)
+  event.add_timer_handler(mqtt_ping_handler, keepalive * 1000)
 
   if settings["mqtt_insecure_exec"]:
     add_message_handler(on_exec_message, "$me/exec")

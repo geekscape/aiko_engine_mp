@@ -141,5 +141,5 @@ def initialise():
               trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
     pins.append(pin)
 
-  event.add_event_handler(handle_pins_active, 50)  # 20 Hz
-  event.add_event_handler(handle_blink_led, 500)
+  event.add_timer_handler(handle_pins_active, 50)  # 20 Hz
+  event.add_timer_handler(handle_blink_led, 500)
