@@ -13,6 +13,12 @@
 #
 # To Do
 # ~~~~~
+# - Rename "add_event_handler()" to "add_timer_handler()" everywhere.
+# - Rename "remove_event_handler()" to "remove_timer_handler()" everywhere.
+#
+# - Add flatout handler.
+# - Add "handler_count" and "loop(loop_when_no_handlers=False)"
+#
 # - Provide helper function for running event.loop() in a background thread
 #   - Consider implementing "lib/aiko/thread.py" manager
 #
@@ -39,9 +45,11 @@ def update_timer_counter():
     machine.enable_irq(irq_state)
 
 class Event:
-  def __init__(self, handler, time_period):
+  def __init__(self, handler, time_period, immediate=False):
     self.handler = handler
-    self.time_next = ticks_ms() + time_period
+    self.time_next = ticks_ms()
+    if not immediate:
+      self.time_next += time_period
     self.time_period = time_period
     self.next = None
 
@@ -77,6 +85,14 @@ class EventList:
       current = current.next
     return current
 
+    def reset(self):
+      current = self.head
+      current_time = time_ms()
+      while current:
+        current.time_next = current_time + current.time_period
+        current = current.next
+      update_timer_counter()
+
   def update(self):
     if self.head:
       event = self.head
@@ -90,8 +106,8 @@ class EventList:
 event_enabled = False
 event_list = EventList()
 
-def add_event_handler(handler, time_period):
-  event = Event(handler, time_period)
+def add_event_handler(handler, time_period, immediate=False):
+  event = Event(handler, time_period, immediate)
   event_list.add(event)
 
 def remove_event_handler(handler):
@@ -99,6 +115,7 @@ def remove_event_handler(handler):
 
 def loop():
   global event_enabled, timer
+  event_list.reset()
 
   if not timer:
     timer = machine.Timer(timer_id)
