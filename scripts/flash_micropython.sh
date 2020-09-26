@@ -6,7 +6,7 @@
 # BAUDRATE=115200
 BAUDRATE=460800
 
-ESP32_MICROPYTHON=firmware/esp32-idf4-20191220-v1.12.bin
+ESP32_MICROPYTHON=firmware/esp32-idf4-20200902-v1.13.bin
 
 echo '### Erase flash ###'
 esptool.py --chip esp32 --port $AMPY_PORT erase_flash
