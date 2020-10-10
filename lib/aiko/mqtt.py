@@ -1,4 +1,4 @@
-# lib/aiko/mqtt.py: version: 2018-02-11 00:00
+# lib/aiko/mqtt.py: version: 2020-10-11 05:00
 #
 # Usage
 # ~~~~~

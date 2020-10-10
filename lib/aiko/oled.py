@@ -1,9 +1,12 @@
-# lib/aiko/oled.py: version: 2018-02-11 00:00
+# lib/aiko/oled.py: version: 2020-10-11 05:00
 #
 # Usage
 # ~~~~~
 # import aiko.oled
 # aiko.oled.initialise()
+# oled.title = "Title"
+# oled.write_title()
+# oled.log("Log message"))
 #
 # MQTT commands
 # ~~~~~~~~~~~~~
@@ -52,7 +55,7 @@ import aiko.mqtt as mqtt
 from machine import Pin
 import machine, ssd1306
 
-oled = None
+oleds = []
 width = None
 height = None
 font_size = None
@@ -61,20 +64,18 @@ bg = 0
 fg = 1
 
 lock_title = False
-title = "Aiko 0.0"
-
-def write_title():
-  oled.fill_rect(0, 0, width, font_size, fg)
-  oled.text("Aiko 0.0", 0, 0, bg)
-  oled.show()
+title = "Aiko 0.1"
 
 def initialise(settings=configuration.oled.settings):
-  global oled, width, height, font_size, bottom_row, lock_title
+  global lock_title, width, height, font_size, bottom_row
   parameter = configuration.main.parameter
 
   Pin(int(settings["enable_pin"]), Pin.OUT).value(1)
+  addresses = settings["addresses"]
   scl_pin = int(settings["scl_pin"])
   sda_pin = int(settings["sda_pin"])
+
+  lock_title = parameter("lock_title", settings)
   width = int(settings["width"])
   height = int(settings["height"])
   font_size = int(settings["font_size"])
@@ -82,33 +83,50 @@ def initialise(settings=configuration.oled.settings):
 
   i2c = machine.I2C(scl=Pin(scl_pin), sda=Pin(sda_pin))
 # i2c.scan()
-  oled = ssd1306.SSD1306_I2C(width, height, i2c)
+  for addr in addresses:
+    oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=addr))
 
-  oled.fill(bg)
-  write_title()
-  lock_title = parameter("lock_title", settings)
+  oleds_clear(bg)
+  write_title()  # includes oled.show()
 
   mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
     mqtt.add_message_handler(on_oled_log_message, "$all/log")
 
 def log(text):
-  oled.scroll(0, -font_size)
-  oled.fill_rect(0, bottom_row, width, font_size, bg)
-  oled.text(text, 0, bottom_row, fg)
+  for oled in oleds:
+    oled.scroll(0, -font_size)
+    oled.fill_rect(0, bottom_row, width, font_size, bg)
+    oled.text(text, 0, bottom_row, fg)
+    oled.show()
+
   if lock_title: write_title()
-  oled.show()
+
+def oleds_clear(bg):
+  for oled in oleds:
+    oled.fill(bg)
+    oled.show()
+
+def oleds_show():
+  for oled in oleds:
+    oled.show()
 
 def test(text="Line "):
-  oled.fill(bg)
-  for y in range(0, height, font_size):
-    oled.text(text + str(y), 0, y, fg)
-  oled.show()
+  for oled in oleds:
+    oled.fill(bg)
+    for y in range(0, height, font_size):
+      oled.text(text + str(y), 0, y, fg)
+    oled.show()
+
+def write_title():
+  for oled in oleds:
+    oled.fill_rect(0, 0, width, font_size, fg)
+    oled.text(title, 0, 0, bg)
+    oled.show()
 
 def on_oled_message(topic, payload_in):
   if payload_in == "(oled:clear)":
-    oled.fill(bg)
-    oled.show()
+    oleds_clear(bg)
     return True
 
   if payload_in.startswith("(oled:log "):
@@ -117,15 +135,17 @@ def on_oled_message(topic, payload_in):
 
   if payload_in.startswith("(oled:pixel "):
     tokens = [int(token) for token in payload_in[12:-1].split()]
-    oled.pixel(tokens[0], height - tokens[1] - 1, fg)
-    oled.show()
+    for oled in oleds:
+      oled.pixel(tokens[0], height - tokens[1] - 1, fg)
+      oled.show()
     return True
 
   if payload_in.startswith("(oled:text "):
     tokens = payload_in[11:-1].split()
     text = " ".join(tokens[2:])
-    oled.text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
-    oled.show()
+    for oled in oleds:
+      oled.text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
+      oled.show()
     return True
 
   return False

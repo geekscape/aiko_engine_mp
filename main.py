@@ -23,7 +23,7 @@ def gc_event():
   print("  ###### GC:", gc.mem_free(), gc.mem_alloc())
 
 if parameter("gc_enabled"):                                   # GC: 86368  9632
-  event.add_event_handler(gc_event, 60000)
+  event.add_timer_handler(gc_event, 60000)
 
 import aiko.led as led                                        # GC: 79696 16304
 led.initialise()

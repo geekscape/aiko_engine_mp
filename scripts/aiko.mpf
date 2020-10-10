@@ -8,6 +8,7 @@ md lib/umqtt
 
 exec print("### Copy applications/*.py ###")
 exec # put applications/nodebots.py
+put applications/default.py
 put applications/step_controller.py
 put applications/step_patterns/cchs_1.py
 put applications/step_patterns/skipping_girl.py
@@ -22,7 +23,6 @@ put configuration/oled.py
 put configuration/services.py
 
 exec print("### Copy lib/aiko/*.py ###")
-put lib/aiko/demonstration.py
 put lib/aiko/event.py
 put lib/aiko/led.py
 put lib/aiko/mqtt.py

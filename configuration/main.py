@@ -1,9 +1,12 @@
-# configuration/main.py: version: 2018-05-30 00:00
+# configuration/main.py: version: 2020-10-11 05:00
 
 settings = {
-  "application":     "aiko/demonstration",      # Application to run
+  "application":     "applications/default",  # Application to run
 # "application":     "applications/joysticks",
+# "application":     "applications/led_strip",
 # "application":     "applications/nodebots",
+# "application":     "applications/step_controller",
+# "application":     "applications/squirrel",
 # "application":     "lolibot",
 
   "gc_enabled":       False,  # Display Garbage Collector statistics

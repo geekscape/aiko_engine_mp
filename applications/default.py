@@ -1,4 +1,4 @@
-# lib/aiko/demonstration.py: version: 2018-02-11 00:00
+# lib/aiko/demonstration.py: version: 2020-10-11 05:00
 #
 # Usage
 # ~~~~~
@@ -33,8 +33,30 @@ def set_handler(demonstration_handler):
   demonstration = demonstration_handler
 
 def initialise():
+# set_handler(pattern_0)
   set_handler(pattern_1)
   event.add_timer_handler(handler, 100)
+
+# pattern_0(): Colour cycle
+# ~~~~~~~~~~~~~~~~~~~~~~~~~
+p0_setup = True
+p0_index = 0
+p0_colors = ["red", "green", "blue", "purple", "yellow", "white"]
+p0_color = led.colors[p0_colors[p0_index]]
+p0_time_next = ticks_ms() + 1000
+
+def pattern_0():
+  global p0_setup, p0_index, p0_colors, p0_color, p0_time_next
+  if p0_setup:
+    p0_setup = False
+    led.dim = 1.0
+  for p0_x in range(led.length):
+    p0_y = 0
+    led.pixel_xy(p0_color, p0_x, p0_y, write=True)
+  if ticks_ms() > p0_time_next:
+    p0_time_next = ticks_ms() + 1000
+    p0_index = (p0_index + 1) % len(p0_colors)
+    p0_color = led.colors[p0_colors[p0_index]]
 
 # pattern_1(): Random pixels
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~
