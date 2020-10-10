@@ -24,7 +24,7 @@ The Aiko Engine MP provides ...
 - Support for low-level LED panel graphics functions
 - Support for multiple OLED screens
 - Support [LCA2017 IoTuz project](http://www.openhardwareconf.org/wiki/OHC2017)
-- Support [LCA2018 LoliBot robotics project](https://github.com/mage0r/ESPkit-0://github.com/CCHS-Melbourne/LoliBot)
+- Support [LCA2018 LoliBot robotics project](https://github.com/CCHS-Melbourne/LoliBot)
 - Support [LCA2021 SwagBadge project](http://www.openhardwareconf.org/wiki/Swagbadge2021)
 
 <a name="installation" />
@@ -81,9 +81,9 @@ Resources
 ---------
 Associated open-source ESP32 hardware ...
 
-- [OHMC team's](http://www.openhardwareconf.org)
+- [OHMC team's](http://www.openhardwareconf.org) -
   [LCA2017 IoTuz](http://www.openhardwareconf.org/wiki/OHC2017)
-- [John Spencer's](https://twitter.com/mage0r)
-  [LCA2018 LoliBot robot](https://github.com/mage0r/ESPkit-0://github.com/CCHS-Melbourne/LoliBot)
-- [OHMC team's](https://twitter.com/swagbadge2021)
+- [John Spencer's](https://twitter.com/mage0r) -
+  [LCA2018 LoliBot robot](https://github.com/CCHS-Melbourne/LoliBot)
+- [OHMC team's](https://twitter.com/swagbadge2021) -
   [LCA2021 SwagBadge](http://www.openhardwareconf.org/wiki/Swagbadge2021)
