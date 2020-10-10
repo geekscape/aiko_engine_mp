@@ -1,11 +1,14 @@
 # To Do
 # ~~~~~
+# - Simplify data structure syntax, e.g remove doubling of parameters
+# - Put desired "step pattern" into "configuration/step_controller.py"
 # - Put led.dim value into .../step_patterns/*.py
 # - Make "on_audrey_message()" more generic or move to .../step_patterns/*.py
-# - Implement step period
-# - Implement transitions
+# - Implement per step ... step period
+# - Implement colour interpolation
 # - Implement sensors: ambient light, ultrasonics, etc
 # - Implement "layer" as a class with behaviour, e.g patterns
+# - Implement 7 segment digit
 
 import aiko.event as event
 import aiko.led as led
@@ -13,8 +16,8 @@ import aiko.mqtt as mqtt
 
 # Provide colors, leds_per_layer, step_speed, steps
 
-from applications.step_patterns.cchs_1 import *
-# from applications.step_patterns.skipping_girl import *
+# from applications.step_patterns.cchs_1 import *
+from applications.step_patterns.skipping_girl import *
 
 step_index = 0
 
@@ -31,10 +34,10 @@ def handle_leds():
     color_start = colors[action[2]]
     color_end   = colors[action[3]]
 
+    led.dim = 0.3
     for led_index in range(led_start, led_end):
       led.pixel(color_start, led_index)
 
-  led.dim = 0.3
   led.np.write()
 
 def on_audrey_message(topic, payload_in):
@@ -46,5 +49,5 @@ def on_audrey_message(topic, payload_in):
     return True
 
 def initialise():
-  event.add_event_handler(handle_leds, step_speed)
+  event.add_timer_handler(handle_leds, step_speed)
   mqtt.add_message_handler(on_audrey_message, "$me/in")
