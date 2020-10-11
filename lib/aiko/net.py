@@ -44,11 +44,11 @@ def wifi_connect(wifi=configuration.net.wifi):
   for ap in aps:  # Note 1
     for ssid in wifi:
       if ssid[0].encode() in ap:
-        print("  ###### Wi-Fi: Connecting to " + ssid[0])
+        print("  ###### WiFi: Connecting to " + ssid[0])
         sta_if.connect(ssid[0], ssid[1])
-#       print("  ###### Wi-Fi: Waiting")
+#       print("  ###### WiFi: Waiting")
         while sta_if.isconnected() == False: sleep(0.1)  # Note 2
-        print("  ###### Wi-Fi: Connected to " + ssid[0])
+        print("  ###### WiFi: Connected to " + ssid[0])
         break  # inner loop
     if sta_if.isconnected(): break  # outer loop
 

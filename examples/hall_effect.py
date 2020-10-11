@@ -1,0 +1,46 @@
+# ESP32 Hall Effect (magnetic sensor) example
+#
+# http://docs.micropython.org/en/latest/library/esp32.html#esp32.hall_sensor
+#
+# Usage
+# ~~~~~
+# export AMPY_PORT=/dev/tty.wchusbserial1410  # Lolin32
+# ./scripts/mpf.sh
+# mpfs [/]> put examples/hall_effect.py
+# mpfs [/]> repl
+# MicroPython v1.13 on 2020-09-02; ESP32 module with ESP32
+# Type "help()" for more information.
+# >>> import examples.hall_effect as eg
+# >>> eg.run()
+#
+##### Console output
+# >>> oled.oleds = []; eg.run()
+
+import esp32
+import aiko.event as event
+import aiko.oled as oled
+
+def map_value(v, a, b, c, d):
+    w = (v - a) / (b - a) * (d - c) + c
+    return int(w)
+
+def hall_sensor_handler():
+    val = esp32.hall_sensor()
+    if len(oled.oleds) > 0:
+        oled1 = oled.oleds[0]
+        oled1.fill_rect(0, 32, 48, 8, 0)
+        oled1.text(str(val), 0, 32)           # 50 - 1800
+        if val < 0: val = -val
+        val = map_value(val, 50, 150, 0, 128)
+        oled1.fill_rect(0, 48, 128, 16, 0)
+        oled1.fill_rect(0, 48, val, 16, 1)
+        oled1.show()
+    else:
+        print("Hall sensor: " + str(val), end="    \r")
+
+def run(handler=hall_sensor_handler, period=100):
+    event.add_timer_handler(handler, period)
+    try:
+        event.loop()
+    finally:
+        event.remove_timer_handler(handler)
