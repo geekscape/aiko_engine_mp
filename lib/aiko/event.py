@@ -82,13 +82,13 @@ class EventList:
       current = current.next
     return current
 
-    def reset(self):
-      current = self.head
-      current_time = time_ms()
-      while current:
-        current.time_next = current_time + current.time_period
-        current = current.next
-      update_timer_counter()
+  def reset(self):
+    current = self.head
+    current_time = ticks_ms()
+    while current:
+      current.time_next = current_time + current.time_period
+      current = current.next
+    update_timer_counter()
 
   def update(self):
     if self.head:
