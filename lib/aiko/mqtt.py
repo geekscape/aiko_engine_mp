@@ -10,6 +10,7 @@
 #
 # To Do
 # ~~~~~
+# - Parameter for enabling on_message() debug logging (set via MQTT message)
 # - Only transmit "ping message" when no messages sent with "keepalive" time
 
 import configuration.mqtt

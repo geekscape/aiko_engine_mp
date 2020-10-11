@@ -13,12 +13,15 @@
 # >>> import examples.hall_effect as eg
 # >>> eg.run()
 #
-##### Console output
-# >>> oled.oleds = []; eg.run()
+# Force console output
+# >>> eg.oleds = []
+# >>> eg.run()
 
 import esp32
 import aiko.event as event
 import aiko.oled as oled
+
+oleds = oled.oleds
 
 def map_value(v, a, b, c, d):
     w = (v - a) / (b - a) * (d - c) + c
@@ -26,8 +29,8 @@ def map_value(v, a, b, c, d):
 
 def hall_sensor_handler():
     val = esp32.hall_sensor()
-    if len(oled.oleds) > 0:
-        oled1 = oled.oleds[0]
+    if len(oleds) > 0:
+        oled1 = oleds[0]
         oled1.fill_rect(0, 32, 48, 8, 0)
         oled1.text(str(val), 0, 32)           # 50 - 1800
         if val < 0: val = -val
