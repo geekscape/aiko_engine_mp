@@ -1,4 +1,4 @@
-# configuration/oled.py: version: 2020-10-11 05:00
+# configuration/oled.py: version: 2020-10-17 04:00
 #
 # SwagBadge OLED: ADDRESS = [0x3c, 0x3d], SCL= 4, SDA= 5
 # Wemos     OLED: SCL= 4, SDA= 5, e.g large TTGO OLED
@@ -6,8 +6,8 @@
 # TinyPICO  OLED: SCL=22, SDA=21
 
 settings = {
-  "addresses":  [0x3c],
-# "addresses":  [0x3c, 0x3d],  # SwagBadge
+# "addresses":  [0x3c],
+  "addresses":  [0x3c, 0x3d],  # SwagBadge
   "lock_title": True,
 # "scl_pin":      15,          # Small TTGO
 # "sda_pin":       4,

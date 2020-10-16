@@ -1,8 +1,8 @@
-# lib/aiko/demonstration.py: version: 2020-10-11 05:00
+# applications/default.py: version: 2020-10-11 05:00
 #
 # Usage
 # ~~~~~
-# import aiko.demonstration as demo
+# import applications.default as demo
 # demo.set_handler(demo.pattern_1)
 # event.add_timer_handler(demo.handler, 100)
 #

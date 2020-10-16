@@ -1,4 +1,4 @@
-# lib/aiko/mqtt.py: version: 2020-10-11 05:00
+# lib/aiko/mqtt.py: version: 2020-10-17 04:00
 #
 # Usage
 # ~~~~~
@@ -26,6 +26,7 @@ client = None
 keepalive = 60
 message_handlers = []
 topic_path = None
+topic_prefix = "public/esp_"
 
 def add_message_handler(message_handler, topic_filter=None):
   message_handlers.append((message_handler, topic_filter))
@@ -72,7 +73,7 @@ def initialise(settings=configuration.mqtt.settings):
   client_id = get_unique_id()
   keepalive = settings["keepalive"]
   topic_path = settings["topic_path"]
-  if topic_path == "$me": topic_path = "aiko_esp/" + get_unique_id() + "/0"
+  if topic_path == "$me": topic_path = topic_prefix + get_unique_id() + "/0"
 
   client = MQTTClient(client_id,
     settings["host"], settings["port"], keepalive=keepalive)
