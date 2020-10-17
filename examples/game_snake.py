@@ -91,6 +91,7 @@ def snake_new_heading():
     if len(viable_headings):
         snake_heading = viable_headings[random(0, len(viable_headings))]
     else:
+        snake_heading = (0, 0)
         snake_dead()
     snake_heading_duration = random(4, 16)
     return snake_heading, snake_heading_duration
