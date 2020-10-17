@@ -85,9 +85,7 @@ def initialise(settings=configuration.oled.settings):
 # i2c.scan()
   for addr in addresses:
     oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=addr))
-
   oleds_clear(bg)
-  write_title()  # includes oled.show()
 
   mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
@@ -99,13 +97,13 @@ def log(text):
     oled.fill_rect(0, bottom_row, width, font_size, bg)
     oled.text(text, 0, bottom_row, fg)
     oled.show()
-
   if lock_title: write_title()
 
 def oleds_clear(bg):
   for oled in oleds:
     oled.fill(bg)
     oled.show()
+  if lock_title: write_title()
 
 def oleds_show():
   for oled in oleds:

@@ -13,7 +13,8 @@
 # MicroPython v1.13 on 2020-09-02; ESP32 module with ESP32
 # Type "help()" for more information.
 # >>> import examples.hall_effect as eg
-# >>> eg.run()
+# >>> from examples.hall_effect import run
+# >>> run()
 #
 # Force console output
 # >>> eg.oleds = []
@@ -32,14 +33,14 @@ def map_value(v, a, b, c, d):
 def hall_sensor_handler():
     value = esp32.hall_sensor()
     if len(oleds) > 0:
-        oled1 = oleds[0]
-        oled1.fill_rect(0, 32, 48, 8, 0)
-        oled1.text(str(value), 0, 32)  # 50 - 1800
+        oled0 = oleds[0]
+        oled0.fill_rect(0, 32, 48, 8, 0)
+        oled0.text(str(value), 0, 32)  # 50 - 1800
         if value < 0: value = -value
         value = map_value(value, 50, 150, 0, 128)
-        oled1.fill_rect(0, 48, 128, 16, 0)
-        oled1.fill_rect(0, 48, value, 16, 1)
-        oled1.show()
+        oled0.fill_rect(0, 48, 128, 16, 0)
+        oled0.fill_rect(0, 48, value, 16, 1)
+        oled0.show()
     else:
         print("Hall sensor: " + str(value), end="    \r")
 
