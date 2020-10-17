@@ -140,9 +140,26 @@ def on_oled_message(topic, payload_in):
       oled.show()
     return True
 
+  # oled:text x y message
+  # If x or y are missing or are malformed (not integer), then we'll log what we can and move on
   if payload_in.startswith("(oled:text "):
-    tokens = payload_in[11:-1].split()
-    text = " ".join(tokens[2:])
+    try:
+      tokens = payload_in[11:-1].split()
+      if (len(tokens) < 3):
+        print("#### Missing parameters to oled:text. Format expected is (oled:text x y message)")
+        log(payload_in[11:-1])
+        return True
+      x=int(tokens[0])
+      y=int(tokens[1])
+      text = " ".join(tokens[2:])
+    except ValueError:
+      print("#### Invalid x,y passed to oled:text, got \`%s\`, \`%s\`" % (tokens[0], tokens[1]))
+      log(payload_in[11:-1])
+      return True
+    except Error:
+      print("#### Missing parameters to oled:text. Format expected is (oled:text x y message)")
+      log(payload_in[11:-1])
+      return True
     for oled in oleds:
       oled.text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
       oled.show()
