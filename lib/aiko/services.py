@@ -1,4 +1,4 @@
-# lib/aiko/services.py: version: 2020-10-11 05:00
+# lib/aiko/services.py: version: 2020-10-17 04:00
 #
 # Usage
 # ~~~~~
@@ -63,7 +63,7 @@ def bootstrap():
 #        MQTT host, MQTT port, Namespace
 
 def get_configuration(settings):
-  hostname = "esp32_" + aiko.mqtt.get_unique_id()
+  hostname = aiko.mqtt.get_hostname()
   pid = settings["pid"]
   protocol = settings["protocol"]
   username = settings["username"]

@@ -25,16 +25,22 @@ import aiko.event as event
 client = None
 keepalive = 60
 message_handlers = []
+namespace = "public"
 topic_path = None
-topic_prefix = "public/esp_"
 
 def add_message_handler(message_handler, topic_filter=None):
   message_handlers.append((message_handler, topic_filter))
 
+def get_hostname():
+  return os.uname()[0] + "_" + get_unique_id()
+
+def get_topic_path(namespace):
+  return namespace + "/" + get_hostname() + "/0"
+
 def get_unique_id():
-  id = machine.unique_id()
-  id = ("000000" + hex((id[3] << 16) | (id[4] << 8) | id[5])[2:])[-6:]
-  return id
+  id = machine.unique_id()  # 6 bytes
+  id = "".join(hex(digit)[-2:] for digit in id)
+  return id   # 12 hexadecimal digits
 
 def on_message(topic, payload_in):
   topic = topic.decode()
@@ -73,7 +79,7 @@ def initialise(settings=configuration.mqtt.settings):
   client_id = get_unique_id()
   keepalive = settings["keepalive"]
   topic_path = settings["topic_path"]
-  if topic_path == "$me": topic_path = topic_prefix + get_unique_id() + "/0"
+  if topic_path == "$me": topic_path = get_topic_path(namespace)
 
   client = MQTTClient(client_id,
     settings["host"], settings["port"], keepalive=keepalive)
