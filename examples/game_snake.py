@@ -37,16 +37,9 @@ width = oled0.width
 allowed_headings = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
 score = 0
-snake_heading = None         # (delta_x, delta_y)
-snake_heading_change = None  # frame count
-snake_position = None        # (x, y)
-
-def display_score():
-    global score
-    oled1.fill_rect(0, offset + oled.font_size, 32, oled.font_size, 0)
-    oled1.text(str(score), 0, offset + oled.font_size)
-    oled1.show()
-    score += 1
+snake_heading = None           # (delta_x, delta_y)
+snake_heading_duration = None  # frame count
+snake_position = None          # (x, y)
 
 def display_snake():
     oled0.pixel(snake_position[0], snake_position[1] + offset, 1)
@@ -56,7 +49,6 @@ def display_snake_dead():
     oled1.text("OUCH !", 0, offset + 3 * oled.font_size)
     oled1.show()
     print("Snake dead !")
-    event.terminate()
 
 def position_check(position):
     position_okay = True
@@ -79,11 +71,16 @@ def random_position(limit):
     limit = limit // 4
     return random(limit, limit * 3)
 
+def snake_dead():
+    display_snake_dead()
+    event.terminate()
+# TODO: Wait 5 seconds and start again
+
 def snake_new():
-    global score, snake_heading, snake_heading_change, snake_position
+    global score, snake_heading, snake_heading_duration, snake_position
     score = 0
     snake_position = (random_position(width), random_position(height))
-    snake_heading, snake_heading_change = snake_new_heading()
+    snake_heading, snake_heading_duration = snake_new_heading()
 
 def snake_new_heading():
     viable_headings = []
@@ -94,26 +91,31 @@ def snake_new_heading():
     if len(viable_headings):
         snake_heading = viable_headings[random(0, len(viable_headings))]
     else:
-        snake_heading = (0, 0)
-        display_snake_dead()
-    snake_heading_change = random(4, 16)
-    return snake_heading, snake_heading_change
+        snake_dead()
+    snake_heading_duration = random(4, 16)
+    return snake_heading, snake_heading_duration
 
 def snake_update():
-    global snake_heading, snake_heading_change, snake_position
-    print("sp: " + str(snake_position) + ", sh: " + str(snake_heading) + ", shc: " + str(snake_heading_change))
+    global snake_heading, snake_heading_duration, snake_position
+    print("sp: " + str(snake_position) + ", sh: " + str(snake_heading) + ", shc: " + str(snake_heading_duration))
     snake_position = tuple(map(sum, zip(snake_position, snake_heading)))
     if not position_check(snake_position):
-        snake_heading = (0, 0)
-        display_snake_dead()
+        snake_dead()
     display_snake()
-    snake_heading_change -= 1
-    if snake_heading_change == 0:
-        snake_heading, snake_heading_change = snake_new_heading()
+    snake_heading_duration -= 1
+    if snake_heading_duration == 0:
+        snake_heading, snake_heading_duration = snake_new_heading()
 
 def timer_handler():
     snake_update()
-    display_score()
+    update_score()
+
+def update_score():
+    global score
+    oled1.fill_rect(0, offset + oled.font_size, 32, oled.font_size, 0)
+    oled1.text(str(score), 0, offset + oled.font_size)
+    oled1.show()
+    score += 1
 
 def run(period=50):
     oled.title = "Snake 0.0"
