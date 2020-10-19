@@ -18,7 +18,8 @@ put configuration/main.py
 put configuration/led.py
 put configuration/lolibot.py
 put configuration/mqtt.py
-put configuration/net.py.cchs  configuration/net.py
+put configuration/net.py
+exec # put configuration/net.py.cchs  configuration/net.py
 put configuration/oled.py
 put configuration/services.py
 
@@ -47,8 +48,8 @@ exec print("### Copy lib/umqtt ###")
 put lib/umqtt/simple.py
 put lib/umqtt/robust.py
 
-exec print("### Copy play.py ###")
-put play.py
+exec # print("### Copy play.py ###")
+exec # put play.py
 
 exec print("### Copy main.py ###")
 put main.py
