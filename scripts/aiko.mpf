@@ -2,6 +2,7 @@ exec print("### Make directories ###")
 md applications
 md applications/step_patterns
 md configuration
+md examples
 md lib
 md lib/aiko
 md lib/umqtt
