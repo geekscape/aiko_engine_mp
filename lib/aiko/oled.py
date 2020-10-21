@@ -95,8 +95,16 @@ def log(text):
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
-    oled.text(text, 0, bottom_row, fg)
-    oled.show()
+    length = len(text) * font_size
+    if length > width:
+        snippet = text[0:int(width/font_size)]
+        oled.text(snippet, 0, bottom_row,fg)
+        oled.show()
+        log(text[len(snippet):])
+    else:
+        oled.text(text, 0, bottom_row, fg)
+        oled.show()
+
   if lock_title: write_title()
 
 def oleds_clear(bg):
