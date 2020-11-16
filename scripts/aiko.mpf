@@ -13,6 +13,7 @@ put applications/default.py
 put applications/step_controller.py
 put applications/step_patterns/cchs_1.py
 put applications/step_patterns/skipping_girl.py
+put applications/swagbadge.py
 
 exec print("### Copy configuration/*.py ###")
 put configuration/main.py

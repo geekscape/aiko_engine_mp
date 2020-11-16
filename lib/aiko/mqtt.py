@@ -76,7 +76,7 @@ def mqtt_ping_handler():
 def initialise(settings=configuration.mqtt.settings):
   global client, keepalive, topic_path
 
-  client_id = get_unique_id()
+  client_id = get_hostname()
   keepalive = settings["keepalive"]
   topic_path = settings["topic_path"]
   if topic_path == "$me": topic_path = get_topic_path(namespace)
