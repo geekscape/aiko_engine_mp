@@ -5,14 +5,15 @@
 # import time
 # import aiko.event as event
 #
-# def event_test(): 
+# def event_test():
 #   print("event_test(): " + str(time.ticks_ms() / 1000))
 #
 # event.add_timer_handler(event_test, 1000)
-# event.loop() 
+# event.loop()
 #
 # To Do
 # ~~~~~
+# - Consider removing irq_handler() and "timer_counter"
 # - Add flatout handler.
 # - Add "handler_count" and "loop(loop_when_no_handlers=False)"
 #
@@ -22,8 +23,8 @@
 # - If "event_list.head.time_next" is above a given threshold, then deep sleep
 
 import machine
-
-from time import ticks_ms  # 27 microseconds
+from threading import Thread
+import time                             # time.ticks_ms() takes 27 microseconds
 
 timer = None
 timer_id = -1   # Hardware timers: 0 to 3, Virtual timers: -1 ...
@@ -36,7 +37,7 @@ def irq_handler(timer):
 def update_timer_counter():
   global timer_counter
   if event_list.head:
-    timer_counter_new = event_list.head.time_next - ticks_ms()
+    timer_counter_new = event_list.head.time_next - time.ticks_ms()
     irq_state = machine.disable_irq()
     timer_counter = timer_counter_new
     machine.enable_irq(irq_state)
@@ -44,7 +45,7 @@ def update_timer_counter():
 class Event:
   def __init__(self, handler, time_period, immediate=False):
     self.handler = handler
-    self.time_next = ticks_ms()
+    self.time_next = time.ticks_ms()
     if not immediate:
       self.time_next += time_period
     self.time_period = time_period
@@ -84,7 +85,7 @@ class EventList:
 
   def reset(self):
     current = self.head
-    current_time = ticks_ms()
+    current_time = time.ticks_ms()
     while current:
       current.time_next = current_time + current.time_period
       current = current.next
@@ -111,7 +112,7 @@ def remove_timer_handler(handler):
   event_list.remove(handler)
 
 def loop():
-  global event_enabled, timer
+  global event_enabled, timer, timer_counter
   event_list.reset()
 
   if not timer:
@@ -122,10 +123,17 @@ def loop():
   event_enabled = True
   while event_enabled:
     event = event_list.head
-    if event and timer_counter <= 0:
-      if ticks_ms() >= event.time_next:
-        event.handler()
-        event_list.update()
+    if not event:
+      time.sleep_ms(100)  # TODO: Consider machine.light_sleep(milliseconds)
+    else:
+      if timer_counter <= 0:
+        if time.ticks_ms() >= event.time_next:
+          event.handler()
+          event_list.update()
+          if timer_counter > 0: time.sleep_ms(timer_counter)
+
+def loop_thread():
+  Thread(target=loop).start()
 
 def terminate():
   global event_enabled, timer

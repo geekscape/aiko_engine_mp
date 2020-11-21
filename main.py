@@ -10,13 +10,6 @@ import configuration.main
 configuration.globals = globals()         # used by aiko.mqtt.on_exec_message()
 parameter = configuration.main.parameter
 
-try:
-  file = open("repl")
-  file.close()
-  raise Exception("Exit to repl")
-except OSError:
-  pass
-
 import gc
 def gc_event():
   gc.collect()
@@ -40,4 +33,4 @@ if parameter("application"):
   application = __import__(application_name)
   application.initialise()
 
-event.loop()
+event.loop_thread()

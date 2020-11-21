@@ -17,7 +17,7 @@
 import network
 
 from threading import Thread
-from time import sleep
+from time import sleep_ms
 
 import aiko.event as event
 import aiko.led as led
@@ -47,7 +47,7 @@ def wifi_connect(wifi=configuration.net.wifi):
         print("  ###### WiFi: Connecting to " + ssid[0])
         sta_if.connect(ssid[0], ssid[1])
 #       print("  ###### WiFi: Waiting")
-        while sta_if.isconnected() == False: sleep(0.1)  # Note 2
+        while sta_if.isconnected() == False: sleep_ms(100)  # Note 2
         print("  ###### WiFi: Connected to " + ssid[0])
         break  # inner loop
     if sta_if.isconnected(): break  # outer loop
@@ -60,11 +60,11 @@ def net_led_handler():
   led_dim = led_max - abs(led_counter % (led_max * 2) - led_max)
   led.pixel0(tuple([int(element * led_dim) for element in led_color]))
 
-def net_manager():
+def net_thread():
   global led_color
   parameter = configuration.main.parameter
 
-  while not wifi_connect(): sleep(0.5)
+  while not wifi_connect(): sleep_ms(500)
   led_color = led.blue
 
   if parameter("services_enabled"):
@@ -79,5 +79,4 @@ def net_manager():
 
 def initialise():
   event.add_timer_handler(net_led_handler, 100)
-  net_thread = Thread(target=net_manager)
-  net_thread.start()
+  Thread(target=net_thread).start()
