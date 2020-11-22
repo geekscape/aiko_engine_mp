@@ -100,8 +100,8 @@ def mqtt_thread():
       connect()
       while is_connected():
         if client:
-#         print(M + "poll()")
-          poller = uselect.poll()
+#         print(M + "poll()")       # TODO: Refactor poller into own function ?
+          poller = uselect.poll()   # TODO: Create poller once per connection ?
           poller.register(client.sock, uselect.POLLIN)
           result = poller.poll(WAIT_MQTT_INCOMING_MESSAGE)
           if result:
