@@ -1,4 +1,4 @@
-# main.py: version: 2018-04-30 00:00
+# main.py: version: 2020-11-22 19:00
 #
 # To Do
 # ~~~~~
@@ -15,22 +15,22 @@ def gc_event():
   gc.collect()
   print("  ###### GC:", gc.mem_free(), gc.mem_alloc())
 
-if parameter("gc_enabled"):                                   # GC: 86368  9632
+if parameter("gc_enabled"):                                  # GC: 105984  5184
   event.add_timer_handler(gc_event, 60000)
 
-import aiko.led as led                                        # GC: 79696 16304
+import aiko.led as led                                       # GC:  94784 16384
 led.initialise()
 
-if parameter("oled_enabled"):                                 # GC: 73088 22912
+if parameter("oled_enabled"):                                # GC:  86528 24640
   import aiko.oled as oled
   oled.initialise()
 
-import aiko.net as net                                        # GC: 54304 41696
+import aiko.net as net                                       # GC:  85424 25744
 net.initialise()
 
-if parameter("application"):
+if parameter("application"):                                 # GC:  85056 26112
   application_name = parameter("application")
   application = __import__(application_name)
   application.initialise()
 
-event.loop_thread()
+event.loop_thread()                                          # GC:  85104 26064
