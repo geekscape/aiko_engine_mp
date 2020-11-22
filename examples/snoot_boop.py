@@ -1,6 +1,6 @@
-# examples/snoot_boot.py: version: 2020-11-23 04:00
+# examples/snoot_boop.py: version: 2020-11-23 04:00
 #
-# ESP32 Tux SAO Snoot boot (touch button)
+# ESP32 Tux SAO Snoot boop (touch button)
 #
 # Description
 # ~~~~~~~~~~~
@@ -21,12 +21,12 @@
 # ~~~~~
 # export AMPY_PORT=/dev/tty.wchusbserial1410  # Lolin32
 # ./scripts/mpf.sh
-# mpfs [/]> put examples/snoot_boot.py
+# mpfs [/]> put examples/snoot_boop.py
 # mpfs [/]> repl
 # MicroPython v1.13 on 2020-09-02; ESP32 module with ESP32
 # Type "help()" for more information.
-# >>> import examples.snoot_boot as eg
-# >>> from examples.snoot_boot import run
+# >>> import examples.snoot_boop as eg
+# >>> from examples.snoot_boop import run
 # >>> run()
 #
 # Notes
@@ -67,7 +67,7 @@ def map_value(v, a, b, c, d):
     w = (v - a) / (b - a) * (d - c) + c
     return int(w)
 
-def snoot_boot_handler():
+def snoot_boop_handler():
     try:
         value = touch9.read()
 
@@ -76,7 +76,7 @@ def snoot_boot_handler():
             led0.value(not(led0.value()))
             led1.value(not(led1.value()))
             oled0.text("SNOOT", 40, 32)
-            oled0.text("BOOT ", 40, 48)
+            oled0.text("BOOP ", 40, 48)
         else:
             oled0.fill_rect(0, 32, 128, 64, 0)
         oled0.show()
@@ -91,7 +91,7 @@ def snoot_boot_handler():
     except ValueError:
         pass
 
-def run(handler=snoot_boot_handler, period=100):
+def run(handler=snoot_boop_handler, period=100):
     event.add_timer_handler(handler, period)
     try:
         event.loop()
