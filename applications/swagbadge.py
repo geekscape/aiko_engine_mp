@@ -28,12 +28,14 @@ import aiko.mqtt as mqtt
 import configuration.main
 parameter = configuration.main.parameter
 
+# Touchpad sliders 
+# Left slider is pins 12 and 15, Right slider is pins 14 and 27
 touch5 = TouchPad(Pin(12))
 touch3 = TouchPad(Pin(15))
-
 touch6 = TouchPad(Pin(14))
 touch7 = TouchPad(Pin(27))
 
+# Buttons!
 buttonR = Pin(17, Pin.IN, Pin.PULL_UP)
 buttonL = Pin(16, Pin.IN, Pin.PULL_UP)
 
@@ -41,6 +43,7 @@ if parameter("oled_enabled"):
     import aiko.oled as oled
 
 
+# Load up a file into a framebuffer for display on an OLED
 def load_image(filename):
     with open(filename, 'rb') as file:
         file.readline()  # magic number: P4
@@ -60,6 +63,7 @@ def slider_range(val):
     return "\\/"
   return "off"
   
+# Read the value of the sliders and burp them out in an array.  
 def touch_slider_handler():
   # left slider
   value0 = touch5.read()
@@ -75,12 +79,15 @@ def touch_slider_handler():
   values = [slider_range(value0), slider_range(value2)]
   return values
   
+# Display a rotating title  
 def handler():
     global title_index
     oled.set_title(titles[title_index])
     oled.write_title()
     title_index = 1 - title_index
 
+# Clean out the whole line that was there before
+# Write some new text and show it
 def oled_write_line(oled_target, x, y, text):
     oled_target.fill_rect(0,y,oled.width, oled.font_size, oled.bg)
     oled_target.text(text, x, y)
@@ -105,7 +112,9 @@ def statusbar():
         tux_64 = load_image("../examples/tux_nice.pbm")
         oledR.blit(tux_64, 0, 0)
         oledR.show()
-            
+
+# Don't update the title bar too often
+# But check on the status of the badge hardware and display that more frequently            
 def initialise():
     event.add_timer_handler(handler, 5000)
     event.add_timer_handler(statusbar, 500)
