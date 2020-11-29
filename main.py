@@ -1,14 +1,33 @@
-# main.py: version: 2020-11-22 19:00
+# main.py: version: 2020-11-29 16:00
+#
+# Usage
+# ~~~~~
+# If the application or Aiko framework prevent developer tools from using
+# the microPython REPL for interactive access or file transfer, then the
+# "denye_touch_pins" parameter can be used to specify ESP32 capacitive
+# touch pins for emergency access.  On boot or whilst developer tools attempt
+# to reset the ESP32, press the specified touch pins and the "main.py" script
+# will exit.
 #
 # To Do
 # ~~~~~
 # - None, yet !
 
 import aiko.event as event
+from machine import Pin, TouchPad
 
 import configuration.main
 configuration.globals = globals()         # used by aiko.mqtt.on_exec_message()
 parameter = configuration.main.parameter
+
+touch_pins = parameter("denye_touch_pins")
+if touch_pins:
+  touched_pins = 0
+  for touch_pin in touch_pins:
+    if TouchPad(Pin(touch_pin)).read() < 200:
+      touched_pins += 1
+  if touched_pins == len(touch_pins):
+    raise Exception("Exit to repl")
 
 import gc
 def gc_event():
