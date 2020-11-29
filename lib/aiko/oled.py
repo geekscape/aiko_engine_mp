@@ -23,6 +23,7 @@
 # ~~~~~
 # - Only register MQTT on_oled_message() if MQTT is enabled
 # - Only register MQTT on_oled_log_message() if MQTT is enabled
+# - Use https://github.com/guyc/py-gaugette/blob/master/gaugette/ssd1306.py
 #
 # Resources
 # ~~~~~~~~~
@@ -83,8 +84,12 @@ def initialise(settings=configuration.oled.settings):
 
   i2c = machine.I2C(scl=Pin(scl_pin), sda=Pin(sda_pin))
 # i2c.scan()
-  for addr in addresses:
-    oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=addr))
+  for address in addresses:
+    try:
+      oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
+    except Exception:
+      print("  ###### OLED: Couldn't initialise device: " + hex(address))
+      oleds = []
   oleds_clear(bg)
 
   mqtt.add_message_handler(on_oled_message, "$me/in")
