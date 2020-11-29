@@ -4,7 +4,7 @@
 # ~~~~~
 # import aiko.oled
 # aiko.oled.initialise()
-# oled.title = "Title"
+# oled.set_title("Title")
 # oled.write_title()
 # oled.log("Log message"))
 #
@@ -51,7 +51,7 @@ ol.contrast(0 .. 255)
 '''
 
 import configuration.oled
-import aiko.mqtt as mqtt
+# import aiko.mqtt as mqtt
 
 from machine import Pin
 import machine, ssd1306
@@ -64,8 +64,8 @@ bottom_row = None
 bg = 0
 fg = 1
 
+annunciators = "    "
 lock_title = False
-title = "Aiko 0.1"
 
 def initialise(settings=configuration.oled.settings):
   global lock_title, width, height, font_size, bottom_row
@@ -89,11 +89,12 @@ def initialise(settings=configuration.oled.settings):
       oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
     except Exception:
       print("  ###### OLED: Couldn't initialise device: " + hex(address))
+  set_title("Aiko v00")
   oleds_clear(bg)
 
-  mqtt.add_message_handler(on_oled_message, "$me/in")
-  if parameter("logger_enabled"):
-    mqtt.add_message_handler(on_oled_log_message, "$all/log")
+# mqtt.add_message_handler(on_oled_message, "$me/in")
+# if parameter("logger_enabled"):
+#   mqtt.add_message_handler(on_oled_log_message, "$all/log")
 
 def log(text):
   for oled in oleds:
@@ -112,6 +113,10 @@ def oleds_clear(bg):
 def oleds_show():
   for oled in oleds:
     oled.show()
+
+def set_title(title_):
+  global title
+  title = title_[:12]
 
 def test(text="Line "):
   for oled in oleds:

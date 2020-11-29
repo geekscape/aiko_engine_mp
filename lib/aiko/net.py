@@ -1,4 +1,4 @@
-# lib/aiko/net.py: version: 2020-11-22 19:00
+# lib/aiko/net.py: version: 2020-11-23 21:00
 #
 # Usage
 # ~~~~~
@@ -22,11 +22,15 @@ from time import sleep_ms
 
 import aiko.event as event
 # import aiko.led as led
+import aiko.oled as oled
+import aiko.web_server as web_server
 
 import configuration.net
 
-WIFI_CONNECTED_SHORT_PERIOD = 100  # milliseconds
-WIFI_CONNECTED_LONG_PERIOD = 2000  # milliseconds
+WIFI_CONNECTING_CLIENT_PERIOD = 100    # milliseconds
+WIFI_CONNECTED_CHECK_PERIOD = 1000    # milliseconds
+WIFI_CONNECTED_CLIENT_PERIOD = 5000  # milliseconds
+WIFI_RETRY_LIMIT = 4
 
 connected = False
 
@@ -44,8 +48,8 @@ def is_connected():
 
 # Parameter(s)
 #   wifi: List of tuples, each one containing the Wi-Fi AP SSID and password
-# Returns
-#   sta_if: Wi-Fi Station reference
+#
+# Returns sta_if: Wi-Fi Station reference
 
 def wifi_connect(wifi=configuration.net.wifi):
   global connected
@@ -60,7 +64,7 @@ def wifi_connect(wifi=configuration.net.wifi):
         sta_if.connect(ssid[0], ssid[1])
 #       print(W + "Waiting")
         while sta_if.isconnected() == False:  # Note 2
-          sleep_ms(WIFI_CONNECTED_SHORT_PERIOD)
+          sleep_ms(WIFI_CONNECTING_CLIENT_PERIOD)
         print(W + "Connected to " + ssid[0])
         connected = True
         break  # inner loop
@@ -80,13 +84,21 @@ def net_led_handler():
 
 def net_thread():
 # global led_color
+
+  wifi = configuration.net.wifi
+# wifi = []  # TEMPORARY FOR TESTING WEB SERVER
   while True:
 #   led_color = led.red
-    sta_if = wifi_connect()
+#   while not len(wifi):
+#     wifi = web_server.wifi_configure(wifi)
+    for retry in range(WIFI_RETRY_LIMIT):
+      sta_if = wifi_connect()
+      if sta_if.isconnected(): break
+      sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
     if sta_if.isconnected():
 #     led_color = led.blue
       while sta_if.isconnected():
-        sleep_ms(WIFI_CONNECTED_LONG_PERIOD)
+        sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
       wifi_disconnect(sta_if)
 
 def initialise():
