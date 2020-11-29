@@ -23,7 +23,6 @@ put configuration/mqtt.py
 put configuration/net.py
 put configuration/oled.py
 put configuration/services.py
-put configuration/web_server.py
 
 exec print("### Copy lib/aiko/*.py ###")
 put lib/aiko/event.py
@@ -33,6 +32,7 @@ put lib/aiko/net.py
 put lib/aiko/oled.py
 put lib/aiko/queue.py
 put lib/aiko/services.py
+put lib/aiko/web_server.py
 
 # exec print("### Copy lolibot.py ###")
 # put lib/lolibot.py
