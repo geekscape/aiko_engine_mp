@@ -46,7 +46,7 @@ ol.blit(frame_buffer, x, y, key)
 
 ol.poweron()
 ol.poweroff()
-ol.invert(0|1)
+scl_pin = int(settings["scl_pin"])ol.invert(0|1)
 ol.contrast(0 .. 255)
 '''
 
@@ -89,7 +89,6 @@ def initialise(settings=configuration.oled.settings):
       oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
     except Exception:
       print("  ###### OLED: Couldn't initialise device: " + hex(address))
-      oleds = []
   oleds_clear(bg)
 
   mqtt.add_message_handler(on_oled_message, "$me/in")

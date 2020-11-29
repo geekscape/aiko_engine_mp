@@ -23,6 +23,7 @@ put configuration/mqtt.py
 put configuration/net.py
 put configuration/oled.py
 put configuration/services.py
+put configuration/web_server.py
 
 exec print("### Copy lib/aiko/*.py ###")
 put lib/aiko/event.py
