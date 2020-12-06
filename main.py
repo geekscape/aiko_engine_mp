@@ -24,6 +24,10 @@ touch_pins = parameter("denye_touch_pins")
 if touch_pins:
   touched_pins = 0
   for touch_pin in touch_pins:
+    try:
+      TouchPad(Pin(touch_pin)).read()
+    except Exception:
+      print("  ###### MAIN: Touch calibration issue on GPIO: " + str(touch_pin))
     if TouchPad(Pin(touch_pin)).read() < 200:
       touched_pins += 1
   if touched_pins == len(touch_pins):
