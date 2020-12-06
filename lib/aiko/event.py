@@ -1,4 +1,4 @@
-# lib/aiko/event.py: version: 2020-10-11 05:00
+# lib/aiko/event.py: version: 2020-12-06 16:00
 #
 # Usage
 # ~~~~~

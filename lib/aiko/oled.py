@@ -1,4 +1,4 @@
-# lib/aiko/oled.py: version: 2020-10-11 05:00
+# lib/aiko/oled.py: version: 2020-12-06 16:00
 #
 # Usage
 # ~~~~~
@@ -21,6 +21,7 @@
 #
 # To Do
 # ~~~~~
+# - Determine whether the OLED screen can be refreshed faster than 10 FPS
 # - Only register MQTT on_oled_message() if MQTT is enabled
 # - Only register MQTT on_oled_log_message() if MQTT is enabled
 # - Use https://github.com/guyc/py-gaugette/blob/master/gaugette/ssd1306.py
@@ -51,6 +52,7 @@ ol.contrast(0 .. 255)
 '''
 
 import configuration.oled
+import aiko.common as common
 # import aiko.mqtt as mqtt
 
 from machine import Pin
@@ -88,9 +90,10 @@ def initialise(settings=configuration.oled.settings):
     try:
       oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
     except Exception:
-      print("  ###### OLED: Couldn't initialise device: " + hex(address))
-  set_title("Aiko v00")
+      print("### OLED: Couldn't initialise device: " + hex(address))
+  set_title(common.AIKO_VERSION)
   oleds_clear(bg)
+  common.set_log_handler(log)
 
 # mqtt.add_message_handler(on_oled_message, "$me/in")
 # if parameter("logger_enabled"):
@@ -100,19 +103,26 @@ def log(text):
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
-    oled.text(text, 0, bottom_row, fg)
-    oled.show()
+  oleds_text(text, 0, bottom_row, fg)
+  oleds_show()
   if lock_title: write_title()
 
-def oleds_clear(bg):
+def oleds_clear(color):
   for oled in oleds:
-    oled.fill(bg)
-    oled.show()
+    oled.fill(color)
+  oleds_show()
   if lock_title: write_title()
 
 def oleds_show():
   for oled in oleds:
     oled.show()
+
+def oleds_text(text, x, y, color):
+  index = 0
+  while text and len(oleds) > index:
+    oleds[index].text(text, x, y, color)
+    index += 1
+    text = text[16:]
 
 def set_title(title_):
   global title
@@ -121,15 +131,15 @@ def set_title(title_):
 def test(text="Line "):
   for oled in oleds:
     oled.fill(bg)
-    for y in range(0, height, font_size):
-      oled.text(text + str(y), 0, y, fg)
-    oled.show()
+  for y in range(0, height, font_size):
+    oleds_text(text + str(y), 0, y, fg)
+  oleds_show()
 
 def write_title():
   for oled in oleds:
     oled.fill_rect(0, 0, width, font_size, fg)
-    oled.text(title, 0, 0, bg)
-    oled.show()
+  oleds_text(title, 0, 0, bg)
+  oleds_show()
 
 def on_oled_message(topic, payload_in):
   if payload_in == "(oled:clear)":
@@ -144,15 +154,14 @@ def on_oled_message(topic, payload_in):
     tokens = [int(token) for token in payload_in[12:-1].split()]
     for oled in oleds:
       oled.pixel(tokens[0], height - tokens[1] - 1, fg)
-      oled.show()
+    oleds_show()
     return True
 
   if payload_in.startswith("(oled:text "):
     tokens = payload_in[11:-1].split()
     text = " ".join(tokens[2:])
-    for oled in oleds:
-      oled.text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
-      oled.show()
+    oleds_text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
+    oleds_show()
     return True
 
   return False

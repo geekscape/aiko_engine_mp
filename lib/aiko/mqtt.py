@@ -1,4 +1,4 @@
-# lib/aiko/mqtt.py: version: 2020-11-22 19:00
+# lib/aiko/mqtt.py: version: 2020-12-06 16:00
 #
 # Usage
 # ~~~~~
@@ -20,6 +20,7 @@ from time import sleep_ms
 from umqtt.simple import MQTTClient
 import uselect
 
+import aiko.common as common
 import aiko.event as event
 import aiko.net as net
 
@@ -36,21 +37,13 @@ message_handlers = []
 namespace = "public"
 topic_path = None
 
-M = "  ###### MQTT: "
+M = "### MQTT: "
 
 def add_message_handler(message_handler, topic_filter=None):
   message_handlers.append((message_handler, topic_filter))
 
-def get_hostname():
-  return os.uname()[0] + "_" + get_unique_id()
-
 def get_topic_path(namespace):
-  return namespace + "/" + get_hostname() + "/0"
-
-def get_unique_id():
-  id = machine.unique_id()  # 6 bytes
-  id = "".join(hex(digit)[-2:] for digit in id)
-  return id   # 12 hexadecimal digits
+  return namespace + "/" + common.hostname() + "/0"
 
 def is_connected():
   global connected
@@ -118,7 +111,7 @@ def mqtt_thread():
 def connect(settings=configuration.mqtt.settings):
   global client, connected, keepalive, topic_path
 
-  client_id = get_hostname()
+  client_id = common.hostname()
   client = MQTTClient(client_id,
     settings["host"], settings["port"], keepalive=keepalive)
 
@@ -135,6 +128,9 @@ def connect(settings=configuration.mqtt.settings):
 
     connected = True
     print(M + "Connected to %s: %s" % (settings["host"], topic_path))
+    common.log("MQTT connected ...")
+    common.log("  " + settings["host"])
+    common.log("  " + topic_path)
   except Exception:
     disconnect("connect")
 
