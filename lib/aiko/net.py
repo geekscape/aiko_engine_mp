@@ -54,7 +54,7 @@ def is_connected():
 # Returns sta_if: Wi-Fi Station reference
 
 def wifi_connect(wifi):
-  global connected, wifi_configuration_updated
+  global connected
   sta_if = network.WLAN(network.STA_IF)
   sta_if.active(True)
   common.log("WiFi scan")
@@ -82,16 +82,19 @@ def wifi_connect(wifi):
   return sta_if
 
 def wifi_configuration_update(wifi):
-# file = open("configuration/net.py", "w")
-  file = open("test.py", "w")
-  file.write("wifi = [\n")
-  for ssid_password in wifi:
-    record = '  ("' + ssid_password[0] + '", "' + ssid_password[1] + '"),\n'
-    file.write(record)
-  file.write("]")
-  file.close()
-  print(W + "Configuration updated")
-  common.log("WiFi configuration updated")
+  global wifi_configuration_updated
+
+  if wifi_configuration_updated:
+    file = open("configuration/net.py", "w")
+    file.write("wifi = [\n")
+    for ssid_password in wifi:
+      record = '  ("' + ssid_password[0] + '", "' + ssid_password[1] + '"),\n'
+      file.write(record)
+    file.write("]")
+    file.close()
+    print(W + "Configuration updated")
+    common.log("WiFi configuration updated")
+  wifi_configuration_updated = False
 
 def wifi_disconnect(sta_if):
   sta_if.disconnect()

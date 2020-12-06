@@ -91,10 +91,12 @@ def wifi_configure(wifi):
   print(W + "WiFi configuration using SSID: " + WIFI_AP_SSID)
   common.log("Configure WiFi: " + WIFI_AP_SSID)
 
-  ap = network.WLAN(network.AP_IF)
-  ap.active(True)
-  ap.config(essid=WIFI_AP_SSID)
-  ap.config(max_clients=1)
+  ap_if = network.WLAN(network.AP_IF)
+  ap_if.active(True)
+  ap_if.config(essid=WIFI_AP_SSID)
+  ap_if.config(max_clients=1)
+  ip_address = ap_if.ifconfig()[0]
+  common.log("Try http://" + ip_address)
   ssid_password = web_server()
-  ap.active(False)
+  ap_if.active(False)
   return ssid_password
