@@ -25,6 +25,7 @@ put configuration/oled.py
 put configuration/services.py
 
 exec print("### Copy lib/aiko/*.py ###")
+put lib/aiko/common.py
 put lib/aiko/event.py
 put lib/aiko/led.py
 put lib/aiko/mqtt.py

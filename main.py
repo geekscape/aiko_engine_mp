@@ -27,7 +27,7 @@ if touch_pins:
     try:
       TouchPad(Pin(touch_pin)).read()
     except Exception:
-      print("  ###### MAIN: Touch calibration issue on GPIO: " + str(touch_pin))
+      print("### MAIN: Touch calibration issue on GPIO: " + str(touch_pin))
     if TouchPad(Pin(touch_pin)).read() < 200:
       touched_pins += 1
   if touched_pins == len(touch_pins):
@@ -36,7 +36,7 @@ if touch_pins:
 import gc
 def gc_event():
   gc.collect()
-  print("  ###### GC:", gc.mem_free(), gc.mem_alloc())
+  print("### GC:", gc.mem_free(), gc.mem_alloc())
 
 if parameter("gc_enabled"):                                  # GC: 105984  5184
   event.add_timer_handler(gc_event, 60000)

@@ -1,4 +1,4 @@
-# lib/aiko/net.py: version: 2020-11-23 21:00
+# lib/aiko/net.py: version: 2020-12-06 16:00
 #
 # Usage
 # ~~~~~
@@ -20,19 +20,21 @@ import network
 from threading import Thread
 from time import sleep_ms
 
+import aiko.common as common
 import aiko.event as event
 # import aiko.led as led
-import aiko.oled as oled
 import aiko.web_server as web_server
 
 import configuration.net
 
-WIFI_CONNECTING_CLIENT_PERIOD = 100    # milliseconds
-WIFI_CONNECTED_CHECK_PERIOD = 1000    # milliseconds
+WIFI_CONNECTING_CLIENT_PERIOD = 500  # milliseconds
+WIFI_CONNECTED_CHECK_PERIOD = 1000   # milliseconds
 WIFI_CONNECTED_CLIENT_PERIOD = 5000  # milliseconds
-WIFI_RETRY_LIMIT = 4
+WIFI_CONNECTING_RETRY_LIMIT = 20
+WIFI_CONNECT_RETRY_LIMIT = 2
 
 connected = False
+wifi_configuration_updated = False
 
 # led.locked = 1
 # led_color = led.red
@@ -40,7 +42,7 @@ led_counter = 0.0
 led_delta = 0.02
 led_max = 0.2
 
-W = "  ###### WiFi: "
+W = "### WiFi: "
 
 def is_connected():
   global connected
@@ -51,25 +53,45 @@ def is_connected():
 #
 # Returns sta_if: Wi-Fi Station reference
 
-def wifi_connect(wifi=configuration.net.wifi):
-  global connected
+def wifi_connect(wifi):
+  global connected, wifi_configuration_updated
   sta_if = network.WLAN(network.STA_IF)
   sta_if.active(True)
+  common.log("WiFi scan")
   aps = sta_if.scan()
 
   for ap in aps:  # Note 1
     for ssid in wifi:
       if ssid[0].encode() in ap:
-        print(W + "Connecting to " + ssid[0])
+        print(W + "Connecting: " +  ssid[0])
+        common.log("WiFi connecting:" +  ssid[0])
         sta_if.connect(ssid[0], ssid[1])
-#       print(W + "Waiting")
-        while sta_if.isconnected() == False:  # Note 2
+        for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
+          if sta_if.isconnected():
+            print(W + "Connected: " + ssid[0])
+            common.log("WiFi connected: " + ssid[0])
+            connected = True
+            wifi_configuration_update(wifi)
+            break   # for retry
+#         print(W + "Waiting")
           sleep_ms(WIFI_CONNECTING_CLIENT_PERIOD)
-        print(W + "Connected to " + ssid[0])
-        connected = True
-        break  # inner loop
-    if sta_if.isconnected(): break  # outer loop
+        if sta_if.isconnected(): break  # for ssid
+        print(W + "Timeout: Bad password ?")
+        common.log("Timeout:        Bad password ?")
+    if sta_if.isconnected(): break  # for ap
   return sta_if
+
+def wifi_configuration_update(wifi):
+# file = open("configuration/net.py", "w")
+  file = open("test.py", "w")
+  file.write("wifi = [\n")
+  for ssid_password in wifi:
+    record = '  ("' + ssid_password[0] + '", "' + ssid_password[1] + '"),\n'
+    file.write(record)
+  file.write("]")
+  file.close()
+  print(W + "Configuration updated")
+  common.log("WiFi configuration updated")
 
 def wifi_disconnect(sta_if):
   sta_if.disconnect()
@@ -84,22 +106,25 @@ def net_led_handler():
 
 def net_thread():
 # global led_color
+  global led_color, wifi_configuration_updated
 
   wifi = configuration.net.wifi
-# wifi = []  # TEMPORARY FOR TESTING WEB SERVER
   while True:
 #   led_color = led.red
-#   while not len(wifi):
-#     wifi = web_server.wifi_configure(wifi)
-    for retry in range(WIFI_RETRY_LIMIT):
-      sta_if = wifi_connect()
-      if sta_if.isconnected(): break
-      sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
-    if sta_if.isconnected():
-#     led_color = led.blue
+    if len(wifi):
+      print(W + "Checking WiFi configuration with available networks")
+      for retry in range(WIFI_CONNECT_RETRY_LIMIT):
+        sta_if = wifi_connect(wifi)
+        if sta_if.isconnected(): break
+        sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
       while sta_if.isconnected():
+#       led_color = led.blue
         sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
       wifi_disconnect(sta_if)
+    ssid_password = web_server.wifi_configure(wifi)
+    if len(ssid_password[0]):
+      wifi.insert(0, ssid_password)
+      wifi_configuration_updated = True
 
 def initialise():
 # event.add_timer_handler(net_led_handler, 100)

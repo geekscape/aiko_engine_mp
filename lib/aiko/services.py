@@ -1,4 +1,4 @@
-# lib/aiko/services.py: version: 2020-10-17 04:00
+# lib/aiko/services.py: version: 2020-12-06 16:00
 #
 # Usage
 # ~~~~~
@@ -21,7 +21,8 @@ import network
 import time
 import usocket
 
-import aiko.mqtt
+import aiko.common as common
+import aiko.mqtt as mqtt
 import configuration.mqtt
 
 protocol = None
@@ -63,7 +64,7 @@ def bootstrap():
 #        MQTT host, MQTT port, Namespace
 
 def get_configuration(settings):
-  hostname = aiko.mqtt.get_hostname()
+  hostname = common.hostname()
   pid = settings["pid"]
   protocol = settings["protocol"]
   username = settings["username"]
@@ -77,7 +78,7 @@ def on_services_message(topic, payload_in):
         service_manager_topic = tokens[1] + "/in"
         payload_out  = "(add " + topic_path
         payload_out += " " + protocol + " " + username + " ())"
-        aiko.mqtt.client.publish(service_manager_topic, payload_out)
+        mqtt.client.publish(service_manager_topic, payload_out)
     return True
 
 def initialise(settings=configuration.services.settings):
@@ -99,5 +100,5 @@ def initialise(settings=configuration.services.settings):
   settings["topic_path"] = topic_path
   settings["topic_subscribe"].append(settings["topic_path"] + "/in")
   settings["topic_subscribe"].append(topic_service)
-  aiko.mqtt.add_message_handler(on_services_message)
-  aiko.mqtt.initialise(settings)
+  mqtt.add_message_handler(on_services_message)
+  mqtt.initialise(settings)
