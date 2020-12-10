@@ -1,30 +1,35 @@
-# lib/aiko/test.py: version: 2020-12-07 20:00
+# lib/aiko/test.py: version: 2020-12-09 21:00
 #
 # Usage
 # ~~~~~
 # import aiko.test as test
 # test.echo("Go away, I'm busy !")
-# test.set_pin_list([19, 22])   # Set list of pin numbers
-# test.get_pin_list()           # Get list of pin numbers
-# test.set_pins_mode(0)         # Mode: Output
-# test.set_pins_mode(1)         # Mode: Input pull-down
-# test.set_pins_mode(2)         # Mode: Input pull-up
-# test.pins                     # Check that pins have been initialised
-# test.set_pins_value(0)        # Set all pins low
-# test.set_pins_value(1)        # Set all pins high
-# test.set_pin_value(index, 0)  # Set single pin[index] low
-# test.set_pin_value(index, 1)  # Set single pin[index] high
-# test.get_pins_value()         # Check all pin input values
+# test.set_gpio_pin_list([19, 22])   # Set list of GPIO pin numbers
+# test.get_gpio_pin_list()           # Get list of GPIO pin numbers
+# test.set_gpio_pins_mode(0)         # GPIO mode: Output
+# test.set_gpio_pins_mode(1)         # GPIO mode: Input pull-down
+# test.set_gpio_pins_mode(2)         # GPIO mode: Input pull-up
+# test.gpio_pins                     # Check GPIO pins have been initialised
+# test.set_gpio_pins_value(0)        # Set all GPIO pins low
+# test.set_gpio_pins_value(1)        # Set all GPIO pins high
+# test.set_gpio_pin_value(index, 0)  # Set single GPIO pin[index] low
+# test.set_gpio_pin_value(index, 1)  # Set single GPIO pin[index] high
+# test.get_gpio_pins_value()         # Check all GPIO pin input values
+#
+# test.set_touch_pin_list([12, 14])  # Set list of touch pin numbers
+# test.get_touch_pin_list()          # Get list of touch pin numbers
+# test.get_touch_pins_value()        # Check all touch pin input values
 #
 # To Do
 # ~~~~~
-# - Command to log to the OLED screen
-# - Set touch pin list
-# - Get touch pin values
+# - Include touch slider code that writes to OLED screen
+#   as a callable function that starts a background thread
 
 import machine
 
-pin_list = [
+import aiko.common as common
+
+gpio_pin_list = [
   19,  # SAO#1
   22,  #  " "
   32,  # SAO#2
@@ -40,66 +45,79 @@ pin_list = [
 # 35   #  "     "    "  "  (input only)
 ]
 
-# 15  # top left touch button (T3)
-# 12  # bottom left touch button (T5)
-# 27  # top right touch button (T7)
-# 14  # bottom right touch button (T6)
+touch_pin_list = [
+  15,  # top left touch button (T3)
+  12,  # bottom left touch button (T5)
+  27,  # top right touch button (T7)
+  14   # bottom right touch button (T6)
+]
 
 # 16  # left OLED button
 # 17  # right OLED button
 
-pin_mode = [
+gpio_pin_mode = [
   (machine.Pin.OUT, None),
   (machine.Pin.IN, machine.Pin.PULL_DOWN),
   (machine.Pin.IN, machine.Pin.PULL_UP)
 ]
 
-pins = None
+gpio_pins = None
 
 def echo(message):
   print(message)
 
-def get_pin_list():
-  print("(pass get_pin_list: " + str(pin_list) + ")")
+def get_gpio_pin_list():
+  print("(pass get_gpio_pin_list: " + str(gpio_pin_list) + ")")
 
-def get_pins_value():
+def get_touch_pin_list():
+  print("(pass get_touch_pin_list: " + str(touch_pin_list) + ")")
+
+def get_touch_pins_value():
   values = []
-  for pin in pins:
-    values.append(pin.value())
-  print("(pass get_pins_value: " + str(values) + ")")
+  for touch_pin_number in touch_pin_list:
+    values.append(machine.TouchPad(machine.Pin(touch_pin_number)).read())
+  print("(pass get_touch_pins_value: " + str(values) + ")")
 
-def set_pin_list(_pin_list):
-  global pin_list
-  pin_list = _pin_list
-  print("(pass set_pin_list)")
+def log(message):
+  common.log(message)
 
-def set_pins_mode(mode):
-  global pin_list, pins
-  pins = []
+def set_gpio_pin_list(_gpio_pin_list):
+  global gpio_pin_list
+  gpio_pin_list = _gpio_pin_list
+  print("(pass set_gpio_pin_list)")
 
-  direction = pin_mode[mode][0]
-  pull = pin_mode[mode][1]
+def set_touch_pin_list(_touch_pin_list):
+  global touch_pin_list
+  touch_pin_list = _touch_pin_list
+  print("(pass set_touch_pin_list)")
 
-  for pin_number in pin_list:
+def set_gpio_pins_mode(mode):
+  global gpio_pin_list, gpio_pins
+  gpio_pins = []
+
+  direction = gpio_pin_mode[mode][0]
+  pull = gpio_pin_mode[mode][1]
+
+  for gpio_pin_number in gpio_pin_list:
     if pull:
-      pin = machine.Pin(pin_number, direction, pull)  # Input
+      gpio_pin = machine.Pin(gpio_pin_number, direction, pull)  # Input
     else:
       try:
-        pin = machine.Pin(pin_number, direction)  # Output
+        gpio_pin = machine.Pin(gpio_pin_number, direction)  # Output
       except ValueError:
-        print("(fail set_pins_mode input only: " + str(pin_number) + ")")
+        print("(fail set_gpio_pins_mode input only: " + str(gpio_pin_number) + ")")
         return
-    pins.append(pin)
+    gpio_pins.append(gpio_pin)
 
-  print("(pass set_pins_mode)")
+  print("(pass set_gpio_pins_mode)")
 
-def set_pin_value(index, value):
-  pins[index].value(value)
-  print("(pass set_pin_value)")
+def set_gpio_pin_value(index, value):
+  gpio_pins[index].value(value)
+  print("(pass set_gpio_pin_value)")
 
-def set_pins_value(value):
-  for pin in pins:
-    pin.value(value)
-  print("(pass set_pins_value)")
+def set_gpio_pins_value(value):
+  for gpio_pin in gpio_pins:
+    gpio_pin.value(value)
+  print("(pass set_gpio_pins_value)")
 
 print("(pass aiko.test)")
