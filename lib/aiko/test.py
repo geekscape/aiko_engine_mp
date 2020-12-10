@@ -3,7 +3,7 @@
 # Usage
 # ~~~~~
 # import aiko.test as test
-# test.echo("Go away, I'm busy !")
+# test.echo("(pass test.echo)")
 # test.set_gpio_pin_list([19, 22])   # Set list of GPIO pin numbers
 # test.get_gpio_pin_list()           # Get list of GPIO pin numbers
 # test.set_gpio_pins_mode(0)         # GPIO mode: Output
@@ -68,6 +68,12 @@ def echo(message):
 
 def get_gpio_pin_list():
   print("(pass get_gpio_pin_list: " + str(gpio_pin_list) + ")")
+
+def get_gpio_pins_value():
+   values = []
+   for gpio_pin in gpio_pins:
+     values.append(gpio_pin.value())
+   print("(pass get_gpio_pins_value: " + str(values) + ")")
 
 def get_touch_pin_list():
   print("(pass get_touch_pin_list: " + str(touch_pin_list) + ")")
