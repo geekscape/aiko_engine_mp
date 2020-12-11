@@ -32,12 +32,12 @@ import aiko.common as common
 gpio_pin_list = [
   19,  # SAO#1
   22,  #  " "
-  32,  # SAO#2
-  33,  #  " "
-  18,  # SAO#3
-  23,  #  " "
+  33,  # SAO#2
+  32,  #  " "
+  23,  # SAO#3
+  18,  #  " "
   25,  # SAO#4
-  22,  #  " "
+  26,  #  " "
 #  0,  # Left side header
    2,  #  "    "    "  "
   13,  #  "    "    "  "
@@ -86,6 +86,7 @@ def get_touch_pins_value():
 
 def log(message):
   common.log(message)
+  print("(pass log)")
 
 def set_gpio_pin_list(_gpio_pin_list):
   global gpio_pin_list
