@@ -74,6 +74,9 @@ COMMAND_GET_GPIO_PINS_VALUE = "test.get_gpio_pins_value()\r\n"
 COMMAND_SET_TOUCH_PIN_LIST = "test.set_touch_pin_list([12, 14])\r\n"
 COMMAND_GET_TOUCH_PIN_LIST = "test.get_touch_pin_list() \r\n"
 COMMAND_GET_TOUCH_PINS_VALUE = "test.get_touch_pins_value()\r\n"
+COMMAND_WAIT_GPIO_PIN_VALUE_LOW = "test.wait_gpio_pin_value({}, 0)\r\n"
+COMMAND_WAIT_GPIO_PIN_VALUE_HIGH = "test.wait_gpio_pin_value({}, 1)\r\n"
+COMMAND_WAIT_TOUCH_PIN_PRESSED = "test.wait_touch_pin_pressed({})\r\n"
 
 last_pin_set = None
 
@@ -133,6 +136,15 @@ def command_set_pin_high(id, value):
     command = COMMAND_SET_GPIO_PIN_VALUE_HIGH.format(value)
     write_id(id, command.encode("utf-8"))
 
+def command_wait_gpio_pin_value_low(id, value):
+    command = COMMAND_WAIT_GPIO_PIN_VALUE_LOW.format(value)
+    write_id(id, command.encode("utf-8"))
+
+def command_wait_touch_pin_pressed(id, value):
+    command = COMMAND_WAIT_TOUCH_PIN_PRESSED.format(value)
+    write_id(id, command.encode("utf-8"))
+
+OLED_BUTTON_PIN_LIST = "[16, 17]"
 GPIO_PIN_LIST = "[19, 22, 33, 32, 23, 18, 25, 26, 2, 13]"
 MODE_OUTPUT = 0
 MODE_INPUT_PULL_DOWN = 1
@@ -147,8 +159,8 @@ tests = [
   ("test_00_0", TESTER, COMMAND_ECHO, None),
   ("test_00_1", TESTEE, COMMAND_ECHO, None),
 
-  ("test_01_0", TESTER, command_log, "'TESTER BOARD'"),
-  ("test_01_1", TESTEE, command_log, "'TESTEE BOARD'"),
+  ("test_01_0", TESTER, command_log, "'Tester board'"),
+  ("test_01_1", TESTEE, command_log, "'Testee board'"),
 
   ("test_02_0", TESTER, command_set_gpio_pin_list, GPIO_PIN_LIST),
   ("test_02_1", TESTEE, command_set_gpio_pin_list, GPIO_PIN_LIST),
@@ -254,7 +266,7 @@ tests = [
   ("test_09_10", TESTEE, COMMAND_GET_GPIO_PINS_VALUE, check_pin_high),
   ("test_09_11", TESTEE, command_set_pin_low, 2),
   ("test_09_12", TESTEE, command_set_pin_high, 3),
-  ("test_09_13", TESTER, COMMAND_GET_GPIO_PINS_VALUE, check_pin_high),
+  ("test_09_13", TESTET, COMMAND_GET_GPIO_PINS_VALUE, check_pin_high),
   ("test_09_14", TESTEE, command_set_pin_low, 3),
   ("test_09_15", TESTEE, command_set_pin_high, 4),
   ("test_09_16", TESTER, COMMAND_GET_GPIO_PINS_VALUE, check_pin_high),
@@ -307,7 +319,25 @@ tests = [
   ("test_10_29", TESTEE, command_set_pin_high, 8),
   ("test_10_30", TESTEE, command_set_pin_low, 9),
   ("test_10_31", TESTER, COMMAND_GET_GPIO_PINS_VALUE, check_pin_low),
-  ("test_10_32", TESTEE, command_set_pin_high, 9)
+  ("test_10_32", TESTEE, command_set_pin_high, 9),
+
+  ("test_11_0", TESTEE, command_log, "'Press left OLED screen'"),
+  ("test_11_1", TESTEE, command_set_gpio_pin_list, OLED_BUTTON_PIN_LIST),
+  ("test_11_2", TESTEE, command_wait_gpio_pin_value_low, 0),
+  ("test_11_3", TESTEE, command_log, "'Press right OLED screen'"),
+  ("test_11_4", TESTEE, command_set_gpio_pin_list, OLED_BUTTON_PIN_LIST),
+  ("test_11_5", TESTEE, command_wait_gpio_pin_value_low, 1),
+
+  ("test_12_0", TESTEE, command_log, "'Press top left touch button'"),
+  ("test_12_1", TESTEE, command_wait_touch_pin_pressed, 0),
+  ("test_12_2", TESTEE, command_log, "'Press bottom left touch button'"),
+  ("test_12_3", TESTEE, command_wait_touch_pin_pressed, 1),
+  ("test_12_4", TESTEE, command_log, "'Press top right touch button'"),
+  ("test_12_5", TESTEE, command_wait_touch_pin_pressed, 2),
+  ("test_12_6", TESTEE, command_log, "'Press bottom right touch button'"),
+  ("test_12_7", TESTEE, command_wait_touch_pin_pressed, 3),
+
+  ("test_pass", TESTEE, command_log, "'All tests passed'")
 ]
 
 def reset_test():
