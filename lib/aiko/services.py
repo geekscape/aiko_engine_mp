@@ -18,7 +18,7 @@ import configuration.services
 
 import machine
 import network
-import time
+from time import sleep_ms
 import usocket
 
 import aiko.common as common
@@ -55,7 +55,7 @@ def bootstrap():
       response, addr = socket.recvfrom(1024)
       tokens = response.decode("utf-8").split()
     except OSError:
-      time.sleep(0.001)
+      sleep_ms(1)
       counter -= 1
       if counter == 0:
         socket.sendto(request, address)
