@@ -19,11 +19,11 @@ import aiko.oled as oled
 titles = ["SwagBadge", "LCA2021"]
 title_index = 0
 
-def handler():
+def swagbadge_handler():
     global title_index
     oled.set_title(titles[title_index])
     oled.write_title()
     title_index = 1 - title_index
 
 def initialise():
-    event.add_timer_handler(handler, 5000)
+    event.add_timer_handler(swagbadge_handler, 5000)
