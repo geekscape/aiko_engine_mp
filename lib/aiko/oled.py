@@ -100,12 +100,14 @@ def initialise(settings=configuration.oled.settings):
     aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
 
 def log(text):
+# common.lock(True)
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
   oleds_text(text, 0, bottom_row, fg)
   oleds_show()
   if lock_title: write_title()
+# common.lock(False)
 
 def oleds_clear(color):
   for oled in oleds:

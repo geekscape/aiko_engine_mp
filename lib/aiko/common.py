@@ -11,9 +11,22 @@ import os
 AIKO_VERSION = "v02"
 
 handlers = {}
+# mutex = False
 
 def hostname():
   return os.uname()[0] + "_" + serial_id()
+
+# def lock(state):
+#   global mutex
+#   if state:
+#     yield
+#     while True:
+#       if not mutex:
+#         mutex = True
+#         return True
+#       yield False
+#   else:
+#     mutex = False
 
 def log(message):
   handlers["log"](message)
