@@ -33,6 +33,10 @@ class Event:
     self.time_period = time_period
     self.next = None
 
+  def __str__(self):
+    output = "{} every {} next {}"
+    return output.format(self.handler, self.time_period, self.time_next)
+
 class EventList:
   def __init__(self):
     self.head = None
@@ -48,6 +52,12 @@ class EventList:
         current = current.next
       event.next = current.next
       current.next = event
+
+  def print(self):
+    current = self.head
+    while current:
+      print(current)
+      current = current.next
 
   def remove(self, handler):
     previous = None
