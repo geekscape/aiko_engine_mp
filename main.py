@@ -11,25 +11,16 @@
 #
 # To Do
 # ~~~~~
-# - None, yet !
+# - None, yet.
 
 import configuration.main
 configuration.globals = globals()         # used by aiko.mqtt.on_exec_message()
 parameter = configuration.main.parameter
 
-from machine import Pin, TouchPad
-touch_pins = parameter("denye_touch_pins")
-if touch_pins:
-  touched_pins = 0
-  for touch_pin in touch_pins:
-    try:
-      TouchPad(Pin(touch_pin)).read()
-    except Exception:
-      print("### MAIN: Touch calibration issue on GPIO: " + str(touch_pin))
-    if TouchPad(Pin(touch_pin)).read() < 200:
-      touched_pins += 1
-  if touched_pins == len(touch_pins):
-    raise Exception("Exit to repl")
+denye_touch_pins = parameter("denye_touch_pins")
+import aiko.common as common
+if common.touch_pins_check(denye_touch_pins):
+  raise Exception("Exit to repl")
 
 import aiko.event
 import aiko.net
@@ -49,6 +40,9 @@ aiko.led.initialise()
 if parameter("oled_enabled"):                                 # GC: 91152 20016
   import aiko.oled
   aiko.oled.initialise()
+
+import aiko.upgrade
+aiko.upgrade.initialise()
 
 aiko.net.initialise()                                         # GC: 82752 28416
 

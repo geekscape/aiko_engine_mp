@@ -52,7 +52,7 @@ ol.contrast(0 .. 255)
 '''
 
 import configuration.oled
-import aiko.common
+import aiko.common as common
 import aiko.mqtt
 
 from machine import Pin
@@ -91,9 +91,9 @@ def initialise(settings=configuration.oled.settings):
       oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
     except Exception:
       print("### OLED: Couldn't initialise device: " + hex(address))
-  set_title("Aiko " + aiko.common.AIKO_VERSION)
+  set_title("Aiko " + common.AIKO_VERSION)
   oleds_clear(bg)
-  aiko.common.set_handler("log", log)
+  common.set_handler("log", log)
 
   aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):

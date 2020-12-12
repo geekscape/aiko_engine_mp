@@ -16,7 +16,7 @@ import aiko.common as common
 
 sock = None
 W = "### Web:  "
-WIFI_AP_SSID = "aiko" + common.unique_id()
+WIFI_AP_SSID = "aiko" + common.serial_id()
 
 def web_server():
   global sock
