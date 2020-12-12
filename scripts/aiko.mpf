@@ -40,13 +40,10 @@ put lib/aiko/web_server.py
 # exec print("### Copy lolibot.py ###")
 # put lib/lolibot.py
 
-exec print("### Copy mpu9250.py ###")
+exec print("### Copy lib/*.py ###")
 put lib/mpu9250.py
-
-exec print("### Copy ssd1306.py ###")
+put lib/shutil.py
 put lib/ssd1306.py
-
-exec print("### Copy threading.py ###")
 put lib/threading.py
 
 # exec print("### Copy lib/umqtt ###")
