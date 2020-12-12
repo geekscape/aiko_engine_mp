@@ -53,7 +53,7 @@ def web_server():
         key, value = item.split("=")
         if key == "ssid": ssid = url_decode(value)
         if key == "password": password = url_decode(value)
-      response = "<html><body>WiFi connecting to {}</body></html>".format(ssid)
+      response = "<html><body>WiFi connecting to %s</body></html>" % ssid
       waiting_for_post_request = False
 
     try:

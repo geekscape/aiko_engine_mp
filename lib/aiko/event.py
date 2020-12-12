@@ -34,8 +34,8 @@ class Event:
     self.next = None
 
   def __str__(self):
-    output = "{} every {} next {}"
-    return output.format(self.handler, self.time_period, self.time_next)
+    output = "%s every %d next %d"
+    return output % (self.handler, self.time_period, self.time_next)
 
 class EventList:
   def __init__(self):

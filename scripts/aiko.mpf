@@ -35,6 +35,7 @@ put lib/aiko/queue.py
 put lib/aiko/services.py
 put lib/aiko/test.py
 put lib/aiko/upgrade.py
+put lib/aiko/web_client.py
 put lib/aiko/web_server.py
 
 # exec print("### Copy lolibot.py ###")

@@ -52,3 +52,4 @@ if parameter("application"):                                  # GC: 82416 28752
   application.initialise()
 
 aiko.event.loop_thread()                                      # GC: 81888 29280
+gc_event()
