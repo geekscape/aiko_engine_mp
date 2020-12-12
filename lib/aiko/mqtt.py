@@ -68,7 +68,9 @@ def on_message(topic, payload_in):
       try:
         if message_handler[0](topic, payload_in): break
       except Exception as exception:
-        print(M + "on_message(): " + str(exception))
+        import sys
+        sys.print_exception(exception)
+#       print(M + "on_message(): " + str(exception))
 
 def on_exec_message(topic, payload_in):  ### INSECURE ###
   try:
