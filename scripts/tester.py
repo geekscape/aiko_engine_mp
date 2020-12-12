@@ -4,8 +4,8 @@
 # ~~~~~
 # pip install pyserial transitions
 #
-# TESTER_PATHNAME = /dev/tty.wchusbserial1440
-# TESTEE_PATHNAME = /dev/tty.wchusbserial1450
+# export TESTER_PATHNAME=/dev/tty.wchusbserial1440
+# export TESTEE_PATHNAME=/dev/tty.wchusbserial1450
 # ./scripts/tester.py $TESTER_PATHNAME $TESTEE_PATHNAME
 #   Tester: /dev/tty.wchusbserial1440
 #   Testee: /dev/tty.wchusbserial1450
@@ -23,6 +23,7 @@
 import select
 import serial
 import sys
+import time
 from transitions import Machine
 from transitions.core import MachineError
 
@@ -381,6 +382,10 @@ def open_serial_device(serial_pathname):
 
     if not serial_device.isOpen():
         raise SystemExit("Serial device isn't open: " + serial_pathname)
+
+    serial_device.setDTR(False)
+    time.sleep(0.25)
+    serial_device.setDTR(True)
     return serial_device
 
 def process_input(id):

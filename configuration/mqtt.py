@@ -8,8 +8,8 @@ settings = {
   "keepalive":       60,
   "port":            1883,
   "topic_path":      "$me",
-  "topic_subscribe": [ "$me/in", "$me/exec" ],
-# "topic_subscribe": [ "$me/in", "$me/exec", "$all/log" ],
+  "topic_subscribe": [ "$me/in", "$me/exec", "aiko/upgrade" ],
+# "topic_subscribe": [ "$me/in", "$me/exec", "aiko/upgrade", "$all/log" ],
 
 # Enable processing *INSECURE* exec() commands received via MQTT
   "mqtt_insecure_exec": False

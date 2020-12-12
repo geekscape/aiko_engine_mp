@@ -4,22 +4,20 @@
 # ~~~~~
 # If the application or Aiko framework prevent developer tools from using
 # the microPython REPL for interactive access or file transfer, then the
-# "denye_touch_pins" parameter can be used to specify ESP32 capacitive
+# "denye_touch_pins" parameter can be used to specify the ESP32 capacitive
 # touch pins for emergency access.  On boot or whilst developer tools attempt
-# to reset the ESP32, press the specified touch pins and the "main.py" script
-# will exit.
+# to reset the ESP32, press and hold the specified touch pins and the "main.py"
+# script will exit.
 #
 # To Do
 # ~~~~~
 # - None, yet !
 
-import aiko.event as event
-from machine import Pin, TouchPad
-
 import configuration.main
 configuration.globals = globals()         # used by aiko.mqtt.on_exec_message()
 parameter = configuration.main.parameter
 
+from machine import Pin, TouchPad
 touch_pins = parameter("denye_touch_pins")
 if touch_pins:
   touched_pins = 0
@@ -33,27 +31,30 @@ if touch_pins:
   if touched_pins == len(touch_pins):
     raise Exception("Exit to repl")
 
+import aiko.event
+import aiko.net
+import aiko.mqtt
+
 import gc
 def gc_event():
   gc.collect()
   print("### GC:", gc.mem_free(), gc.mem_alloc())
 
-if parameter("gc_enabled"):                                  # GC: 105984  5184
-  event.add_timer_handler(gc_event, 60000)
+if parameter("gc_enabled"):                                   # GC: 94736 16432
+  aiko.event.add_timer_handler(gc_event, 60000)
 
-import aiko.led as led                                       # GC:  94784 16384
-led.initialise()
+import aiko.led                                               # GC: 95264 15904
+aiko.led.initialise()
 
-if parameter("oled_enabled"):                                # GC:  86528 24640
-  import aiko.oled as oled
-  oled.initialise()
+if parameter("oled_enabled"):                                 # GC: 91152 20016
+  import aiko.oled
+  aiko.oled.initialise()
 
-import aiko.net as net                                       # GC:  85424 25744
-net.initialise()
+aiko.net.initialise()                                         # GC: 82752 28416
 
-if parameter("application"):                                 # GC:  85056 26112
+if parameter("application"):                                  # GC: 82416 28752
   application_name = parameter("application")
   application = __import__(application_name)
   application.initialise()
 
-event.loop_thread()                                          # GC:  85104 26064
+aiko.event.loop_thread()                                      # GC: 81888 29280

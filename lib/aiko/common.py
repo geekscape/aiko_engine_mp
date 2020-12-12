@@ -2,27 +2,23 @@
 #
 # To Do
 # ~~~~~
-# - None, yet.
+# - Improve set_handler() mechanism to not require individual handler shims
 
 import machine
 import os
 
-AIKO_VERSION = "Aiko v02"
+AIKO_VERSION = "v03"
 
-log_handler = None
+handlers = {}
 
 def hostname():
   return os.uname()[0] + "_" + unique_id()
 
 def log(message):
-  global log_handler
+  handlers["log"](message)
 
-  if log_handler:
-    log_handler(message)
-
-def set_log_handler(handler):
-  global log_handler
-  log_handler = handler
+def set_handler(name, handler):
+  handlers[name] = handler
 
 def unique_id():
   id = machine.unique_id()  # 6 bytes

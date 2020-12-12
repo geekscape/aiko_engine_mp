@@ -31,7 +31,7 @@
 # - https://forum.micropython.org/viewtopic.php?f=18&t=3769&p=21741&hilit=neopixel#p21741
 
 import configuration.led
-# import aiko.mqtt as mqtt
+import aiko.mqtt
 
 from machine  import Pin
 from neopixel import NeoPixel
@@ -147,7 +147,7 @@ def initialise(settings=configuration.led.settings):
   length_x = settings["dimension"][0]
   np = NeoPixel(Pin(settings["neopixel_pin"]), length, timing=True)
 
-# mqtt.add_message_handler(on_led_message, "$me/in")
+  aiko.mqtt.add_message_handler(on_led_message, "$me/in")
 
 def on_led_message(topic, payload_in):
   if payload_in == "(led:clear)":
