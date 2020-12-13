@@ -1,11 +1,11 @@
 # lib/aiko/upgrade.py: version: 2020-12-13 14:00
 #
-# mosquitto_pub -t upgrade/aiko -r  \
+# mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
 #
-# mosquitto_pub -h lounge.local -t upgrade/aiko -r -m '(upgrade v03 http://205.185.125.62:8888/aiko_v03/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
+# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v03 http://205.185.125.62:8888/aiko_v03/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
 #
-# mosquitto_sub -t upgrade/aiko -v
+# mosquitto_sub -t upgrade/aiko_00 -v
 #
 # To Do
 # ~~~~~
@@ -44,8 +44,9 @@ def upgrade_thread():
     common.log("Firmware upgrade start")
     gc.collect()
     _, _, host, manifest_pathname = manifest_url.split("/", 3)
-    upgrade_directory, _ = manifest_pathname.split("/", 1)
-    shutil.path_remove(upgrade_directory)
+
+#   shutil.path_remove(upgrade_directory)
+
     aiko.web_client.http_get_file(manifest_url, manifest_pathname)
 #   Verify "manifest_pathname" actual file size versus "manifest_size"
 
@@ -66,8 +67,8 @@ def upgrade_thread():
 
 #   Move old directories and main.py
 #   Move new directories and main.py
-
 #   shutil.path_remove(upgrade_directory)
+
     version = None
     common.log("Firmware upgrade success")
   except Exception as exception:

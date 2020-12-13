@@ -1,6 +1,6 @@
 # configuration/mqtt.py: version: 2020-12-13-14:00
 
-upgrade_topic = "upgrade/aiko"
+upgrade_topic = "upgrade/aiko_00"
 
 settings = {
   "host":            "101.181.46.180",  # LCA2021 #swagbadge

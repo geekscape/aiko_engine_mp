@@ -5,7 +5,7 @@
 # - None, yet !
 
 MANIFEST=manifest
-UPGRADE_TOPIC=upgrade/aiko
+UPGRADE_TOPIC=upgrade/aiko_00
 VERSION=v03
 RELEASE_PATHNAME=aiko_$VERSION
 rm -rf $RELEASE_PATHNAME
@@ -44,6 +44,8 @@ cp lib/mpu9250.py             $RELEASE_PATHNAME/lib
 cp lib/shutil.py              $RELEASE_PATHNAME/lib
 cp lib/ssd1306.py             $RELEASE_PATHNAME/lib
 cp lib/threading.py           $RELEASE_PATHNAME/lib
+
+cp main.py                    $RELEASE_PATHNAME
 
 find $RELEASE_PATHNAME -type f \( -exec md5sum {} \; -exec wc -c {} \; \) | paste - - | column -t | tr -s "[:blank:]" | cut -d" " -f1,3,4 | sort -k 3 >$MANIFEST
 mv $MANIFEST $RELEASE_PATHNAME/$MANIFEST
