@@ -61,4 +61,4 @@ QUOTE=\'
 
 echo '### FIRMWARE DETAILS --> MOSQUITTO UPGRADE TOPIC ###'
 echo 'mosquitto_pub -u ?????? -P ?????? -h lounge.local -t '$UPGRADE_TOPIC' -r -m '$QUOTE'('upgrade $VERSION $URL $MANIFEST_CHECKSUM $MANIFEST_SIZE $FILE_COUNT')'$QUOTE
-# rm -rf $RELEASE_PATHNAME
+rm -rf $RELEASE_PATHNAME
