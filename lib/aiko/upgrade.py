@@ -52,9 +52,9 @@ def upgrade_thread():
     url_prefix = manifest_url.rpartition("/")[0]
     with open(manifest_pathname, "r") as manifest_file:
       file_index = 0
-      for record in manifest_file.readlines():
+      for line in manifest_file.readlines():
         file_index += 1
-        file_checksum, file_size, filepath = record.split()
+        file_checksum, file_size, filepath = line.split()
         url_suffix = filepath.partition("/")[-1]
         file_url = "/".join([url_prefix, url_suffix])
         pathname = "/".join([upgrade_directory, url_suffix])
