@@ -32,10 +32,14 @@ def S_ISDIR(mode):
   return S_IFMT(mode) == S_IFDIR
 
 def file_copy(pathname_old, pathname_new):
-  with open(pathname_new, "w") as file_new:
-    with open(pathname_old, "r") as file_old:
-      for line in file_old.readlines():
-        file_new.write(line)
+  try:
+    with open(pathname_new, "w") as file_new:
+      with open(pathname_old, "r") as file_old:
+        for line in file_old.readlines():
+          file_new.write(line)
+  except Exception:
+    return False
+  return True
 
 def isdir(pathname):
   try:
