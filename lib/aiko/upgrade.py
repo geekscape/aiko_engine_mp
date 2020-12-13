@@ -1,11 +1,11 @@
-# lib/aiko/upgrade.py: version: 2020-12-12 13:00
+# lib/aiko/upgrade.py: version: 2020-12-13 14:00
 #
-# mosquitto_pub -t aiko/upgrade -r  \
+# mosquitto_pub -t upgrade/aiko -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
 #
-# mosquitto_pub -h lounge.local -t aiko/upgrade -r -m '(upgrade v03 http://205.185.125.62:8888/aiko_v03/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
+# mosquitto_pub -h lounge.local -t upgrade/aiko -r -m '(upgrade v03 http://205.185.125.62:8888/aiko_v03/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
 #
-# mosquitto_sub -t aiko/upgrade -v
+# mosquitto_sub -t upgrade/aiko -v
 #
 # To Do
 # ~~~~~
@@ -45,7 +45,7 @@ def upgrade_thread():
     upgrade_directory, _ = manifest_pathname.split("/", 1)
     shutil.path_remove(upgrade_directory)
     aiko.web_client.http_get_file(manifest_url, manifest_pathname)
-#   Verify "manifest_pathname" file size versus "manifest_size"
+#   Verify "manifest_pathname" actual file size versus "manifest_size"
 
     url_prefix = manifest_url.rpartition("/")[0]
     with open(manifest_pathname, "r") as manifest_file:
@@ -56,9 +56,8 @@ def upgrade_thread():
         pathname = "/".join([upgrade_directory, url_suffix])
         print(file_url + " --> " + pathname)
         aiko.web_client.http_get_file(file_url, pathname)
+#       Verify actual file size versus size stated in the "manifest"
 
-#   Download upgrade
-#   Checksum or file size comparison
 #   Move old directories and main.py
 #   Move new directories and main.py
 

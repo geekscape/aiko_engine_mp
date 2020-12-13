@@ -8,7 +8,7 @@
 from machine import Pin, TouchPad, unique_id
 import os
 
-AIKO_VERSION = "v02"
+AIKO_VERSION = "v03"
 
 handlers = {}
 # mutex = False
