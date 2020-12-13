@@ -1,3 +1,5 @@
+# lib/ssd1306.py: version: 2020-12-13 18:00 v03
+#
 # MicroPython SSD1306 OLED driver, I2C and SPI interfaces
 
 from micropython import const

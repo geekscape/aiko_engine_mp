@@ -1,4 +1,4 @@
-# lib/aiko/common.py: version: 2020-12-06 16:00
+# lib/aiko/common.py: version: 2020-12-13 18:00 v03
 #
 # To Do
 # ~~~~~

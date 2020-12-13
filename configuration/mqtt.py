@@ -1,4 +1,4 @@
-# configuration/mqtt.py: version: 2020-12-13-14:00
+# configuration/mqtt.py: version: 2020-12-13 18:00 v03
 
 upgrade_topic = "upgrade/aiko_00"
 

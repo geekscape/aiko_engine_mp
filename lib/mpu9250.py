@@ -1,3 +1,5 @@
+# lib/mpu9250.py: version: 2020-12-13 18:00 v03
+
 import struct
 import math
 

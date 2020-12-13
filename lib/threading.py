@@ -1,3 +1,5 @@
+# lib/threading.py: version: 2020-12-13 18:00 v03
+
 import _thread
 
 

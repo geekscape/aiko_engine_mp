@@ -1,4 +1,4 @@
-# lib/aiko/upgrade.py: version: 2020-12-13 14:00
+# lib/aiko/upgrade.py: version: 2020-12-13 18:00 v03
 #
 # mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"

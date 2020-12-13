@@ -1,4 +1,4 @@
-# applications/swagbadge.py: version: 2020-10-17 04:00
+# applications/swagbadge.py: version: 2020-12-13 18:00 v03
 #
 # Usage
 # ~~~~~
