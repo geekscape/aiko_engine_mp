@@ -1,4 +1,4 @@
-# lib/aiko/common.py: version: 2020-12-13 18:00 v03
+# lib/aiko/common.py: version: 2020-12-13 18:30 v04
 #
 # To Do
 # ~~~~~
@@ -8,7 +8,7 @@
 from machine import Pin, TouchPad, unique_id
 import os
 
-AIKO_VERSION = "v03"
+AIKO_VERSION = "v04"
 
 handlers = {}
 # mutex = False

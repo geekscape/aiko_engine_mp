@@ -1,9 +1,9 @@
-# lib/aiko/upgrade.py: version: 2020-12-13 18:00 v03
+# lib/aiko/upgrade.py: version: 2020-12-13 18:30 v04
 #
 # mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
 #
-# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v03 http://205.185.125.62:8888/aiko_v03/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
+# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v04 http://205.185.125.62:8888/aiko_v04/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
 #
 # mosquitto_sub -t upgrade/aiko_00 -v
 #

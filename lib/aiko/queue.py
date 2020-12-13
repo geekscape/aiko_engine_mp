@@ -1,4 +1,4 @@
-# lib/aiko/queue.py: version: 2020-12-13 18:00 v03
+# lib/aiko/queue.py: version: 2020-12-13 18:30 v04
 #
 # https://en.wikipedia.org/wiki/Stack-sortable_permutation
 # https://en.wikipedia.org/wiki/Donald_Knuth

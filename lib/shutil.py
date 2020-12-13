@@ -1,4 +1,4 @@
-# lib/shutil.py: version: 2020-12-13 18:00 v03
+# lib/shutil.py: version: 2020-12-13 18:30 v04
 #
 # Reimplement, because CPython3.3 impl is rather bloated
 

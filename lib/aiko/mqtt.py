@@ -1,4 +1,4 @@
-# lib/aiko/mqtt.py: version: 2020-12-13 18:00 v03
+# lib/aiko/mqtt.py: version: 2020-12-13 18:30 v04
 #
 # Usage
 # ~~~~~
@@ -133,8 +133,11 @@ def connect(settings=configuration.mqtt.settings):
     common.log("MQTT connected ...")
     common.log("  " + settings["host"])
     common.log("  " + topic_path)
+    payload_out = "(boot %s %s)" % (common.AIKO_VERSION, "swagbadge")
+    client.publish(topic_path + "/out", payload_out)
   except Exception:
     disconnect("connect")
+
 
 def disconnect(caller_name):
   global client, connected

@@ -1,4 +1,4 @@
-# configuration/main.py: version: 2020-12-13 18:00 v03
+# configuration/main.py: version: 2020-12-13 18:30 v04
 
 settings = {
 # "application":     "applications/default",  # Application to run

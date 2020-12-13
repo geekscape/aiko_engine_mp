@@ -1,4 +1,4 @@
-# configuration/net.py: version: 2020-12-13 18:00 v03
+# configuration/net.py: version: 2020-12-13 18:30 v04
 
 wifi = [
   ("SSID_1",    "PASSWORD_1"),  # Your home Wi-Fi

@@ -1,4 +1,4 @@
-# configuration/services.py: version: 2020-12-13 18:00 v03
+# configuration/services.py: version: 2020-12-13 18:30 v04
 
 settings = {
   "pid":       0,
