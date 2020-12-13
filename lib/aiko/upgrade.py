@@ -22,6 +22,7 @@ import shutil
 
 import configuration.mqtt
 
+file_count = None
 in_progress = False
 manifest_checksum = None
 manifest_size = None
@@ -37,7 +38,8 @@ def upgrade_handler():
       Thread(target=upgrade_thread).start()
 
 def upgrade_thread():
-  global in_progress, manifest_checksum, manifest_size, manifest_url, version
+  global in_progress
+  global file_count, manifest_checksum, manifest_size, manifest_url, version
   try:
     common.log("Firmware upgrade start")
     gc.collect()
@@ -49,12 +51,16 @@ def upgrade_thread():
 
     url_prefix = manifest_url.rpartition("/")[0]
     with open(manifest_pathname, "r") as manifest_file:
+      file_index = 0
       for record in manifest_file.readlines():
+        file_index += 1
         file_checksum, file_size, filepath = record.split()
         url_suffix = filepath.partition("/")[-1]
         file_url = "/".join([url_prefix, url_suffix])
         pathname = "/".join([upgrade_directory, url_suffix])
         print(file_url + " --> " + pathname)
+        common.log("Firmware upgrade %d of %d" % (file_index, file_count))
+
         aiko.web_client.http_get_file(file_url, pathname)
 #       Verify actual file size versus size stated in the "manifest"
 
@@ -72,7 +78,7 @@ def upgrade_thread():
     in_progress = False
 
 def on_upgrade_message(topic, payload_in):
-  global manifest_checksum, manifest_size, manifest_url, version
+  global file_count, manifest_checksum, manifest_size, manifest_url, version
 
   if payload_in.startswith("(upgrade "):
     tokens = payload_in[9:-1].split()
@@ -80,7 +86,8 @@ def on_upgrade_message(topic, payload_in):
       version = tokens[0]
       manifest_url = tokens[1]
       manifest_checksum = tokens[2]
-      manifest_size = tokens[3]
+      manifest_size = int(tokens[3])
+      file_count = int(tokens[4])
       common.log("Firmware upgrade available: " + version)
     return True
 

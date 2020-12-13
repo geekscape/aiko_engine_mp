@@ -51,13 +51,14 @@ chmod -R 755 $RELEASE_PATHNAME
 find $RELEASE_PATHNAME -type f -exec chmod 444 '{}' \;
 tar -cf $RELEASE_PATHNAME.tar $RELEASE_PATHNAME
 
+FILE_COUNT=`wc -l $RELEASE_PATHNAME/$MANIFEST | column -t | cut -d" " -f 1`
 MANIFEST_CHECKSUM=`md5sum $RELEASE_PATHNAME/$MANIFEST | column -t | cut -d" " -f1`
 MANIFEST_SIZE=`wc -c $RELEASE_PATHNAME/$MANIFEST | column -t | cut -d" " -f1`
 URL=http://205.185.125.62:8888/$RELEASE_PATHNAME/$MANIFEST
 QUOTE=\'
 
 echo '### FIRMWARE DETAILS --> MOSQUITTO UPGRADE TOPIC ###'
-echo 'mosquitto_pub -u ?????? -P ?????? -h lounge.local -t '$UPGRADE_TOPIC' -r -m '$QUOTE'('upgrade $VERSION $URL $MANIFEST_CHECKSUM $MANIFEST_SIZE')'$QUOTE
+echo 'mosquitto_pub -u ?????? -P ?????? -h lounge.local -t '$UPGRADE_TOPIC' -r -m '$QUOTE'('upgrade $VERSION $URL $MANIFEST_CHECKSUM $MANIFEST_SIZE $FILE_COUNT')'$QUOTE
 # rm -rf $RELEASE_PATHNAME
 
 #   (upgrade v03 http://205.185.125.62:8888/aiko_v03/manifest 30712ed923059d1e3fcf445a3a855234)
