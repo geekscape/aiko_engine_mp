@@ -69,11 +69,11 @@ pip install -U mpfshell
 Note: For Lolin32-Lite boards, the serial port is notoriously problematic
 and requires a slight delay in order for the connection to occur properly.
 If you're seeing errors that look like
-`ampy.pyboard.PyboardError: could not enter raw repl`
+`Could not enter raw repl`
 then this is probably related.
 
-In this case, set a delay to sleep the program when it iss uploading the files:
-`export AMPY_DELAY=4` will usually do the trick.
+For `mpfshell` (version v0.9.1 and earlier) on Mac OS X or Windows, this
+problem may be fixed via this [patch](https://github.com/wendlers/mpfshell/commit/52b0636c82b06a07daa5731550f86b0d7ebc7608)
 
 <a name="resources" />
 
