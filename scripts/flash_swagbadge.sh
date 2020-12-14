@@ -52,7 +52,7 @@ echo "###########################################"
 # Display the unique key INDEX (up-one integer) and ESP32 serial id
 #
 DEVICE_SERIAL_ID=`./scripts/device_info.py $AMPY_PORT 2>&1 | grep passed | cut -d\' -f2`
-echo "ESP32 serial id: $DEVICE_SERIAL_ID"
+echo "Index is $INDEX for ESP32 serial id: $DEVICE_SERIAL_ID"
 
 # Increment unique key index value
 #
