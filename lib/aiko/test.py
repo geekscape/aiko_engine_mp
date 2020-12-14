@@ -149,4 +149,4 @@ def wait_touch_pin_pressed(index):
     sleep_ms(50)
   print("(pass wait_touch_pin_pressed)")
 
-print("(pass aiko.test)")
+print("(pass aiko.test %s)" % common.serial_id())

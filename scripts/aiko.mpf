@@ -16,9 +16,10 @@ put applications/default.py
 put applications/swagbadge.py
 
 exec print("### Copy configuration/*.py ###")
-put configuration/main.py
+put configuration/keys.db
 put configuration/led.py
 # put configuration/lolibot.py
+put configuration/main.py
 put configuration/mqtt.py
 put configuration/net.py
 put configuration/oled.py

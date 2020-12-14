@@ -1,0 +1,9 @@
+cd configuration
+
+exec print("### Save configuration/keys.db_backup  ###")
+get keys.db configuration/keys.db_backup
+
+exec print("### Save configuration/net.py_backup  ###")
+get net.py configuration/net.py_backup
+
+exec print("### Complete ###")

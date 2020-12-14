@@ -12,7 +12,7 @@
 #   Tester: microPython booting
 #   Tester: microPython REPL ready
 #   Tester and Testee importing test module
-#   Tester: (pass aiko.test)
+#   Tester: (pass aiko.test 000000000000)
 #   Tester and Testee are ready to begin testing
 #   Tester: (pass test.echo)
 #
@@ -49,6 +49,7 @@ class StateMachineModel(object):
         reset_test()
 
 state_machine = None
+serial_ids = ["unknown", "unknown"]
 
 PROMPT = ">>> "
 TESTER = 0  # device id
@@ -361,7 +362,7 @@ def run_test(input):
         if callable(test[COMMAND]):
             test[COMMAND](test[DEVICE_ID], test[CHECK])
     else:
-        raise SystemExit("All tests passed")
+        raise SystemExit("All tests passed: " + str(serial_ids))
 
 def open_serial_device(serial_pathname):
     try:
@@ -443,7 +444,11 @@ def parse_input(id, input):
     if state_machine.model.state == "ready" and input.startswith("(pass "):
         run_test(input)
 
-    if input == "(pass aiko.test)":
+    if input.startswith("(pass aiko.test"):
+        tokens = input[1:-1].split()
+        if len(tokens) > 2:
+            serial_ids[id] = tokens[2]
+
         test_passed[id] = True
         if all(test_passed):
             state_machine.dispatch("ready")

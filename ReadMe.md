@@ -63,7 +63,7 @@ pip install -U mpfshell
 ```
 - Run the Aiko Engine MP flash script
 ```
-./scripts/mpf_flash.sh ./scripts/aiko.mpf
+./scripts/mpf_script.sh ./scripts/aiko.mpf
 ```
 
 Note: For Lolin32-Lite boards, the serial port is notoriously problematic

@@ -76,7 +76,7 @@ def upgrade_thread():
 
     shutil.path_remove(manifest_pathname)
     shutil.file_copy("configuration/net.py",  "configuration_new/net.py")
-    shutil.file_copy("configuration/keys.py", "configuration_new/keys.py")
+    shutil.file_copy("configuration/keys.db", "configuration_new/keys.db")
 
     common.log("Firmware install")
     for file in top_level_files:
