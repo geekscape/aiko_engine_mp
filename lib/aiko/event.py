@@ -1,4 +1,4 @@
-# lib/aiko/event.py: version: 2020-12-13 18:30 v04
+# lib/aiko/event.py: version: 2020-12-22 09:00 v05
 #
 # Usage
 # ~~~~~
@@ -63,7 +63,7 @@ class EventList:
     previous = None
     current = self.head
     while current:
-      if current.handler == handler:
+      if current.handler.__name__ == handler.__name__:
         if previous:
           previous.next = current.next
         else:
