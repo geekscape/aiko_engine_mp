@@ -17,10 +17,6 @@ import configuration.main
 configuration.globals = globals()         # used by aiko.mqtt.on_exec_message()
 parameter = configuration.main.parameter
 
-denye_touch_pins = parameter("denye_touch_pins")
-import aiko.common as common
-if common.touch_pins_check(denye_touch_pins):
-  raise Exception("Exit to repl")
 
 import aiko.event
 import aiko.net
@@ -40,6 +36,14 @@ aiko.led.initialise()
 if parameter("oled_enabled"):                                 # GC: 91152 20016
   import aiko.oled
   aiko.oled.initialise()
+  
+denye_touch_pins = parameter("denye_touch_pins")
+import aiko.common as common
+if common.touch_pins_check(denye_touch_pins):
+  aiko.oled.oleds_clear(aiko.oled.bg)
+  aiko.oled.log("Stopped.")
+  raise Exception("Exit to repl")
+
 
 import aiko.upgrade
 aiko.upgrade.initialise()
