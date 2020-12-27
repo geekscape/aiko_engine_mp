@@ -1,8 +1,4 @@
-# applications/swagbadge.py: version: 2020-12-13 18:30 v04
-#
-# Usage
-# ~~~~~
-# import applications.swagbadge as demo
+# applications/swagbadge.py: version: 2020-12-27 14:00 v05
 #
 # To Do
 # ~~~~~
