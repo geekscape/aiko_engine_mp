@@ -17,6 +17,19 @@
 # >>> from examples.oled_image import run
 # >>> run()
 #
+# >>> import aiko.event
+# >>> import aiko.oled
+# >>> import applications.swagbadge
+# >>> import examples.oled_image
+# >>> aiko.event.event_list.print()
+# >>> aiko.event.remove_timer_handler(applications.swagbadge.swagbadge_handler)
+# >>> aiko.event.event_list.print()
+# >>> oled1 = aiko.oled.oleds[1]
+# >>> image = examples.oled_image.load_image("examples/christmas_tree_64.pbm")
+# >>> oled1.fill(0)
+# >>> oled1.blit(image, 32, 0)
+# >>> oled1.show()
+#
 # Notes
 # ~~~~~
 # - GIMP supports the PBM image format
