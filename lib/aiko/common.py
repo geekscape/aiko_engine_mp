@@ -1,4 +1,4 @@
-# lib/aiko/common.py: version: 2020-12-13 18:30 v04
+# lib/aiko/common.py: version: 2020-12-27 14:00 v05
 #
 # To Do
 # ~~~~~
@@ -12,6 +12,7 @@ AIKO_VERSION = "v04"
 
 handlers = {}
 # mutex = False
+touch_okay = True
 
 def hostname():
   return os.uname()[0] + "_" + serial_id()
@@ -29,21 +30,27 @@ def hostname():
 #     mutex = False
 
 def log(message):
-  handlers["log"](message)
+  if "log" in handlers:
+    handlers["log"](message)
 
 def set_handler(name, handler):
   handlers[name] = handler
 
 def touch_pins_check(touch_pins):
-  if touch_pins:
+  global touch_okay
+
+  if touch_pins and touch_okay:
     touched_pins = 0
-    for touch_pin in touch_pins:
-      try:
-        TouchPad(Pin(touch_pin)).read()
-      except Exception:
-        print("### Main: Touch calibration issue on GPIO: " + str(touch_pin))
-      if TouchPad(Pin(touch_pin)).read() < 200:  # TODO: Fix literal "200"
-        touched_pins += 1
+    try:
+      for touch_pin in touch_pins:
+        try:
+          TouchPad(Pin(touch_pin)).read()
+        except Exception:
+          print("### Main: Touch calibration issue on GPIO: " + str(touch_pin))
+        if TouchPad(Pin(touch_pin)).read() < 200:  # TODO: Fix literal "200"
+          touched_pins += 1
+    except Exception:
+      touch_okay = False
 
     if touched_pins == len(touch_pins): return True
   return False
