@@ -8,6 +8,12 @@
 # oled.write_title()
 # oled.log("Log message"))
 #
+# image = aiko.oled.load_image("examples/tux_nice.pbm")
+# oled0 = aiko.oled.oleds[0]
+# oled0.fill(0)
+# oled0.blit(image, 32, 0)
+# oled0.show()
+#
 # MQTT commands
 # ~~~~~~~~~~~~~
 # Topic: /in   (oled:clear)
@@ -51,6 +57,7 @@ ol.invert(0|1)
 ol.contrast(0 .. 255)
 '''
 
+import framebuf
 from machine import Pin
 import machine, ssd1306
 
@@ -100,6 +107,14 @@ def initialise(settings=configuration.oled.settings):
   aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
     aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
+
+def load_image(filename):
+  with open(filename, 'rb') as file:
+    file.readline()  # magic number: P4
+    file.readline()  # creator comment
+    width, height = [int(value) for value in file.readline().split()]
+    image = bytearray(file.read())
+  return framebuf.FrameBuffer(image, width, height, framebuf.MONO_HLSB)
 
 def log(text):
 # common.lock(True)

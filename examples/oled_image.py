@@ -25,7 +25,7 @@
 # >>> aiko.event.remove_timer_handler(applications.swagbadge.swagbadge_handler)
 # >>> aiko.event.event_list.print()
 # >>> oled1 = aiko.oled.oleds[1]
-# >>> image = examples.oled_image.load_image("examples/christmas_tree_64.pbm")
+# >>> image = aiko.oled.load_image("examples/christmas_tree_64.pbm")
 # >>> oled1.fill(0)
 # >>> oled1.blit(image, 32, 0)
 # >>> oled1.show()
@@ -41,26 +41,18 @@ oled.initialise()
 oled0 = oled.oleds[0]
 oled1 = oled.oleds[1]
 
-def load_image(filename):
-    with open(filename, 'rb') as file:
-        file.readline()  # magic number: P4
-        file.readline()  # creator comment
-        width, height = [int(value) for value in file.readline().split()]
-        image = bytearray(file.read())
-    return framebuf.FrameBuffer(image, width, height, framebuf.MONO_HLSB)
-
 def run():
     for oledx in oled.oleds:
         oledx.invert(1)
         oledx.fill(1)
 
-    tux_64 = load_image("examples/tux_64.pbm")
+    tux_64 = oled.load_image("examples/tux_64.pbm")
     oled0.blit(tux_64, 0, 0)
     oled0.show()
 
     images = [
-        load_image("examples/tux_nice.pbm"),
-        load_image("examples/tux_zoom.pbm")
+        oled.load_image("examples/tux_nice.pbm"),
+        oled.load_image("examples/tux_zoom.pbm")
     ]
 
     direction = 1
