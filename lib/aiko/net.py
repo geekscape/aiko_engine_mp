@@ -21,7 +21,7 @@ from threading import Thread
 from time import sleep_ms
 
 import aiko.common as common
-import aiko.event
+import aiko.event as event
 import aiko.led as led
 import aiko.web_server
 
@@ -130,7 +130,7 @@ def net_thread():
       wifi_configuration_updated = True
 
 def initialise():
-  aiko.event.add_timer_handler(net_led_handler, 100)
+  event.add_timer_handler(net_led_handler, 100)
   Thread(target=net_thread).start()
 
   parameter = configuration.main.parameter

@@ -54,7 +54,7 @@ ol.contrast(0 .. 255)
 from machine import Pin
 import machine, ssd1306
 
-import aiko.common
+import aiko.common as common
 import configuration.oled
 
 oleds = []
@@ -92,9 +92,9 @@ def initialise(settings=configuration.oled.settings):
     except Exception:
       print("### OLED: Couldn't initialise device: " + hex(address))
   set_annunciators("")
-  set_title("Aiko " + aiko.common.AIKO_VERSION)
+  set_title("Aiko " + common.AIKO_VERSION)
   oleds_clear(bg)
-  aiko.common.set_handler("log", log)
+  common.set_handler("log", log)
 
   import aiko.mqtt
   aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
@@ -102,14 +102,14 @@ def initialise(settings=configuration.oled.settings):
     aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
 
 def log(text):
-# aiko.common.lock(True)
+# common.lock(True)
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
   oleds_text(text, 0, bottom_row, fg)
   oleds_show()
   if lock_title: write_title()
-# aiko.common.lock(False)
+# common.lock(False)
 
 def oleds_clear(color):
   for oled in oleds:

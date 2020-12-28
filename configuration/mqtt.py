@@ -1,4 +1,6 @@
-# configuration/mqtt.py: version: 2020-12-27 14:00 v05
+# configuration/mqtt.py: version: 2020-12-13 18:30 v04
+
+upgrade_topic = "upgrade/aiko_00"
 
 settings = {
   "host":            "101.181.46.180",  # LCA2021 #swagbadge
@@ -10,7 +12,7 @@ settings = {
   "topic_path":      "$me",
   "topic_subscribe": [ "$me/in", "$me/exec", upgrade_topic ],
 # "topic_subscribe": [ "$me/in", "$me/exec", upgrade_topic, "$all/log" ],
-  "upgrade_topic":   "upgrade/aiko_00",
+  "upgrade_topic":   upgrade_topic,
 
 # Enable processing *INSECURE* exec() commands received via MQTT
   "mqtt_insecure_exec": False
