@@ -15,6 +15,7 @@ import socket
 import aiko.common as common
 import aiko.led as led
 import aiko.net
+import aiko.oled as oled
 
 sock = None
 W = "### Web:  "
@@ -99,6 +100,7 @@ def wifi_configure(wifi):
   ap_if.config(max_clients=1)
   ip_address = ap_if.ifconfig()[0]
   aiko.net.set_status(led.yellow)
+  oled.set_annunciator(common.ANNUNCIATOR_WIFI, "A", True)
   common.log("Try http://" + ip_address)
   ssid_password = web_server()
   ap_if.active(False)

@@ -130,13 +130,15 @@ def net_thread():
         sta_if = wifi_connect(wifi)
         if sta_if.isconnected(): break
         sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
-      while sta_if.isconnected():
+      if sta_if.isconnected():        # TODO: Consolidate Wi-FI and MQTT status
         set_status(led.blue)
+      while sta_if.isconnected():
         oled.set_annunciator(common.ANNUNCIATOR_WIFI, "W", True)
         sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
       wifi_disconnect(sta_if)
       set_status(led.red)
       oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
+# TODO: If Wi-Fi disconnect, then retry Wi-Fi before going to Wi-Fi AP mode
     ssid_password = aiko.web_server.wifi_configure(wifi)
     if len(ssid_password[0]):
       wifi.insert(0, ssid_password)
