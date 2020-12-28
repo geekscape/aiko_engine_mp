@@ -1,4 +1,4 @@
-# lib/aiko/net.py: version: 2020-12-13 18:30 v04
+# lib/aiko/net.py: version: 2020-12-27 14:00 v05
 #
 # Usage
 # ~~~~~
@@ -21,9 +21,9 @@ from threading import Thread
 from time import sleep_ms
 
 import aiko.common as common
-import aiko.event as event
-# import aiko.led as led
-import aiko.web_server as web_server
+import aiko.event
+import aiko.led as led
+import aiko.web_server
 
 import configuration.net
 
@@ -36,8 +36,8 @@ WIFI_CONNECT_RETRY_LIMIT = 2
 connected = False
 wifi_configuration_updated = False
 
-# led.locked = 1
-# led_color = led.red
+led.locked = 1
+led_color = led.red
 led_counter = 0.0
 led_delta = 0.02
 led_max = 0.2
@@ -113,7 +113,7 @@ def net_thread():
 
   wifi = configuration.net.wifi
   while True:
-#   led_color = led.red
+    led_color = led.red
     if len(wifi):
       print(W + "Checking WiFi configuration with available networks")
       for retry in range(WIFI_CONNECT_RETRY_LIMIT):
@@ -121,16 +121,16 @@ def net_thread():
         if sta_if.isconnected(): break
         sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
       while sta_if.isconnected():
-#       led_color = led.blue
+        led_color = led.blue
         sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
       wifi_disconnect(sta_if)
-    ssid_password = web_server.wifi_configure(wifi)
+    ssid_password = aiko.web_server.wifi_configure(wifi)
     if len(ssid_password[0]):
       wifi.insert(0, ssid_password)
       wifi_configuration_updated = True
 
 def initialise():
-# event.add_timer_handler(net_led_handler, 100)
+  aiko.event.add_timer_handler(net_led_handler, 100)
   Thread(target=net_thread).start()
 
   parameter = configuration.main.parameter
@@ -138,5 +138,5 @@ def initialise():
     import aiko.services as services
     services.initialise()
   else:
-    import aiko.mqtt as mqtt
-    mqtt.initialise()
+    import aiko.mqtt
+    aiko.mqtt.initialise()

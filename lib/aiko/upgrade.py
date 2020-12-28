@@ -1,4 +1,4 @@
-# lib/aiko/upgrade.py: version: 2020-12-13 18:30 v04
+# lib/aiko/upgrade.py: version: 2020-12-27 14:00 v05
 #
 # mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
@@ -17,7 +17,6 @@ from threading import Thread
 
 import aiko.common as common
 import aiko.event
-import aiko.mqtt
 import aiko.web_client
 import shutil
 
@@ -112,6 +111,7 @@ def on_upgrade_message(topic, payload_in):
     return True
 
 def initialise(settings=configuration.mqtt.settings):
+  import aiko.mqtt
   upgrade_topic = settings["upgrade_topic"]
   aiko.mqtt.add_message_handler(on_upgrade_message, upgrade_topic)
   aiko.event.add_timer_handler(upgrade_handler, 5000)

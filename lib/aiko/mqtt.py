@@ -1,4 +1,4 @@
-# lib/aiko/mqtt.py: version: 2020-12-13 18:30 v04
+# lib/aiko/mqtt.py: version: 2020-12-27 14:00 v05
 #
 # Usage
 # ~~~~~
@@ -21,8 +21,8 @@ from umqtt.simple import MQTTClient
 import uselect
 
 import aiko.common as common
-import aiko.event as event
-import aiko.net as net
+import aiko.event
+import aiko.net
 
 import configuration.mqtt
 
@@ -90,7 +90,7 @@ def mqtt_thread():
   global client
   while True:
 #   print(M + "Wi-Fi connected check")
-    if net.is_connected():
+    if aiko.net.is_connected():
 #     print(M + "connect()")
       connect()
       while is_connected():
@@ -121,7 +121,7 @@ def connect(settings=configuration.mqtt.settings):
   client.set_last_will(topic_path + "/state", "nil")
   try:
     client.connect()
-    event.add_timer_handler(mqtt_ping_handler, keepalive * 1000)
+    aiko.event.add_timer_handler(mqtt_ping_handler, keepalive * 1000)
 
     for topic in settings["topic_subscribe"]:
       if topic.startswith("$all/"): topic = "+/+/+" + topic[4:]
@@ -145,7 +145,7 @@ def disconnect(caller_name):
   if client:
     print(M + "Disconnected by " + caller_name)
     connected = False
-    event.remove_timer_handler(mqtt_ping_handler)
+    aiko.event.remove_timer_handler(mqtt_ping_handler)
     try:
       client.disconnect()
     except Exception:
