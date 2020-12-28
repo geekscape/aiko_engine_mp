@@ -1,4 +1,4 @@
-# lib/aiko/oled.py: version: 2020-12-13 18:30 v04
+# lib/aiko/oled.py: version: 2020-12-27 14:00 v05
 #
 # Usage
 # ~~~~~
@@ -47,16 +47,15 @@ ol.blit(frame_buffer, x, y, key)
 
 ol.poweron()
 ol.poweroff()
-scl_pin = int(settings["scl_pin"])ol.invert(0|1)
+ol.invert(0|1)
 ol.contrast(0 .. 255)
 '''
 
-import configuration.oled
-import aiko.common as common
-import aiko.mqtt
-
 from machine import Pin
 import machine, ssd1306
+
+import aiko.common
+import configuration.oled
 
 oleds = []
 width = None
@@ -66,8 +65,9 @@ bottom_row = None
 bg = 0
 fg = 1
 
-annunciators = "    "
+annunciators = ""
 lock_title = False
+title = ""
 
 def initialise(settings=configuration.oled.settings):
   global lock_title, width, height, font_size, bottom_row
@@ -91,23 +91,25 @@ def initialise(settings=configuration.oled.settings):
       oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
     except Exception:
       print("### OLED: Couldn't initialise device: " + hex(address))
-  set_title("Aiko " + common.AIKO_VERSION)
+  set_annunciators("")
+  set_title("Aiko " + aiko.common.AIKO_VERSION)
   oleds_clear(bg)
-  common.set_handler("log", log)
+  aiko.common.set_handler("log", log)
 
+  import aiko.mqtt
   aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
     aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
 
 def log(text):
-# common.lock(True)
+# aiko.common.lock(True)
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
   oleds_text(text, 0, bottom_row, fg)
   oleds_show()
   if lock_title: write_title()
-# common.lock(False)
+# aiko.common.lock(False)
 
 def oleds_clear(color):
   for oled in oleds:
@@ -126,9 +128,18 @@ def oleds_text(text, x, y, color):
     index += 1
     text = text[16:]
 
+def set_annunciators(annuciators_, write=False):
+  global annunciators
+  annunciators = annuciators_[:4]
+  set_title(title)
+  if write and oleds:
+    oleds[0].fill_rect(font_size * 12, 0, font_size * 4, font_size, fg)
+    oleds[0].text(annunciators, font_size * 12, 0, 0)
+    oleds_show()
+
 def set_title(title_):
   global title
-  title = title_[:12]
+  title = (title_ + ' '*12)[:12] + annunciators
 
 def test(text="Line "):
   for oled in oleds:
