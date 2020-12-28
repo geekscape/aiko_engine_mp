@@ -14,8 +14,6 @@
 # - Bootstrap protocol should include version number
 # - If bootstrap() timeout, then use default settings for namespace, host, port
 
-import configuration.services
-
 import machine
 import network
 from time import sleep_ms
@@ -24,6 +22,8 @@ import usocket
 import aiko.common
 import aiko.mqtt
 import configuration.mqtt
+
+import configuration.services
 
 protocol = None
 socket = None

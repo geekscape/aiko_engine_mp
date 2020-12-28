@@ -22,6 +22,7 @@ import uselect
 
 import aiko.common as common
 import aiko.event
+import aiko.led as led
 import aiko.net
 import aiko.oled as oled
 
@@ -95,6 +96,7 @@ def mqtt_thread():
 #     print(M + "connect()")
       oled.set_annunciator(common.ANNUNCIATOR_MQTT, "c", True)
       connect()
+      aiko.net.set_status(led.green)
       oled.set_annunciator(common.ANNUNCIATOR_MQTT, "M", True)
       while is_connected():
         if client:

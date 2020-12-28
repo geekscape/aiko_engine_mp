@@ -30,10 +30,10 @@
 # - https://forum.micropython.org/viewtopic.php?f=18&t=3697&p=21460&hilit=neopixel#p21460
 # - https://forum.micropython.org/viewtopic.php?f=18&t=3769&p=21741&hilit=neopixel#p21741
 
-import configuration.led
-
 from machine  import Pin
 from neopixel import NeoPixel
+
+import configuration.led
 
 import urandom
 apa106   = False
@@ -59,6 +59,7 @@ black = colors["black"]
 red = colors["red"]
 green = colors["green"]
 blue = colors["blue"]
+yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
   if dimmer == None: dimmer = dim

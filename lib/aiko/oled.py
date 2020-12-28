@@ -55,6 +55,7 @@ from machine import Pin
 import machine, ssd1306
 
 import aiko.common as common
+
 import configuration.oled
 
 oleds = []

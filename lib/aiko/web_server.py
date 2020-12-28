@@ -13,6 +13,8 @@ import network
 import socket
 
 import aiko.common as common
+import aiko.led as led
+import aiko.net
 
 sock = None
 W = "### Web:  "
@@ -96,6 +98,7 @@ def wifi_configure(wifi):
   ap_if.config(essid=WIFI_AP_SSID)
   ap_if.config(max_clients=1)
   ip_address = ap_if.ifconfig()[0]
+  aiko.net.set_status(led.yellow)
   common.log("Try http://" + ip_address)
   ssid_password = web_server()
   ap_if.active(False)

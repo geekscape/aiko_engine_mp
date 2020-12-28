@@ -11,10 +11,11 @@
 #
 # - Note 1: If all APs and SSIDs tried unsuccessfully, then retry Wi-Fi scan
 # - Note 2: Time-out in case Wi-Fi API connection fails
-#
-# - If Wi-Fi station connnection fails, then become a Wi-Fi Access Point
+# - Note 3: When Wi-Fi AP, timeout if no Wi-Fi client connection
 #
 # - If OLED configured, write network status message to OLED
+# - Provide convenience function to update "pixel 0" for network status
+#   - Use this function in mqtt.py and web_server.py
 
 import network
 from threading import Thread
@@ -49,6 +50,12 @@ def is_connected():
   global connected
   return connected
 
+# TODO: Replace "color" parameter with network status enum --> LED color
+
+def set_status(color):
+  global led_color
+  led_color = color
+
 # Parameter(s)
 #   wifi: List of tuples, each one containing the Wi-Fi AP SSID and password
 #
@@ -58,7 +65,7 @@ def wifi_connect(wifi):
   global connected
   sta_if = network.WLAN(network.STA_IF)
   sta_if.active(True)
-  oled.set_annunciator(common.ANNUNCIATOR_MQTT, "s", True)
+  oled.set_annunciator(common.ANNUNCIATOR_WIFI, "s", True)
   common.log("WiFi scan")
   aps = sta_if.scan()
 
@@ -66,7 +73,7 @@ def wifi_connect(wifi):
     for ssid in wifi:
       if ssid[0].encode() in ap:
         print(W + "Connecting: " +  ssid[0])
-        oled.set_annunciator(common.ANNUNCIATOR_MQTT, "c", True)
+        oled.set_annunciator(common.ANNUNCIATOR_WIFI, "c", True)
         common.log("WiFi connecting:" +  ssid[0])
         sta_if.connect(ssid[0], ssid[1])
         for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
@@ -111,13 +118,12 @@ def net_led_handler():
   led.pixel0(tuple([int(element * led_dim) for element in led_color]))
 
 def net_thread():
-# global led_color
-  global led_color, wifi_configuration_updated
+  global wifi_configuration_updated
 
   wifi = configuration.net.wifi
   while True:
-    led_color = led.red
-    oled.set_annunciator(common.ANNUNCIATOR_MQTT, " ", True)
+    set_status(led.red)
+    oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
     if len(wifi):
       print(W + "Checking WiFi configuration with available networks")
       for retry in range(WIFI_CONNECT_RETRY_LIMIT):
@@ -125,11 +131,12 @@ def net_thread():
         if sta_if.isconnected(): break
         sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
       while sta_if.isconnected():
-        led_color = led.blue
-        oled.set_annunciator(common.ANNUNCIATOR_MQTT, "W", True)
+        set_status(led.blue)
+        oled.set_annunciator(common.ANNUNCIATOR_WIFI, "W", True)
         sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
       wifi_disconnect(sta_if)
-      oled.set_annunciator(common.ANNUNCIATOR_MQTT, " ", True)
+      set_status(led.red)
+      oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
     ssid_password = aiko.web_server.wifi_configure(wifi)
     if len(ssid_password[0]):
       wifi.insert(0, ssid_password)
