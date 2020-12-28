@@ -23,6 +23,7 @@ from time import sleep_ms
 import aiko.common as common
 import aiko.event as event
 import aiko.led as led
+import aiko.oled as oled
 import aiko.web_server
 
 import configuration.net
@@ -57,6 +58,7 @@ def wifi_connect(wifi):
   global connected
   sta_if = network.WLAN(network.STA_IF)
   sta_if.active(True)
+  oled.set_annunciator(2, "s", True)
   common.log("WiFi scan")
   aps = sta_if.scan()
 
@@ -64,6 +66,7 @@ def wifi_connect(wifi):
     for ssid in wifi:
       if ssid[0].encode() in ap:
         print(W + "Connecting: " +  ssid[0])
+        oled.set_annunciator(2, "c", True)
         common.log("WiFi connecting:" +  ssid[0])
         sta_if.connect(ssid[0], ssid[1])
         for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
@@ -114,6 +117,7 @@ def net_thread():
   wifi = configuration.net.wifi
   while True:
     led_color = led.red
+    oled.set_annunciator(2, " ", True)
     if len(wifi):
       print(W + "Checking WiFi configuration with available networks")
       for retry in range(WIFI_CONNECT_RETRY_LIMIT):
@@ -122,8 +126,10 @@ def net_thread():
         sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
       while sta_if.isconnected():
         led_color = led.blue
+        oled.set_annunciator(2, "W", True)
         sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
       wifi_disconnect(sta_if)
+      oled.set_annunciator(2, " ", True)
     ssid_password = aiko.web_server.wifi_configure(wifi)
     if len(ssid_password[0]):
       wifi.insert(0, ssid_password)

@@ -23,6 +23,7 @@ import uselect
 import aiko.common as common
 import aiko.event
 import aiko.net
+import aiko.oled as oled
 
 import configuration.mqtt
 
@@ -92,7 +93,9 @@ def mqtt_thread():
 #   print(M + "Wi-Fi connected check")
     if aiko.net.is_connected():
 #     print(M + "connect()")
+      oled.set_annunciator(3, "c", True)
       connect()
+      oled.set_annunciator(3, "M", True)
       while is_connected():
         if client:
 #         print(M + "poll()")       # TODO: Refactor poller into own function ?
@@ -107,6 +110,7 @@ def mqtt_thread():
               break  # inner loop
         else:
           sleep_ms(WAIT_MQTT_CONNECTED_PERIOD)
+      oled.set_annunciator(3, " ", True)
       disconnect("mqtt_thread")
     sleep_ms(WAIT_WIFI_CONNECTED_PERIOD)
 

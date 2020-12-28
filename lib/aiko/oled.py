@@ -65,7 +65,7 @@ bottom_row = None
 bg = 0
 fg = 1
 
-annunciators = ""
+annunciators = "    "
 lock_title = False
 title = ""
 
@@ -91,7 +91,6 @@ def initialise(settings=configuration.oled.settings):
       oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
     except Exception:
       print("### OLED: Couldn't initialise device: " + hex(address))
-  set_annunciators("")
   set_title("Aiko " + common.AIKO_VERSION)
   oleds_clear(bg)
   common.set_handler("log", log)
@@ -128,9 +127,9 @@ def oleds_text(text, x, y, color):
     index += 1
     text = text[16:]
 
-def set_annunciators(annuciators_, write=False):
+def set_annunciator(position, annunciator, write=False):
   global annunciators
-  annunciators = annuciators_[:4]
+  annunciators = annunciators[:position]+ annunciator+ annunciators[position+1:]
   set_title(title)
   if write and oleds:
     oleds[0].fill_rect(font_size * 12, 0, font_size * 4, font_size, fg)
