@@ -93,9 +93,9 @@ def mqtt_thread():
 #   print(M + "Wi-Fi connected check")
     if aiko.net.is_connected():
 #     print(M + "connect()")
-      oled.set_annunciator(3, "c", True)
+      oled.set_annunciator(common.ANNUNCIATOR_MQTT, "c", True)
       connect()
-      oled.set_annunciator(3, "M", True)
+      oled.set_annunciator(common.ANNUNCIATOR_MQTT, "M", True)
       while is_connected():
         if client:
 #         print(M + "poll()")       # TODO: Refactor poller into own function ?
@@ -110,7 +110,7 @@ def mqtt_thread():
               break  # inner loop
         else:
           sleep_ms(WAIT_MQTT_CONNECTED_PERIOD)
-      oled.set_annunciator(3, " ", True)
+      oled.set_annunciator(common.ANNUNCIATOR_MQTT, " ", True)
       disconnect("mqtt_thread")
     sleep_ms(WAIT_WIFI_CONNECTED_PERIOD)
 

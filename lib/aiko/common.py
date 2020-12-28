@@ -9,6 +9,8 @@ from machine import Pin, TouchPad, unique_id
 import os
 
 AIKO_VERSION = "v04"
+ANNUNCIATOR_MQTT = 2
+ANNUNCIATOR_WIFI = 3
 
 handlers = {}
 # mutex = False
