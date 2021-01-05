@@ -6,8 +6,8 @@
 # Usage
 # ~~~~~
 # import examples.showcase as showcase
-# from examples.showcase import run
-# run()
+# showcase.initialise()
+# showcase.run()
 #
 
 from machine import Pin, TouchPad
