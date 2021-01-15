@@ -78,8 +78,8 @@ def wifi_connect(wifi):
         sta_if.connect(ssid[0], ssid[1])
         for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
           if sta_if.isconnected():
-            print(W + "Connected: " + ssid[0])
-            common.log("WiFi connected: " + ssid[0])
+            print(W + "Connected: " + sta_if.ifconfig()[0])
+            common.log("WiFi connected: " + sta_if.ifconfig()[0])
             connected = True
             wifi_configuration_update(wifi)
             break   # for retry
