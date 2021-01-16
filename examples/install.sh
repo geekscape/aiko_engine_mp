@@ -1,13 +1,16 @@
 #!/bin/bash
 
-> .install.mpf
+rm -f .install.mpf
 for i in *.py *.pbm
 do
-    cat >> .install.mpf << EOF
+    if [ "$i" -nt ."$i".pushed ]; then
+	cat >> .install.mpf << EOF
 exec print("$i")
 put $i examples/$i
 EOF
+	touch ."$i".pushed
+    fi
 done
 
 # FIXME for your architecture
-mpfshell ttyUSB0 -s .install.mpf
+test -e  .install.mpf && mpfshell ttyUSB0 -s .install.mpf
