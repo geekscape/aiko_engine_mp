@@ -4,7 +4,7 @@
 # ~~~~~
 # import applications.default as demo
 # demo.set_handler(demo.pattern_1)
-# event.add_timer_handler(demo.handler, 100)
+# aiko.event.add_timer_handler(demo.handler, 100)
 #
 # demo.set_handler(None)
 #
