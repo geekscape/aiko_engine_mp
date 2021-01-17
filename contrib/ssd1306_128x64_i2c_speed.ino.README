@@ -1,3 +1,0 @@
-This is a speed test of the hardware using arduino. It gets 62fps per
-screen while ssd1306 with python only gets 21fps.
-Compare with examples/oled_benchmark.py
