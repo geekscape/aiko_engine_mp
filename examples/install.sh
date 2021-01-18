@@ -1,7 +1,7 @@
 #!/bin/bash
 
-DEST=examples/
 TTY=${1:-ttyUSB0}
+DEST=${2:-$(pwd | sed "s#.*aiko_engine_mp/##")}
 
 rm -f .install.mpf
 
@@ -27,7 +27,7 @@ grep -q "Failed to create file" .install.mpf.output && echo "You will need to ma
 for i in *.py *.pbm
 do
     if [ "$i" -nt ."$i".pushed ]; then
-	echo "Pushed $i, updating last push time"
+	echo "Pushed $i to $DEST, updating last push time"
 	touch ."$i".pushed
     fi
 done
