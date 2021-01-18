@@ -1,4 +1,4 @@
-# configuration/led.py: version: 2020-10-11 05:00
+# configuration/led.py: version: 2020-12-13 18:30 v04
 
 settings = {    # LED panel or string
   "apa106":       False,  # IoTuz and LoliBot use APA106 RGB LEDs

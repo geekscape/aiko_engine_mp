@@ -1,3 +1,5 @@
+# lib/mpu9250.py: version: 2020-12-13 18:30 v04
+
 import struct
 import math
 
@@ -12,7 +14,7 @@ class MPU9250:
     def __init__(self, bus, accel_max_g=2, addr=104):
         self.bus = bus
         self.addr = addr
-        if accel_max_g <= 2: 
+        if accel_max_g <= 2:
             accel_fs_sel = 0
             self.accel_scale = 16384
         elif accel_max_g <= 4:

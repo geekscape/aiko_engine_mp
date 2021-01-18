@@ -1,4 +1,4 @@
-# configuration/oled.py: version: 2020-10-17 04:00
+# configuration/oled.py: version: 2020-12-13 18:30 v04
 #
 # SwagBadge OLED: ADDRESS = [0x3c, 0x3d], SCL= 4, SDA= 5
 # Wemos     OLED: SCL= 4, SDA= 5, e.g large TTGO OLED

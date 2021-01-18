@@ -1,4 +1,4 @@
-# lib/aiko/led.py: version: 2020-10-11 05:00
+# lib/aiko/led.py: version: 2020-12-27 14:00 v05
 #
 # Usage
 # ~~~~~
@@ -30,11 +30,10 @@
 # - https://forum.micropython.org/viewtopic.php?f=18&t=3697&p=21460&hilit=neopixel#p21460
 # - https://forum.micropython.org/viewtopic.php?f=18&t=3769&p=21741&hilit=neopixel#p21741
 
-import configuration.led
-import aiko.mqtt as mqtt
-
 from machine  import Pin
 from neopixel import NeoPixel
+
+import configuration.led
 
 import urandom
 apa106   = False
@@ -60,6 +59,7 @@ black = colors["black"]
 red = colors["red"]
 green = colors["green"]
 blue = colors["blue"]
+yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
   if dimmer == None: dimmer = dim
@@ -147,7 +147,8 @@ def initialise(settings=configuration.led.settings):
   length_x = settings["dimension"][0]
   np = NeoPixel(Pin(settings["neopixel_pin"]), length, timing=True)
 
-  mqtt.add_message_handler(on_led_message, "$me/in")
+  import aiko.mqtt
+  aiko.mqtt.add_message_handler(on_led_message, "$me/in")
 
 def on_led_message(topic, payload_in):
   if payload_in == "(led:clear)":
@@ -190,7 +191,8 @@ def on_led_message(topic, payload_in):
 
 # if payload_in == "(led:traits)":
 #   payload_out  = "(traits rgb " + str(LED_COUNT) + ")"
-#   mqtt_client.publish(TOPIC_OUT, payload_out)
+#   import aiko.mqtt
+#   aiko.mqtt.client.publish(TOPIC_OUT, payload_out)
 #   return True
 
   return False

@@ -1,4 +1,4 @@
-# lib/aiko/services.py: version: 2020-10-11 05:00
+# lib/aiko/services.py: version: 2020-12-27 14:00 v05
 #
 # Usage
 # ~~~~~
@@ -14,15 +14,16 @@
 # - Bootstrap protocol should include version number
 # - If bootstrap() timeout, then use default settings for namespace, host, port
 
-import configuration.services
-
 import machine
 import network
-import time
+from time import sleep_ms
 import usocket
 
+import aiko.common
 import aiko.mqtt
 import configuration.mqtt
+
+import configuration.services
 
 protocol = None
 socket = None
@@ -54,7 +55,7 @@ def bootstrap():
       response, addr = socket.recvfrom(1024)
       tokens = response.decode("utf-8").split()
     except OSError:
-      time.sleep(0.001)
+      sleep_ms(1)
       counter -= 1
       if counter == 0:
         socket.sendto(request, address)
@@ -63,7 +64,7 @@ def bootstrap():
 #        MQTT host, MQTT port, Namespace
 
 def get_configuration(settings):
-  hostname = "esp32_" + aiko.mqtt.get_unique_id()
+  hostname = aiko.common.hostname()
   pid = settings["pid"]
   protocol = settings["protocol"]
   username = settings["username"]

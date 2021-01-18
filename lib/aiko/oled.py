@@ -1,12 +1,18 @@
-# lib/aiko/oled.py: version: 2020-10-11 05:00
+# lib/aiko/oled.py: version: 2020-12-27 14:00 v05
 #
 # Usage
 # ~~~~~
 # import aiko.oled
 # aiko.oled.initialise()
-# oled.title = "Title"
+# oled.set_title("Title")
 # oled.write_title()
 # oled.log("Log message"))
+#
+# image = aiko.oled.load_image("examples/tux_nice.pbm")
+# oled0 = aiko.oled.oleds[0]
+# oled0.fill(0)
+# oled0.blit(image, 32, 0)
+# oled0.show()
 #
 # MQTT commands
 # ~~~~~~~~~~~~~
@@ -21,8 +27,10 @@
 #
 # To Do
 # ~~~~~
+# - Determine whether the OLED screen can be refreshed faster than 10 FPS
 # - Only register MQTT on_oled_message() if MQTT is enabled
 # - Only register MQTT on_oled_log_message() if MQTT is enabled
+# - Use https://github.com/guyc/py-gaugette/blob/master/gaugette/ssd1306.py
 #
 # Resources
 # ~~~~~~~~~
@@ -49,11 +57,13 @@ ol.invert(0|1)
 ol.contrast(0 .. 255)
 '''
 
-import configuration.oled
-import aiko.mqtt as mqtt
-
+import framebuf
 from machine import Pin
 import machine, ssd1306
+
+import aiko.common as common
+
+import configuration.oled
 
 oleds = []
 width = None
@@ -63,8 +73,9 @@ bottom_row = None
 bg = 0
 fg = 1
 
+annunciators = "    "
 lock_title = False
-title = "Aiko 0.1"
+title = ""
 
 def initialise(settings=configuration.oled.settings):
   global lock_title, width, height, font_size, bottom_row
@@ -83,46 +94,80 @@ def initialise(settings=configuration.oled.settings):
 
   i2c = machine.I2C(scl=Pin(scl_pin), sda=Pin(sda_pin))
 # i2c.scan()
-  for addr in addresses:
-    oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=addr))
-
+  for address in addresses:
+    try:
+      oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
+    except Exception:
+      print("### OLED: Couldn't initialise device: " + hex(address))
+  set_title("Aiko " + common.AIKO_VERSION)
   oleds_clear(bg)
-  write_title()  # includes oled.show()
+  common.set_handler("log", log)
 
-  mqtt.add_message_handler(on_oled_message, "$me/in")
+  import aiko.mqtt
+  aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
-    mqtt.add_message_handler(on_oled_log_message, "$all/log")
+    aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
+
+def load_image(filename):
+  with open(filename, 'rb') as file:
+    file.readline()  # magic number: P4
+    file.readline()  # creator comment
+    width, height = [int(value) for value in file.readline().split()]
+    image = bytearray(file.read())
+  return framebuf.FrameBuffer(image, width, height, framebuf.MONO_HLSB)
 
 def log(text):
+# common.lock(True)
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
-    oled.text(text, 0, bottom_row, fg)
-    oled.show()
-
+  oleds_text(text, 0, bottom_row, fg)
+  oleds_show()
   if lock_title: write_title()
+# common.lock(False)
 
-def oleds_clear(bg):
+def oleds_clear(color):
   for oled in oleds:
-    oled.fill(bg)
-    oled.show()
+    oled.fill(color)
+  oleds_show()
+  if lock_title: write_title()
 
 def oleds_show():
   for oled in oleds:
     oled.show()
 
+def oleds_text(text, x, y, color):
+  index = 0
+  while text and len(oleds) > index:
+    oleds[index].text(text, x, y, color)
+    index += 1
+    text = text[16:]
+
+def set_annunciator(position, annunciator, write=False):
+  global annunciators
+  annunciators = annunciators[:position]+ annunciator+ annunciators[position+1:]
+  set_title(title)
+  if write and oleds:
+    oleds[0].fill_rect(font_size * 12, 0, font_size * 4, font_size, fg)
+    oleds[0].text(annunciators, font_size * 12, 0, 0)
+    oleds_show()
+
+def set_title(title_):
+  global title
+  title = (title_ + ' '*12)[:12] + annunciators
+
 def test(text="Line "):
   for oled in oleds:
     oled.fill(bg)
-    for y in range(0, height, font_size):
-      oled.text(text + str(y), 0, y, fg)
-    oled.show()
+  for y in range(0, height, font_size):
+    oleds_text(text + str(y), 0, y, fg)
+  oleds_show()
 
 def write_title():
   for oled in oleds:
     oled.fill_rect(0, 0, width, font_size, fg)
-    oled.text(title, 0, 0, bg)
-    oled.show()
+  oleds_text(title, 0, 0, bg)
+  oleds_show()
 
 def on_oled_message(topic, payload_in):
   if payload_in == "(oled:clear)":
@@ -137,32 +182,20 @@ def on_oled_message(topic, payload_in):
     tokens = [int(token) for token in payload_in[12:-1].split()]
     for oled in oleds:
       oled.pixel(tokens[0], height - tokens[1] - 1, fg)
-      oled.show()
+    oleds_show()
     return True
 
-  # oled:text x y message
-  # If x or y are missing or are malformed (not integer), then we'll log what we can and move on
+  # (oled:text x y message)
   if payload_in.startswith("(oled:text "):
+    tokens = payload_in[11:-1].split()
     try:
-      tokens = payload_in[11:-1].split()
-      if (len(tokens) < 3):
-        print("#### Missing parameters to oled:text. Format expected is (oled:text x y message)")
-        log(payload_in[11:-1])
-        return True
-      x=int(tokens[0])
-      y=int(tokens[1])
+      x = int(tokens[0])
+      y = height - font_size - int(tokens[1])
       text = " ".join(tokens[2:])
-    except ValueError:
-      print("#### Invalid x,y passed to oled:text, got \`%s\`, \`%s\`" % (tokens[0], tokens[1]))
-      log(payload_in[11:-1])
-      return True
-    except Error:
-      print("#### Missing parameters to oled:text. Format expected is (oled:text x y message)")
-      log(payload_in[11:-1])
-      return True
-    for oled in oleds:
-      oled.text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
-      oled.show()
+      oleds_text(text, x, y, fg)
+      oleds_show()
+    except Exception:
+      print("Error: Expected (oled.text x y message) where x and y are int")
     return True
 
   return False
