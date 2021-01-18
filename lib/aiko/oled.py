@@ -185,11 +185,17 @@ def on_oled_message(topic, payload_in):
     oleds_show()
     return True
 
+  # (oled:text x y message)
   if payload_in.startswith("(oled:text "):
     tokens = payload_in[11:-1].split()
-    text = " ".join(tokens[2:])
-    oleds_text(text, int(tokens[0]), height - font_size - int(tokens[1]), fg)
-    oleds_show()
+    try:
+      x = int(tokens[0])
+      y = height - font_size - int(tokens[1])
+      text = " ".join(tokens[2:])
+      oleds_text(text, x, y, fg)
+      oleds_show()
+    except Exception:
+      print("Error: Expected (oled.text x y message) where x and y are int")
     return True
 
   return False
