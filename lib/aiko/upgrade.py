@@ -108,6 +108,7 @@ def on_upgrade_message(topic, payload_in):
       manifest_size = int(tokens[3])
       file_count = int(tokens[4])
       common.log("Firmware upgrade available: " + version)
+      common.log("Press & hold lower touch buttons")
     return True
 
 def initialise(settings=configuration.mqtt.settings):

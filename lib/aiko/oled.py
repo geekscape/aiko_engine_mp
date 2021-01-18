@@ -195,7 +195,7 @@ def on_oled_message(topic, payload_in):
       oleds_text(text, x, y, fg)
       oleds_show()
     except Exception:
-      print("Error: Expected (oled.text x y message) where x and y are int")
+      print("Error: Expected (oled.text x y message) where x and y are integers")
     return True
 
   return False

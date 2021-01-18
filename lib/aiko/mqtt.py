@@ -136,7 +136,7 @@ def connect(settings=configuration.mqtt.settings):
 
     connected = True
     print(M + "Connected to %s: %s" % (settings["host"], topic_path))
-    common.log("MQTT connected ...")
+    common.log("MQTT connected")
     common.log("  " + settings["host"])
     common.log("  " + topic_path)
     payload_out = "(boot %s %s)" % (common.AIKO_VERSION, "swagbadge")
