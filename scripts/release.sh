@@ -27,6 +27,7 @@ cp configuration/mqtt.py      $RELEASE_PATHNAME/configuration
 cp configuration/oled.py      $RELEASE_PATHNAME/configuration
 cp configuration/services.py  $RELEASE_PATHNAME/configuration
 
+cp lib/aiko/button.py         $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/common.py         $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/event.py          $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/led.py            $RELEASE_PATHNAME/lib/aiko
