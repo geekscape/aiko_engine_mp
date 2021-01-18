@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DEST=examples/
+TTY=${1:-ttyUSB0}
 
 rm -f .install.mpf
 
@@ -18,7 +19,7 @@ EOF
 done
 
 # FIXME for your architecture
-test -e  .install.mpf && mpfshell ttyUSB0 -s .install.mpf 2>&1 | tee .install.mpf.output
+test -e  .install.mpf && mpfshell $TTY -s .install.mpf 2>&1 | tee .install.mpf.output
 grep -q "Not connected to device" .install.mpf.output && exit
 grep -q "Failed to create file" .install.mpf.output && echo "You will need to manually run md $DEST once" && exit
 
