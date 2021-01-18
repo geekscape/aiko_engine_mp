@@ -35,6 +35,12 @@ def log(message):
   if "log" in handlers:
     handlers["log"](message)
 
+def map_value(input, in_min, in_max, out_min, out_max):
+    output = (input-in_min) / (in_max-in_min) * (out_max-out_min) + out_min
+    output = max(output, out_min)
+    output = min(output, out_max)
+    return output
+
 def set_handler(name, handler):
   handlers[name] = handler
 
@@ -49,7 +55,7 @@ def touch_pins_check(touch_pins):
           TouchPad(Pin(touch_pin)).read()
         except Exception:
           print("### Main: Touch calibration issue on GPIO: " + str(touch_pin))
-        if TouchPad(Pin(touch_pin)).read() < 200:  # TODO: Fix literal "200"
+        if TouchPad(Pin(touch_pin)).read() < 150:  # TODO: Fix literal "150"
           touched_pins += 1
     except Exception:
       touch_okay = False

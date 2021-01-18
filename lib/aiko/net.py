@@ -145,7 +145,7 @@ def net_thread():
       wifi_configuration_updated = True
 
 def initialise():
-  event.add_timer_handler(net_led_handler, 100)
+# event.add_timer_handler(net_led_handler, 100)  # 10 Hz
   Thread(target=net_thread).start()
 
   parameter = configuration.main.parameter
