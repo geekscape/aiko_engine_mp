@@ -3,6 +3,8 @@ a) push the left or right Oleds to invert the color
 b) try the left or right touch slider to stop the frames, rewind,
    or move forward slowly
 
+Demo: https://www.youtube.com/watch?v=LuYFG-w8C2Q
+
 How the animations were made:
 - this started with a suitable animated gif I had to find (took over 1h)
 - then resizing it to 256 wide
