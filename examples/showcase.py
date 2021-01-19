@@ -13,6 +13,10 @@
 # Type "help()" for more information.
 # >>> from examples.showcase import run
 # >>> run()
+#
+# To Do
+# ~~~~~
+# - Utilise framework features: "lib/aiko/button.py"
 
 from machine import Pin, TouchPad
 

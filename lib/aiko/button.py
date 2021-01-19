@@ -168,7 +168,7 @@ def button_handler():  # software timer event handler
     slider_state = slider_handler[LOWER_BUTTON].slider_state
 
     if lower_value < TOUCH_THRESHOLD or upper_value < TOUCH_THRESHOLD:
-      value = map_value(lower_value - upper_value, -180, 180, 0, 100)
+      value = int(map_value(lower_value - upper_value, -180, 180, 0, 100))
       handler(pin_number, slider_state, value)
       if slider_state == 0:
         slider_handler[LOWER_BUTTON].slider_state = 1

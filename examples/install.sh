@@ -1,4 +1,8 @@
 #!/bin/bash
+#
+# microPython v1.13 is effectively Python 3.4.0
+# Please ensure that your host Python version is Python 3.4 or newer
+# Otherwise the host side compilation check may fail on some source code
 
 TTY=${1:-ttyUSB0}
 DEST=${2:-$(pwd | sed "s#.*aiko_engine_mp/##")}

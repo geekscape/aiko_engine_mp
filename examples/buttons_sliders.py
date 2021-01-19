@@ -23,13 +23,8 @@
 # mpfs [/]> repl
 # MicroPython v1.13 on 2020-09-02; ESP32 module with ESP32
 # Type "help()" for more information.
-# >>> import examples.buttons_sliders as eg
 # >>> from examples.buttons_sliders import run
 # >>> run()
-#
-# Force console output
-# >>> eg.oleds = []
-# >>> eg.run()
 #
 # Notes
 # ~~~~~
@@ -38,57 +33,47 @@
 # esp32.wake_on_touch(True)
 # machine.lightsleep()  
 
-from machine import Pin, TouchPad
+import aiko.button
+from aiko.common import map_value
+import aiko.event
+import aiko.oled
 
-import aiko.event as event
-import aiko.oled as oled
+aiko.button.initialise(poll_rate=100)  # 10 Hz (default is 5 Hz)
 
-touch3 = TouchPad(Pin(15))
-touch5 = TouchPad(Pin(12))
-touch6 = TouchPad(Pin(14))
-touch7 = TouchPad(Pin(27))
+def button_handler(pin_number, state):
+    print("Button {}: {}".format(pin_number, "press" if state else "release"))
 
-oleds = oled.oleds
+    screen = None
+    if pin_number == 16: screen = aiko.oled.oleds[0]
+    if pin_number == 17: screen = aiko.oled.oleds[1]
 
-def map_value(v, a, b, c, d):
-    w = (v - a) / (b - a) * (d - c) + c
-    return int(w)
+    if screen:
+        screen.fill_rect(0, 16, 128, 8, 0)
+        text = "Button {}: {}".format(pin_number, state)
+        screen.text(text, 0, 16)
+        screen.show()
 
-def touch_slider_handler():
-    try:
-      pad_left_top = touch3.read()
-      pad_left_bottom = touch5.read()
-      pad_right_top = touch7.read()
-      pad_right_bottom = touch6.read()
-      slider_left = pad_left_bottom - pad_left_top
-      slider_right = pad_right_bottom - pad_right_top
+def slider_handler(pin_number, state, value):
+    print("Slider {}: {} {}".format(pin_number, state, value))
 
-      if len(oleds) > 0:
-          oled0 = oleds[0]
-          oled0.fill_rect(0, 32, 48, 8, 0)
-          if pad_left_top < 200 or pad_left_bottom < 200:
-              oled0.text(str(slider_left), 0, 32)  # 0 - 100
-              slider_left = map_value(slider_left, -100, 100, 0, 128)
-              oled0.fill_rect(0, 48, 128, 16, 0)
-              oled0.fill_rect(0, 48, slider_left, 16, 1)
-          oled0.show()
+    screen = None
+    if pin_number == 12: screen = aiko.oled.oleds[0]
+    if pin_number == 14: screen = aiko.oled.oleds[1]
 
-          oled1 = oleds[1]
-          oled1.fill_rect(0, 32, 48, 8, 0)
-          if pad_right_top < 200 or pad_right_bottom < 200:
-              oled1.text(str(slider_right), 0, 32)  # 0 - 100
-              slider_right = map_value(slider_right, -100, 100, 0, 128)
-              oled1.fill_rect(0, 48, 128, 16, 0)
-              oled1.fill_rect(0, 48, slider_right, 16, 1)
-          oled1.show()
-      else:
-          print("Touch: " + str(slider_left), end="    \r")
-    except ValueError:
-      pass
+    if screen:
+        screen.fill_rect(0, 32, 128, 8, 0)
+        text = "Slider: {} {}".format(state, value)
+        screen.text(text, 0, 32)
+        if value:
+            value = int(map_value(value, 0, 100, 0, 128))
+            screen.fill_rect(0, 48, 128, 16, 0)
+            screen.fill_rect(0, 48, value, 16, 1)
+        screen.show()
 
-def run(handler=touch_slider_handler, period=100):
-    event.add_timer_handler(handler, period)
-    try:
-        event.loop()
-    finally:
-        event.remove_timer_handler(handler)
+def run():
+    aiko.oled.oleds_clear(0)
+    aiko.button.add_button_handler(button_handler, [16, 17])
+#   aiko.button.add_touch_handler(button_handler, [12, 14, 15, 27])
+
+    aiko.button.add_slider_handler(slider_handler, 12, 15)
+    aiko.button.add_slider_handler(slider_handler, 14, 27)
