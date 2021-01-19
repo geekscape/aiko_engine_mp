@@ -9,7 +9,7 @@ for i in *.py *.pbm
 do
     if [ "$i" -nt ."$i".pushed ]; then
 	if [[ $i =~ .py$ ]]; then 
-	    python -m py_compile "$i" || exit
+	    python3 -m py_compile "$i" || exit
 	fi
 	cat >> .install.mpf << EOF
 exec print("$i")
@@ -32,7 +32,8 @@ do
     fi
 done
 
-cat <<EOF
-Type this in repl for space left:
-import os; print(os.statvfs("/")[0]*os.statvfs("/")[3], "bytes free out of",os.statvfs("/")[1]*os.statvfs("/")[2])
-EOF
+if type pyboard.py &>/dev/null; then 
+    pyboard.py --device /dev/$TTY -c 'import os; print(os.statvfs("/")[0]*os.statvfs("/")[3], "bytes free out of",os.statvfs("/")[1]*os.statvfs("/")[2])'
+else
+    echo "Consider installing pyboard.py in your path (pip install rshell or https://github.com/micropython/micropython/blob/master/tools/pyboard.py )"
+fi
