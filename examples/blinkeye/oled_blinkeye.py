@@ -218,7 +218,6 @@ def run():
         # API: http://docs.micropython.org/en/latest/library/framebuf.html
         oled0.fill_rect(112, 56, 16, 8, 0)
         oled0.text(str(leftcnt), 112, 56, 1);
-        oled0.show()
 
         if right == -128:  
             rightcnt+=1
@@ -243,6 +242,8 @@ def run():
         if (imagesR[rightcnt]): oled1.blit(imagesR[rightcnt], 0, 0) 
         oled1.fill_rect(0, 56, 16, 8, 0)
         oled1.text(str(rightcnt), 0, 56, 1);
+
+        oled0.show()
         oled1.show()
 
         cnt += 1
