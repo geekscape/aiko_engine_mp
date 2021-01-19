@@ -1,5 +1,5 @@
-Usage:
-a) push the left or right Oleds to invert the color
+Usage:  
+a) push the left or right Oleds to invert the color  
 b) try the left or right touch slider to stop the frames, rewind,
    or move forward slowly
 
