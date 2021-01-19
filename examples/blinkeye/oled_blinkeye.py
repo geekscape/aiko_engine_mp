@@ -42,11 +42,27 @@ def mapTouchpad(top, bottom):
     if top-bottom+correction <  100: return  2
     return 3
 
+# Track invert state
+leftoled = 0
+rightoled = 0
+lastleftbut = 0
+lastrightbut = 0
+def button_handler():
+    global leftoled, rightoled, lastleftbut, lastrightbut
+    leftbut =  button_left.value()
+    rightbut = button_right.value()
+    if leftbut and not lastleftbut:
+        leftoled = not leftoled
+        oled0.invert(leftoled)
+    lastleftbut = leftbut
+    if rightbut and not lastrightbut:
+        rightoled = not rightoled
+        oled1.invert(rightoled)
+    lastrightbut = rightbut
+
 def run():
     # get a few extra fps, at 240Mhz, I get 14FPS for both screens (or 28fps per screen)
     machine.freq(240000000)
-    oled0.invert(1)
-    oled1.invert(1)
 
     # Original animated gif had lots of frames that were
     # identical, or very close. We skip loading dupes but
@@ -171,6 +187,7 @@ def run():
     lastright = 0
     cnt = 0
     while True:
+        button_handler()
         left =  mapTouchpad(top_left.read(),  bottom_left.read())
         right = mapTouchpad(top_right.read(), bottom_right.read())
 
