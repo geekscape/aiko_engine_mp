@@ -27,6 +27,8 @@
 #
 # To Do
 # ~~~~~
+# - Use OLEDProxy.debug to see how often OLEDProxy.show() is called !
+#
 # - Determine whether the OLED screen can be refreshed faster than 10 FPS
 # - Only register MQTT on_oled_message() if MQTT is enabled
 # - Only register MQTT on_oled_log_message() if MQTT is enabled
@@ -74,11 +76,13 @@ bg = 0
 fg = 1
 
 annunciators = "    "
-lock_title = False
+log_annunciator = False
+log_buffer = []
+show_title = False
 title = ""
 
 def initialise(settings=configuration.oled.settings):
-  global lock_title, width, height, font_size, bottom_row
+  global show_title, width, height, font_size, bottom_row
   parameter = configuration.main.parameter
 
   Pin(int(settings["enable_pin"]), Pin.OUT).value(1)
@@ -86,7 +90,7 @@ def initialise(settings=configuration.oled.settings):
   scl_pin = int(settings["scl_pin"])
   sda_pin = int(settings["sda_pin"])
 
-  lock_title = parameter("lock_title", settings)
+  show_title = parameter("lock_title", settings)
   width = int(settings["width"])
   height = int(settings["height"])
   font_size = int(settings["font_size"])
@@ -96,7 +100,8 @@ def initialise(settings=configuration.oled.settings):
 # i2c.scan()
   for address in addresses:
     try:
-      oleds.append(ssd1306.SSD1306_I2C(width, height, i2c, addr=address))
+      oled = ssd1306.SSD1306_I2C(width, height, i2c, addr=address)
+      oleds.append(OLEDProxy(oled))
     except Exception:
       print("### OLED: Couldn't initialise device: " + hex(address))
   set_title("Aiko " + common.AIKO_VERSION)
@@ -117,22 +122,30 @@ def load_image(filename):
   return framebuf.FrameBuffer(image, width, height, framebuf.MONO_HLSB)
 
 def log(text):
+  global log_annunciator
+  log_buffer.append(text)
+  if len(log_buffer) > 12:
+    del log_buffer[0]
+  if not log_annunciator:
+    set_annunciator(common.ANNUNCIATOR_LOG, "L", True) 
+    log_annunciator = True
+
+def oleds_clear(color):
+  for oled in oleds:
+    oled.fill(color)
+  oleds_show()
+
+def oleds_log(text):
 # common.lock(True)
   for oled in oleds:
     oled.scroll(0, -font_size)
     oled.fill_rect(0, bottom_row, width, font_size, bg)
   oleds_text(text, 0, bottom_row, fg)
   oleds_show()
-  if lock_title: write_title()
 # common.lock(False)
 
-def oleds_clear(color):
-  for oled in oleds:
-    oled.fill(color)
-  oleds_show()
-  if lock_title: write_title()
-
 def oleds_show():
+  if show_title: write_title()
   for oled in oleds:
     oled.show()
 
@@ -167,7 +180,6 @@ def write_title():
   for oled in oleds:
     oled.fill_rect(0, 0, width, font_size, fg)
   oleds_text(title, 0, 0, bg)
-  oleds_show()
 
 def on_oled_message(topic, payload_in):
   if payload_in == "(oled:clear)":
@@ -203,6 +215,67 @@ def on_oled_message(topic, payload_in):
 def on_oled_log_message(topic, payload_in):
   log(payload_in)
   return True
+
+class OLEDProxy:
+  def __init__(self, oled):
+    self.oled = oled
+    self.debug = False
+    self.enabled = True
+    self.enabled_saved = self.enabled
+
+  def restore_enabled(self):
+    self.enabled = self.enabled_save
+
+  def store_enabled(self, enabled):
+    self.enabled_saved = self.enabled
+    self.enabled = enabled
+
+  def blit(self, *args):
+    if self.enabled: self.oled.blit(*args)
+
+  def constrast(self, constrast):
+    if self.enabled: self.oled.constrast(constrast)
+
+  def fill(self, c):
+    if self.enabled: self.oled.fill(c)
+
+  def fill_rect(self, x, y, w, h, c):
+    if self.enabled: self.oled.fill_rect(x, y, w, h, c)
+
+  def hline(self, x, y, w, c):
+    if self.enabled: self.oled.hline(x, y, w, c)
+
+  def invert(self, invert):
+    if self.enabled: self.oled.invert(invert)
+
+  def line(self, x1, y1, x2, y2, c):
+    if self.enabled: self.oled.line(x1, y1, x2, y2, c)
+
+  def pixel(self, *args):
+    if len(args) == 2: return self.oled.pixel(*args)
+    if self.enabled: self.oled.pixel(*args)
+
+  def poweroff(self):
+    if self.enabled: self.oled.poweroff()
+
+  def poweron(self):
+    if self.enabled: self.oled.poweron()
+
+  def rect(self, x, y, w, h, c):
+    if self.enabled: self.oled.rect(x, y, w, h, c)
+
+  def scroll(self, xstep, ystep):
+    if self.enabled: self.oled.scroll(xstep, ystep)
+
+  def show(self):
+#   if self.debug: print("OLEDProxy.show()")
+    if self.enabled: self.oled.show()
+
+  def text(self, s, x, y, c=1):
+    if self.enabled: self.oled.text(s, x, y, c)
+
+  def vline(self, x, y, h, c):
+    if self.enabled: self.oled.vline(x, y, h, c)
 
 '''
 # cs   = Pin( 2, mode=Pin.OUT)
