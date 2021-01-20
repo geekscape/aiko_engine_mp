@@ -79,6 +79,7 @@ annunciators = "    "
 log_annunciator = False
 log_buffer = []
 show_title = False
+system_use_count = 0
 title = ""
 
 def initialise(settings=configuration.oled.settings):
@@ -112,6 +113,21 @@ def initialise(settings=configuration.oled.settings):
   aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
     aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
+
+def oleds_enabled(enabled):
+  for oled in oleds:
+    oled.enabled = enabled
+
+def oleds_system_use(system_use):
+  global system_use_count
+  if system_use:
+    system_use_count += 1
+    if system_use_count == 1:
+      for oled in oleds: oled.store_enabled(True)
+  else:
+    system_use_count -= 1
+    if system_use_count == 0:
+      for oled in oleds: oled.restore_enabled()
 
 def load_image(filename):
   with open(filename, 'rb') as file:
@@ -161,9 +177,11 @@ def set_annunciator(position, annunciator, write=False):
   annunciators = annunciators[:position]+ annunciator+ annunciators[position+1:]
   set_title(title)
   if write and oleds:
+    oleds_system_use(True)
     oleds[0].fill_rect(font_size * 12, 0, font_size * 4, font_size, fg)
     oleds[0].text(annunciators, font_size * 12, 0, 0)
     oleds_show()
+    oleds_system_use(False)
 
 def set_title(title_):
   global title
@@ -224,7 +242,7 @@ class OLEDProxy:
     self.enabled_saved = self.enabled
 
   def restore_enabled(self):
-    self.enabled = self.enabled_save
+    self.enabled = self.enabled_saved
 
   def store_enabled(self, enabled):
     self.enabled_saved = self.enabled
