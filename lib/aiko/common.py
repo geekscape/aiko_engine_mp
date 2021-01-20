@@ -9,12 +9,19 @@ from machine import Pin, TouchPad, unique_id
 import os
 
 AIKO_VERSION = "v04"
+ANNUNCIATOR_LOG  = 1
 ANNUNCIATOR_MQTT = 2
 ANNUNCIATOR_WIFI = 3
 
 handlers = {}
 # mutex = False
 touch_okay = True
+
+def convert_time(timer):
+  seconds = timer % 60
+  minutes = (timer - seconds) // 60 % 60
+  hours = (timer - minutes * 60 - seconds) // 3600
+  return hours, minutes, seconds
 
 def hostname():
   return os.uname()[0] + "_" + serial_id()
@@ -36,10 +43,10 @@ def log(message):
     handlers["log"](message)
 
 def map_value(input, in_min, in_max, out_min, out_max):
-    output = (input-in_min) / (in_max-in_min) * (out_max-out_min) + out_min
-    output = max(output, out_min)
-    output = min(output, out_max)
-    return output
+  output = (input-in_min) / (in_max-in_min) * (out_max-out_min) + out_min
+  output = max(output, out_min)
+  output = min(output, out_max)
+  return output
 
 def set_handler(name, handler):
   handlers[name] = handler
