@@ -4,12 +4,19 @@
 #
 # Usage
 # ~~~~~
-# Use examples/blinkeye/install.sh
+# Use examples/blinkeye/install.sh to install everything
+#
 # Boot with both touch pads down to stop aiko from interfering
 # mpfs [/]> repl
 # MicroPython v1.13 on 2020-09-02; ESP32 module with ESP32
 # Type "help()" for more information.
 # >>> from examples.blinkeye.oled_blinkeye import run; run()
+# 
+# Or you can tell the badge to boot with this code by editing
+# configuration/main.py and setting 
+#  "application":     "examples/blinkeye/oled_blinkeye",
+#
+
 
 from machine import Pin, TouchPad
 import machine
@@ -251,6 +258,7 @@ def run():
             timer = time.ticks_ms()
             cnt = 0
 
-
-    #print("left:  ", top_left.read(), bottom_left.read(), top_left.read() - bottom_left.read())
-    #print("right: ", top_right.read(), bottom_right.read(), top_right.read() - bottom_right.read())
+# for compat with main.py, set
+#  "application":     "examples/blinkeye/oled_blinkeye",
+def initialise():
+    run()
