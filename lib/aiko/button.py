@@ -1,4 +1,4 @@
-# lib/aiko/button.py: version: 2020-01-19 06:00 v05
+# lib/aiko/button.py: version: 2020-01-22 06:00 v05
 #
 # Usage
 # ~~~~~
@@ -17,16 +17,21 @@
 # aiko.button.add_slider_handler(slider_handler, 14, 27)
 # aiko.button.remove_handler(slider_handler)
 #
+# def multibutton_handler(pin_numbers):
+#   print("Multibutton {}".format(pin_numbers))
+# aiko.button.add_multibutton_handler(multibutton_handler, [12, 14])
+# aiko.button.add_multibutton_handler(multibutton_handler, [15, 27])
+# aiko.button.remove_handler(multibutton_handler)
+#
 # To Do
 # ~~~~~
-# - Slider --> Console log display
-# - Ensure add/remove handlers is thread-safe !
-# - Add short versus long button press
-# - Add holding down multiple buttons simultaneously
 # - After remove_handler(), can't re-use existing Button ?!?
-# - Fix remove_handler(): Clean-up Button, when no handlers left
+# - Ensure add/remove handlers is thread-safe !
+# - Fix remove_handler(): Clean-up Buttons, when no handlers left
+# - Add short versus long button press
 
 from machine import disable_irq, enable_irq, Pin, TouchPad
+import time
 
 from aiko.common import map_value
 import aiko.event as event
@@ -37,8 +42,14 @@ pins = []
 pins_active = []  ### globally shared and writable by interrupt handler ###
 touch_buttons = []
 
-slider_handlers = []  # [(slider_handler, lower_button, upper_button), ...]
-SLIDER_HANDLER = 0
+multibutton_handlers = []  # [(handler, {pin_0, pin_1, ...}, hold_time), ...]
+multibutton_press_time = {}
+HANDLER = 0
+PIN_NUMBERS = 1
+HOLD_TIME = 2
+
+slider_handlers = []  # [(handler, lower_button, upper_button), ...]
+HANDLER = 0  # same as multibutton_handlers !
 LOWER_BUTTON = 1
 UPPER_BUTTON = 2
 TOUCH_THRESHOLD = 150
@@ -50,6 +61,7 @@ class Button:
     self.continuous = continuous
     self.cache = 300
     self.handlers = []
+    self.multibutton_state = False
     self.slider_state = 0
     self.state = False
 
@@ -79,6 +91,12 @@ def add_button_handler(handler, gpio_pin_numbers):
   for pin_number in gpio_pin_numbers:
     button = create_gpio_button(pin_number)
     button.handlers.append(handler)
+
+def add_multibutton_handler(handler, pin_numbers, hold_time=3000):
+  pin_numbers.sort()  # required for list equality test
+  for pin_number in pin_numbers:
+    create_touch_button(pin_number)
+  multibutton_handlers.append((handler, pin_numbers, hold_time))
 
 def add_slider_handler(handler, lower_pin_number, upper_pin_number):
   lower_button = create_touch_button(lower_pin_number)
@@ -128,6 +146,14 @@ def remove_handler(handler):
     handlers = [handler for handler in button.handlers]
     if handler in handlers:
       button.handlers.remove(handler)
+
+  handlers = [handler for handler in multibutton_handlers]
+  for multibutton_handler in handlers:
+    if multibutton_handler[0] == handler:
+      multibutton_handlers.remove(multibutton_handler)
+  if handler in multibutton_press_time:
+    del multibutton_press_time[handler]
+
   handlers = [handler for handler in slider_handlers]
   for slider_handler in handlers:
     if slider_handler[0] == handler:
@@ -160,10 +186,35 @@ def button_handler():  # software timer event handler
       button.set_state(False)
       button.call_handlers()
 
+  pin_numbers_active = None
+  for multibutton_handler in multibutton_handlers:
+    if not pin_numbers_active:
+      pin_numbers_active = pin_numbers_sorted(pins_active)
+      pin_numbers_active.sort()
+    handler = multibutton_handler[HANDLER]
+    pin_numbers_multibutton = multibutton_handler[PIN_NUMBERS]
+    hold_time = multibutton_handler[HOLD_TIME]
+
+    if pin_numbers_active == pin_numbers_multibutton:
+      if handler in multibutton_press_time:
+        time_held = time.ticks_ms() - multibutton_press_time[handler]
+        if time_held >= hold_time:
+          button = buttons[pin_numbers.index(pin_numbers_multibutton[0])]
+          if not button.multibutton_state:
+            button.multibutton_state = True
+            handler(pin_numbers_multibutton)
+      else:
+        multibutton_press_time[handler] = time.ticks_ms()
+    else:
+      if handler in multibutton_press_time:
+        del multibutton_press_time[handler]
+        button = buttons[pin_numbers.index(pin_numbers_multibutton[0])]
+        button.multibutton_state = False
+
   for slider_handler in slider_handlers:
     lower_value = slider_handler[LOWER_BUTTON].value(digital=False)
     upper_value = slider_handler[UPPER_BUTTON].value(digital=False)
-    handler = slider_handler[SLIDER_HANDLER]
+    handler = slider_handler[HANDLER]
     pin_number = slider_handler[LOWER_BUTTON].pin_number
     slider_state = slider_handler[LOWER_BUTTON].slider_state
 
@@ -175,6 +226,9 @@ def button_handler():  # software timer event handler
     elif slider_state == 1:
       handler(pin_number, 2, None)
       slider_handler[LOWER_BUTTON].slider_state = 0
+
+def pin_numbers_sorted(pin_list):
+  return [pin_numbers[pins.index(pin)] for pin in pin_list]
 
 def pin_change_handler(pin):  # hardware pin interrupt handler
   if not pin.value():         # button pulls down input to ground
