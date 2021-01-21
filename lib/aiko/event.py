@@ -21,6 +21,7 @@
 #
 # - If "event_list.head.time_next" is above a given threshold, then deep sleep
 
+import sys
 from threading import Thread
 import time                             # time.ticks_ms() takes 27 microseconds
 
@@ -114,7 +115,10 @@ def loop():
   while event_enabled:
     gap = next_timer_event_gap()
     while gap <= 0:
-      event_list.head.handler()
+      try:
+        event_list.head.handler()
+      except Exception as exception:
+        sys.print_exception(exception)
       event_list.update()
       gap = next_timer_event_gap()
 #   print("event:loop(): sleep " + str(gap))
