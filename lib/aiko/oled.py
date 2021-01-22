@@ -73,8 +73,8 @@ width = None
 height = None
 font_size = None
 bottom_row = None
-bg = 0
-fg = 1
+BG = 0
+FG = 1
 
 annunciators = "    "
 log_annunciator = False
@@ -110,7 +110,7 @@ def initialise(settings=configuration.oled.settings):
     except Exception:
       print("### OLED: Couldn't initialise device: " + hex(address))
   set_system_title()
-  oleds_clear(bg)
+  oleds_clear()
   common.set_handler("log", log)
 
   import aiko.mqtt
@@ -151,7 +151,7 @@ def log(text):
     set_annunciator(common.ANNUNCIATOR_LOG, "L", True) 
     log_annunciator = True
 
-def oleds_clear(color):
+def oleds_clear(color=BG):
   for oled in oleds:
     oled.fill(color)
   oleds_show()
@@ -160,8 +160,8 @@ def oleds_log(text):
 # common.lock(True)
   for oled in oleds:
     oled.scroll(0, -font_size)
-    oled.fill_rect(0, bottom_row, width, font_size, bg)
-  oleds_text(text, 0, bottom_row, fg)
+    oled.fill_rect(0, bottom_row, width, font_size, BG)
+  oleds_text(text, 0, bottom_row, FG)
   oleds_show()
 # common.lock(False)
 
@@ -183,7 +183,7 @@ def set_annunciator(position, annunciator, write=False):
   set_title(title)
   if write and oleds:
     oleds_system_use(True)
-    oleds[0].fill_rect(font_size * 12, 0, font_size * 4, font_size, fg)
+    oleds[0].fill_rect(font_size * 12, 0, font_size * 4, font_size, FG)
     oleds[0].text(annunciators, font_size * 12, 0, 0)
     oleds_show()
     oleds_system_use(False)
@@ -202,19 +202,19 @@ def set_title(new_title):
 
 def test(text="Line "):
   for oled in oleds:
-    oled.fill(bg)
+    oled.fill(BG)
   for y in range(0, height, font_size):
-    oleds_text(text + str(y), 0, y, fg)
+    oleds_text(text + str(y), 0, y, FG)
   oleds_show()
 
 def write_title():
   for oled in oleds:
-    oled.fill_rect(0, 0, width, font_size, fg)
-  oleds_text(title, 0, 0, bg)
+    oled.fill_rect(0, 0, width, font_size, FG)
+  oleds_text(title, 0, 0, BG)
 
 def on_oled_message(topic, payload_in):
   if payload_in == "(oled:clear)":
-    oleds_clear(bg)
+    oleds_clear()
     return True
 
   if payload_in.startswith("(oled:log "):
@@ -224,7 +224,7 @@ def on_oled_message(topic, payload_in):
   if payload_in.startswith("(oled:pixel "):
     tokens = [int(token) for token in payload_in[12:-1].split()]
     for oled in oleds:
-      oled.pixel(tokens[0], height - tokens[1] - 1, fg)
+      oled.pixel(tokens[0], height - tokens[1] - 1, FG)
     oleds_show()
     return True
 
@@ -235,7 +235,7 @@ def on_oled_message(topic, payload_in):
       x = int(tokens[0])
       y = height - font_size - int(tokens[1])
       text = " ".join(tokens[2:])
-      oleds_text(text, x, y, fg)
+      oleds_text(text, x, y, FG)
       oleds_show()
     except Exception:
       print("Error: Expected (oled.text x y message) where x and y are integers")

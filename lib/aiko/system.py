@@ -12,17 +12,16 @@ system_active = False
 
 def system_features_handler(pin_numbers):
   global system_active
+  system_active = not system_active
 
-  if not system_active:
+  if system_active:
     oled.set_system_title(save=True)
-    oled.oleds_show()
+    oled.oleds_clear()
     oled.oleds_enable(False)
   else:
     oled.oleds_enable(True)
     oled.set_system_title(restore=True)
-    oled.oleds_show()
-
-  system_active = not system_active
+    oled.oleds_clear()
 
 def initialise(settings=configuration.system.settings):
   system_pins = configuration.main.parameter("system_pins", settings)
