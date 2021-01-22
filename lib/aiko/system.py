@@ -6,7 +6,7 @@
 
 import gc
 
-import aiko.event
+import aiko.event as event
 
 import configuration.system
 
@@ -18,8 +18,8 @@ def system_features_handler(pin_numbers):
   print("System special features")
 
 def initialise(settings=configuration.system.settings):
-# if configuration.main.parameter("gc_enabled", settings):
-#   aiko.event.add_timer_handler(gc_event, 10000)
+  if configuration.main.parameter("gc_enabled", settings):
+    event.add_timer_handler(gc_event, 60000)
 
   system_pins = configuration.main.parameter("system_pins", settings)
   if system_pins:
