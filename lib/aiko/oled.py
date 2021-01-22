@@ -218,7 +218,7 @@ def on_oled_message(topic, payload_in):
     return True
 
   if payload_in.startswith("(oled:log "):
-    log(payload_in[10:-1])
+    oleds_log(payload_in[10:-1])
     return True
 
   if payload_in.startswith("(oled:pixel "):
