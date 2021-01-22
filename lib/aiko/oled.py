@@ -151,10 +151,10 @@ def log(text):
     set_annunciator(common.ANNUNCIATOR_LOG, "L", True) 
     log_annunciator = True
 
-def oleds_clear(color=BG):
+def oleds_clear(color=BG, write=True):
   for oled in oleds:
     oled.fill(color)
-  oleds_show()
+  if write: oleds_show()
 
 def oleds_log(text):
 # common.lock(True)
