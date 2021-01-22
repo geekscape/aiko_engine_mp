@@ -60,6 +60,7 @@ ol.contrast(0 .. 255)
 '''
 
 import framebuf
+import gc
 from machine import Pin
 import machine, ssd1306
 
@@ -185,7 +186,7 @@ def set_annunciator(position, annunciator, write=False):
 
 def set_title(title_):
   global title
-  title = (title_ + ' '*12)[:12] + annunciators
+  title = (title_ + ' '*12)[:12] + annunciators + "Free:" + str(gc.mem_free())
 
 def test(text="Line "):
   for oled in oleds:
