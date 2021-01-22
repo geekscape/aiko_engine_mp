@@ -24,6 +24,7 @@ put configuration/mqtt.py
 put configuration/net.py
 put configuration/oled.py
 put configuration/services.py
+put configuration/system.py
 
 exec print("### Copy lib/aiko/*.py ###")
 put lib/aiko/button.py
@@ -35,6 +36,7 @@ put lib/aiko/net.py
 put lib/aiko/oled.py
 put lib/aiko/queue.py
 put lib/aiko/services.py
+put lib/aiko/system.py
 put lib/aiko/test.py
 put lib/aiko/upgrade.py
 put lib/aiko/web_client.py

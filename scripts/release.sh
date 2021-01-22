@@ -26,6 +26,7 @@ cp configuration/mqtt.py      $RELEASE_PATHNAME/configuration
 # cp configuration/net.py     $RELEASE_PATHNAME/configuration
 cp configuration/oled.py      $RELEASE_PATHNAME/configuration
 cp configuration/services.py  $RELEASE_PATHNAME/configuration
+cp configuration/system.py   $RELEASE_PATHNAME/configuration
 
 cp lib/aiko/button.py         $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/common.py         $RELEASE_PATHNAME/lib/aiko
@@ -36,6 +37,7 @@ cp lib/aiko/net.py            $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/oled.py           $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/queue.py          $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/services.py       $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/system.py         $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/test.py           $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/upgrade.py        $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/web_client.py     $RELEASE_PATHNAME/lib/aiko
