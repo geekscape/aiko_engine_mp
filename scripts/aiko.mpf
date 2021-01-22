@@ -1,5 +1,6 @@
 exec print("### Make directories ###")
 md applications
+md applications/schedule
 # md applications/step_patterns
 md configuration
 md examples
