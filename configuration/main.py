@@ -5,9 +5,10 @@ settings = {
 # "application":     "applications/joysticks",
 # "application":     "applications/led_strip",
 # "application":     "applications/nodebots",
+  "application":     "applications/schedule/schedule",
 # "application":     "applications/step_controller",
 # "application":     "applications/squirrel",
-  "application":     "applications/swagbadge",
+# "application":     "applications/swagbadge",
 # "application":     "lolibot",
 
   "denye_pins":       [12, 14],  # If touch_pins pressed, don't run "main.py"

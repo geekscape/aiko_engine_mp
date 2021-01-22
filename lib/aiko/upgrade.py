@@ -3,7 +3,7 @@
 # mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
 #
-# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v04 http://205.185.125.62:8888/aiko_v04/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
+# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v04 http://209.141.52.199:8888/aiko_v04/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
 #
 # mosquitto_sub -t upgrade/aiko_00 -v
 #
@@ -115,4 +115,4 @@ def initialise(settings=configuration.mqtt.settings):
   import aiko.mqtt
   upgrade_topic = settings["upgrade_topic"]
   aiko.mqtt.add_message_handler(on_upgrade_message, upgrade_topic)
-  aiko.event.add_timer_handler(upgrade_handler, 5000)
+# aiko.event.add_timer_handler(upgrade_handler, 5000)

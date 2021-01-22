@@ -3,7 +3,8 @@
 # To Do
 # ~~~~~
 # - When required, increase maximum displayable menu items beyond 5
-# - Consider creating "process.py", which encapsulates process data structures
+# - Create "processes", which encapsulate process data structures
+# - UI in "oled.py" can be (1) just for process or (2) share with console log
 
 import aiko.button
 from aiko.common import map_value
