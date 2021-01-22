@@ -6,7 +6,7 @@
 
 MANIFEST=manifest
 UPGRADE_TOPIC=upgrade/aiko_00
-VERSION=v04
+VERSION=v05
 RELEASE_PATHNAME=aiko_$VERSION
 rm -rf $RELEASE_PATHNAME
 
@@ -18,6 +18,7 @@ mkdir $RELEASE_PATHNAME/lib
 mkdir $RELEASE_PATHNAME/lib/aiko
 
 cp applications/default.py     $RELEASE_PATHNAME/applications
+cp applications/schedule/schedule.py  $RELEASE_PATHNAME/applications/schedule
 cp applications/swagbadge.py   $RELEASE_PATHNAME/applications
 
 cp configuration/main.py       $RELEASE_PATHNAME/configuration
@@ -25,6 +26,7 @@ cp configuration/led.py        $RELEASE_PATHNAME/configuration
 cp configuration/mqtt.py       $RELEASE_PATHNAME/configuration
 # cp configuration/net.py      $RELEASE_PATHNAME/configuration
 cp configuration/oled.py       $RELEASE_PATHNAME/configuration
+cp configuration/schedule.py   $RELEASE_PATHNAME/configuration
 cp configuration/services.py   $RELEASE_PATHNAME/configuration
 cp configuration/system_ui.py  $RELEASE_PATHNAME/configuration
 

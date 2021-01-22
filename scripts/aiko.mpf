@@ -13,6 +13,7 @@ put applications/default.py
 # put applications/step_controller.py
 # put applications/step_patterns/cchs_1.py
 # put applications/step_patterns/skipping_girl.py
+put applications/schedule/schedule.py
 put applications/swagbadge.py
 
 exec print("### Copy configuration/*.py ###")
@@ -23,6 +24,7 @@ put configuration/main.py
 put configuration/mqtt.py
 put configuration/net.py
 put configuration/oled.py
+put configuration/schedule.py
 put configuration/services.py
 put configuration/system_ui.py
 
