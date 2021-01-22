@@ -25,9 +25,12 @@ timer = 0
 def swagbadge_handler():
     global timer
     hours, minutes, seconds = convert_time(timer)
-    message = "{:02d}:{:02d}:{:02d}".format(hours, minutes, seconds)
-    aiko.oled.oleds_log(message)
     timer += 1
+    text = "{:02d}:{:02d}:{:02d}".format(hours, minutes, seconds)
+    screen = aiko.oled.oleds[0]
+    screen.fill_rect(0, 16, 128, 8, 0)
+    screen.text(text, 0, 16)
+    screen.show()
 
 def swagbadge_title():
     global title_index
