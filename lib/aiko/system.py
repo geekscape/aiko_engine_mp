@@ -4,10 +4,25 @@
 # ~~~~~
 # - None, yet !
 
+import aiko.oled as oled
+
 import configuration.system
 
+system_active = False
+
 def system_features_handler(pin_numbers):
-  print("System special features")
+  global system_active
+
+  if not system_active:
+    oled.set_system_title(save=True)
+    oled.oleds_show()
+    oled.oleds_enable(False)
+  else:
+    oled.oleds_enable(True)
+    oled.set_system_title(restore=True)
+    oled.oleds_show()
+
+  system_active = not system_active
 
 def initialise(settings=configuration.system.settings):
   system_pins = configuration.main.parameter("system_pins", settings)
@@ -15,3 +30,14 @@ def initialise(settings=configuration.system.settings):
     import aiko.button
     aiko.button.initialise()
     aiko.button.add_multibutton_handler(system_features_handler, system_pins)
+
+def console_log_feature():
+  pass
+
+def firmware_upgrade_feature():
+  pass
+
+features = [
+  ("Console log", console_log_feature),
+  ("Firmware upgrade", firmware_upgrade_feature)
+]
