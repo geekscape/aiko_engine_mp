@@ -17,38 +17,38 @@ mkdir $RELEASE_PATHNAME/examples
 mkdir $RELEASE_PATHNAME/lib
 mkdir $RELEASE_PATHNAME/lib/aiko
 
-cp applications/default.py    $RELEASE_PATHNAME/applications
-cp applications/swagbadge.py  $RELEASE_PATHNAME/applications
+cp applications/default.py     $RELEASE_PATHNAME/applications
+cp applications/swagbadge.py   $RELEASE_PATHNAME/applications
 
-cp configuration/main.py      $RELEASE_PATHNAME/configuration
-cp configuration/led.py       $RELEASE_PATHNAME/configuration
-cp configuration/mqtt.py      $RELEASE_PATHNAME/configuration
-# cp configuration/net.py     $RELEASE_PATHNAME/configuration
-cp configuration/oled.py      $RELEASE_PATHNAME/configuration
-cp configuration/services.py  $RELEASE_PATHNAME/configuration
-cp configuration/system.py   $RELEASE_PATHNAME/configuration
+cp configuration/main.py       $RELEASE_PATHNAME/configuration
+cp configuration/led.py        $RELEASE_PATHNAME/configuration
+cp configuration/mqtt.py       $RELEASE_PATHNAME/configuration
+# cp configuration/net.py      $RELEASE_PATHNAME/configuration
+cp configuration/oled.py       $RELEASE_PATHNAME/configuration
+cp configuration/services.py   $RELEASE_PATHNAME/configuration
+cp configuration/system_ui.py  $RELEASE_PATHNAME/configuration
 
-cp lib/aiko/button.py         $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/common.py         $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/event.py          $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/led.py            $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/mqtt.py           $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/net.py            $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/oled.py           $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/queue.py          $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/services.py       $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/system.py         $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/test.py           $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/upgrade.py        $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/web_client.py     $RELEASE_PATHNAME/lib/aiko
-cp lib/aiko/web_server.py     $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/button.py          $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/common.py          $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/event.py           $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/led.py             $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/mqtt.py            $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/net.py             $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/oled.py            $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/queue.py           $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/services.py        $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/system_ui.py       $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/test.py            $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/upgrade.py         $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/web_client.py      $RELEASE_PATHNAME/lib/aiko
+cp lib/aiko/web_server.py      $RELEASE_PATHNAME/lib/aiko
 
-cp lib/mpu9250.py             $RELEASE_PATHNAME/lib
-cp lib/shutil.py              $RELEASE_PATHNAME/lib
-cp lib/ssd1306.py             $RELEASE_PATHNAME/lib
-cp lib/threading.py           $RELEASE_PATHNAME/lib
+cp lib/mpu9250.py              $RELEASE_PATHNAME/lib
+cp lib/shutil.py               $RELEASE_PATHNAME/lib
+cp lib/ssd1306.py              $RELEASE_PATHNAME/lib
+cp lib/threading.py            $RELEASE_PATHNAME/lib
 
-cp main.py                    $RELEASE_PATHNAME
+cp main.py                     $RELEASE_PATHNAME
 
 find $RELEASE_PATHNAME -type f \( -exec md5sum {} \; -exec wc -c {} \; \) | paste - - | column -t | tr -s "[:blank:]" | cut -d" " -f1,3,4 | sort -k 3 >$MANIFEST
 mv $MANIFEST $RELEASE_PATHNAME/$MANIFEST

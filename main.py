@@ -25,8 +25,8 @@ if common.touch_pins_check(denye_pins):
 import aiko.event
 import aiko.net
 import aiko.mqtt
-import aiko.system
-aiko.system.initialise()
+import aiko.system_ui
+aiko.system_ui.initialise()
 
 import aiko.led
 aiko.led.initialise()
