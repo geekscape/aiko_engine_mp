@@ -62,6 +62,7 @@ class Button:
     self.cache = 300
     self.handlers = []
     self.multibutton_state = False
+    self.safe = True
     self.slider_state = 0
     self.state = False
 
@@ -87,9 +88,9 @@ class Button:
         result = result < TOUCH_THRESHOLD
     return result
 
-def add_button_handler(handler, gpio_pin_numbers):
+def add_button_handler(handler, gpio_pin_numbers, safe=True):
   for pin_number in gpio_pin_numbers:
-    button = create_gpio_button(pin_number)
+    button = create_gpio_button(pin_number, safe=safe)
     button.handlers.append(handler)
 
 def add_multibutton_handler(handler, pin_numbers, hold_time=3000):
@@ -104,9 +105,9 @@ def add_slider_handler(handler, lower_pin_number, upper_pin_number):
   lower_button.slider = 0
   slider_handlers.append((handler, lower_button, upper_button))
 
-def add_touch_handler(handler, touch_pin_numbers):
+def add_touch_handler(handler, touch_pin_numbers, safe=True):
   for pin_number in touch_pin_numbers:
-    button = create_touch_button(pin_number)
+    button = create_touch_button(pin_number, safe=safe)
     button.handlers.append(handler)
 
 def create_button(pin, pin_number, continuous=False):
@@ -116,7 +117,7 @@ def create_button(pin, pin_number, continuous=False):
   pin_numbers.append(pin_number)
   return button
 
-def create_gpio_button(pin_number, continuous=False):
+def create_gpio_button(pin_number, continuous=False, safe=True):
   if pin_number in pin_numbers:
     button = buttons[pin_numbers.index(pin_number)]
 #   if not isinstance(button, Pin):
@@ -127,9 +128,10 @@ def create_gpio_button(pin_number, continuous=False):
               trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING)
     button = create_button(pin, pin_number)
   button.continuous = continuous
+  button.safe = safe
   return button
 
-def create_touch_button(pin_number, continuous=False):
+def create_touch_button(pin_number, continuous=False, safe=True):
   if pin_number in pin_numbers:
     button = buttons[pin_numbers.index(pin_number)]
 #   if not isinstance(button, TouchPad):
@@ -139,6 +141,7 @@ def create_touch_button(pin_number, continuous=False):
     button = create_button(touch_pad, pin_number)
     touch_buttons.append(button)
   button.continuous = continuous
+  button.safe = safe
   return button
 
 def remove_handler(handler):
@@ -176,6 +179,8 @@ def button_handler():  # software timer event handler
     button = buttons[pins.index(pin)]
     if button.value():
       call = button.continuous or not button.get_state()
+      if button.safe and len(local_pins_active) != 1:
+        call = False
       button.set_state(True)
       if call:
         button.call_handlers()
