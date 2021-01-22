@@ -34,13 +34,14 @@ def oled_write_line(oled_target, x, y, text):
     oled_target.fill_rect(0,y,oled.width, oled.font_size, oled.bg)
     oled_target.text(text, x, y)
 
+
 # (session:##[upcoming <time>|now]##title:<title>##speaker:<speaker>##room:<room>)
 def on_schedule_message(topic,payload_in):
     when,title,speaker, room = None, None, None, None
     if payload_in.startswith("(session:"):
         talk = payload_in[9:-1]
         tokenised = talk.split("##")
-        print(tokenised)
+#        print(tokenised)
         for token in tokenised:
             if token.startswith("title:"):
                 title = token[6:]
@@ -49,18 +50,29 @@ def on_schedule_message(topic,payload_in):
             elif token == "now":
                 when = "now"
             elif token.startswith("upcoming "):
-                when = token[10:]
+                when = token[9:]
             elif token.startswith("room:"):
                 room = token[5:]
             else:
                 pass
-        if (topic == "break"):
-            print(when+" "+title)
-            oled.log(when+" "+title)
+#        print("topic "+topic)
+        if (topic.endswith("break")):
+#            print(when+" "+title)
+            oled.oleds_log(when+" "+title)
         else:
-            print(when+" "+title+" "+speaker+" "+room)
-            oled.log(when+" "+title)
-            oled.log(speaker+" "+room)
+            text=""
+            if (when is None):
+                when=""
+            if title is None:
+                title="title?"
+            if speaker is None:
+                speaker="speaker?"
+            if room is None:
+                room = "room?"
+#            print(when+" "+title+" "+speaker+" "+room)
+            oled.oleds_log(when+" "+title)
+            oled.oleds_log(speaker+" "+room)
+        oled.oleds_log("")
         return True    
     return False
     
@@ -70,7 +82,7 @@ def initialise():
     global schedule,menu
     
     schedule = configuration.schedule.settings
-    oled.oleds_clear(oled.bg)
+    oled.oleds_clear(oled.BG)
     event.add_timer_handler(titlebar, 5000)
     prefix = configuration.schedule.settings['topicprefix']
 

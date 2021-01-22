@@ -28,7 +28,7 @@ port = 1883
 client_id = 'LCA2021 schedulator'
 
 # A session is upcoming if it's within 10 minutes (values vary during testing)  
-upcomingdelta = timedelta(hours=19,minutes=10)
+upcomingdelta = timedelta(hours=13,minutes=10)
 # A session is on right now if it's within 1 minute
 nowdelta = timedelta(minutes=1)
 
@@ -78,7 +78,7 @@ while (datetime.now() < datetime.fromisoformat("2021-01-25T23:59:59")):
         message = "(session:"
         starttime = datetime.fromisoformat(id['start'])
         # Don't alert for cancelled sessions
-        if (('cancelled' in id) and (id['cancelled'])):
+        if (('cancelled' in id) and (id['cancelled']) or id['name'] == "Slot"):
             continue
 
         # Set the room topic. Currently supported:
