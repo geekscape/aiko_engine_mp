@@ -1,4 +1,4 @@
-# lib/aiko/upgrade.py: version: 2020-12-27 14:00 v05
+# lib/aiko/upgrade.py: version: 2021-01-23 09:00 v05
 #
 # mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
@@ -9,7 +9,6 @@
 #
 # To Do
 # ~~~~~
-# - Replace "upgrade_handler()" with proper Aiko Engine button handler
 # - Improve upgrade mechanism to use "import sys; sys.path" !
 
 import gc
@@ -18,6 +17,7 @@ from threading import Thread
 
 import aiko.common as common
 import aiko.event
+import aiko.oled as oled
 import aiko.web_client
 import shutil
 
@@ -29,6 +29,9 @@ manifest_checksum = None
 manifest_size = None
 manifest_url = None
 version = None
+
+def get_version():
+  return version
 
 def upgrade_handler():
   global in_progress, version
@@ -108,8 +111,9 @@ def on_upgrade_message(topic, payload_in):
       manifest_checksum = tokens[2]
       manifest_size = int(tokens[3])
       file_count = int(tokens[4])
+      common.annunicator_log_symbol = "F"
+      oled.set_annunciator(common.ANNUNCIATOR_LOG, common.annunicator_log_symbol, True)
       common.log("Firmware upgrade available: " + version)
-      common.log("Press & hold lower touch buttons")
     return True
 
 def initialise(settings=configuration.mqtt.settings):

@@ -148,7 +148,7 @@ def log(text):
   if len(log_buffer) > 12:
     del log_buffer[0]
   if not log_annunciator:
-    set_annunciator(common.ANNUNCIATOR_LOG, "L", True) 
+    set_annunciator(common.ANNUNCIATOR_LOG, common.annunicator_log_symbol, True)
     log_annunciator = True
 
 def oleds_clear(color=BG, write=True):

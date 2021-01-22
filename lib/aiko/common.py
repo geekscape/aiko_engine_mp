@@ -13,6 +13,8 @@ ANNUNCIATOR_LOG  = 1
 ANNUNCIATOR_MQTT = 2
 ANNUNCIATOR_WIFI = 3
 
+annunicator_log_symbol = "L"
+
 handlers = {}
 # mutex = False
 touch_okay = True

@@ -9,6 +9,7 @@
 import aiko.button
 from aiko.common import map_value
 import aiko.oled as oled
+import aiko.upgrade
 
 import configuration.system_ui
 
@@ -63,6 +64,10 @@ def menu_item_write(menu_item, highlighted=False):
 def menu_show():
   for menu_item in range(len(features)):
     menu_item_write(menu_item)
+  version = aiko.upgrade.get_version()
+  if version:
+    oled.oleds[1].text("Firmware upgrade", 0, 11, oled.FG)
+    oled.oleds[1].text("Version: " + version, 0, 21, oled.FG)
 
 def console_log_feature():
   pass
