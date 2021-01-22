@@ -1,0 +1,28 @@
+exec print("### Copy blinkeye example ###")
+md examples/blinkeye
+
+put examples/blinkeye/oled_blinkeye.py
+put examples/blinkeye/L00.pbm
+put examples/blinkeye/L03.pbm
+put examples/blinkeye/L05.pbm
+put examples/blinkeye/L06.pbm
+put examples/blinkeye/L07.pbm
+put examples/blinkeye/L08.pbm
+put examples/blinkeye/L09.pbm
+put examples/blinkeye/L11.pbm
+put examples/blinkeye/L12.pbm
+put examples/blinkeye/R00.pbm
+put examples/blinkeye/R03.pbm
+put examples/blinkeye/R05.pbm
+put examples/blinkeye/R06.pbm
+put examples/blinkeye/R07.pbm
+put examples/blinkeye/R08.pbm
+put examples/blinkeye/R09.pbm
+put examples/blinkeye/R11.pbm
+put examples/blinkeye/R12.pbm
+put examples/blinkeye/R23.pbm
+put examples/blinkeye/R24.pbm
+put examples/blinkeye/R32.pbm
+put examples/blinkeye/R33.pbm
+
+exec print("### Complete ###")

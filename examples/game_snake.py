@@ -98,7 +98,7 @@ def snake_new_heading():
 
 def snake_update():
     global snake_heading, snake_heading_duration, snake_position
-    print("sp: " + str(snake_position) + ", sh: " + str(snake_heading) + ", shc: " + str(snake_heading_duration))
+#   print("sp: " + str(snake_position) + ", sh: " + str(snake_heading) + ", shd: " + str(snake_heading_duration))
     snake_position = tuple(map(sum, zip(snake_position, snake_heading)))
     if not position_check(snake_position):
         snake_dead()
