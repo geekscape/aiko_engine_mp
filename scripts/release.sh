@@ -12,6 +12,7 @@ rm -rf $RELEASE_PATHNAME
 
 mkdir $RELEASE_PATHNAME
 mkdir $RELEASE_PATHNAME/applications
+mkdir $RELEASE_PATHNAME/applications/schedule
 mkdir $RELEASE_PATHNAME/configuration
 mkdir $RELEASE_PATHNAME/examples
 mkdir $RELEASE_PATHNAME/lib

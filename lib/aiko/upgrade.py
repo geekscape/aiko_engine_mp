@@ -3,13 +3,14 @@
 # mosquitto_pub -t upgrade/aiko_00 -r  \
 #     -m "(upgrade VERSION MANIFEST_URL MANIFEST_CHECKSUM MANIFEST_SIZE)"
 #
-# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v04 http://209.141.52.199:8888/aiko_v04/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
+# mosquitto_pub -h lounge.local -t upgrade/aiko_00 -r -m '(upgrade v05 http://209.141.52.199:8888/aiko_v05/manifest 60371cc473d0aa7c0cbefbc760c30665 1585)'
 #
 # mosquitto_sub -t upgrade/aiko_00 -v
 #
 # To Do
 # ~~~~~
 # - Replace "upgrade_handler()" with proper Aiko Engine button handler
+# - Improve upgrade mechanism to use "import sys; sys.path" !
 
 import gc
 import os
