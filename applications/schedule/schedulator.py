@@ -48,7 +48,7 @@ def connect_mqtt():
 
 def send_message(client, topic, msg):
     print("publishing "+topic+" // "+msg)
-    result = client.publish(topic, msg)
+    result = client.publish(topic, msg, retain=True)
     print("ok")
     # result: [0, 1]
     status = result[0]
