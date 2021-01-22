@@ -36,10 +36,9 @@ def get_version():
 def upgrade_handler():
   global in_progress, version
 
-  if common.touch_pins_check([12, 14]):
-    if version and not in_progress:
-      in_progress = True
-      Thread(target=upgrade_thread).start()
+  if version and not in_progress:
+    in_progress = True
+    Thread(target=upgrade_thread).start()
 
 def upgrade_thread():
   global in_progress
@@ -120,4 +119,3 @@ def initialise(settings=configuration.mqtt.settings):
   import aiko.mqtt
   upgrade_topic = settings["upgrade_topic"]
   aiko.mqtt.add_message_handler(on_upgrade_message, upgrade_topic)
-# aiko.event.add_timer_handler(upgrade_handler, 5000)
