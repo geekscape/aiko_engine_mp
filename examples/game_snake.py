@@ -54,7 +54,6 @@ def display_snake():
 def display_snake_dead():
     oled1.text("OUCH !", 0, offset + 3 * oled.font_size)
     oled1.show()
-    print("Snake dead !")
 
 def position_check(position):
     position_okay = True
@@ -79,6 +78,9 @@ def random_position(limit):
 
 def snake_dead():
     global time_of_death, snake_alive
+    if snake_alive:
+        # Print out this just once
+        print("Snake dead !")
     snake_alive = False
     time_of_death = datetime.now().timestamp()
     display_snake_dead()
