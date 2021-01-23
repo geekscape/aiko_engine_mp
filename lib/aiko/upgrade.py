@@ -114,7 +114,7 @@ def on_upgrade_message(topic, payload_in):
       file_count = int(tokens[4])
       common.annunicator_log_symbol = "F"
       oled.set_annunciator(common.ANNUNCIATOR_LOG, common.annunicator_log_symbol, True)
-      oled.oleds_log("Firmware upgrade available: " + version)
+      oled.log("Firmware upgrade available: " + version)
     return True
 
 def initialise(settings=configuration.mqtt.settings):

@@ -5,7 +5,6 @@
 # Usage
 # ~~~~~
 # TODO
-#
 
 from machine import Pin, TouchPad
 import aiko.event as event
@@ -19,8 +18,8 @@ title_index = 0
 
 
 schedule = None
-  
-# Display a rotating title  
+
+# Display a rotating title
 def titlebar():
     global title_index
     oled.set_title(titles[title_index])
@@ -37,7 +36,7 @@ def oled_write_line(oled_target, x, y, text):
 
 # (session:##[upcoming <time>|now]##title:<title>##speaker:<speaker>##room:<room>)
 def on_schedule_message(topic,payload_in):
-    when,title,speaker, room = None, None, None, None
+    when,title,speaker, room = "", "", "", ""
     if payload_in.startswith("(session:"):
         talk = payload_in[9:-1]
         tokenised = talk.split("##")
@@ -60,27 +59,18 @@ def on_schedule_message(topic,payload_in):
 #            print(when+" "+title)
             oled.oleds_log(when+" "+title)
         else:
-            text=""
-            if (when is None):
-                when=""
-            if title is None:
-                title="title?"
-            if speaker is None:
-                speaker="speaker?"
-            if room is None:
-                room = "room?"
 #            print(when+" "+title+" "+speaker+" "+room)
             oled.oleds_log(when+" "+title)
-            oled.oleds_log(speaker+" "+room)
-        oled.oleds_log("")
-        return True    
+            oled.oleds_log(" "+speaker+" "+room)
+        return True
     return False
-    
+
+
 # Don't update the title bar too often
-# But check on the status of the badge hardware and display that more frequently            
+# But check on the status of the badge hardware and display that more frequently
 def initialise():
     global schedule,menu
-    
+
     schedule = configuration.schedule.settings
     oled.oleds_clear(oled.BG)
     event.add_timer_handler(titlebar, 5000)
@@ -91,9 +81,6 @@ def initialise():
 
 def finalise():
     event.remove_timer_handler(titlebar)
-
-
-
 
 # Badge: read config from file (default all)
 # on init set message handlers to monitor lca/schedule/<room> as configured

@@ -145,7 +145,7 @@ def load_image(filename):
 def log(text):
   global log_annunciator
   log_buffer.append(text)
-  if len(log_buffer) > 12:
+  if len(log_buffer) > 7:
     del log_buffer[0]
   if not log_annunciator:
     set_annunciator(common.ANNUNCIATOR_LOG, common.annunicator_log_symbol, True)
@@ -170,6 +170,12 @@ def oleds_show():
   for oled in oleds:
     oled.show()
 
+def oleds_show_log(buffer=log_buffer):
+  oleds_clear(write=True)
+  for row in range(len(buffer)):
+    oleds_text(buffer[row], 0, row * 8 + 8, FG)
+  oleds_show()
+
 def oleds_text(text, x, y, color):
   index = 0
   while text and len(oleds) > index:
@@ -192,7 +198,7 @@ def set_system_title(save=False, restore=False):
   global title, title_saved
   if save:
     title_saved = title
-  set_title(title_saved if restore else "Aiko " + common.AIKO_VERSION)
+  set_title(title_saved if restore else "ENHANCED " + common.AIKO_VERSION)
 
 def set_title(new_title):
   global title
