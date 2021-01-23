@@ -44,7 +44,8 @@ def upgrade_thread():
   global in_progress
   global file_count, manifest_checksum, manifest_size, manifest_url, version
   try:
-    common.log("Firmware upgrade start")
+    oled.oleds_system_use(True)
+    oled.oleds_log("Firmware upgrade start")
     gc.collect()
 
     manifest_pathname = "manifest"
@@ -71,7 +72,7 @@ def upgrade_thread():
         pathname = "".join([pathname[0] + "_new"] + list(pathname[1:]))
 
         print(file_url + " --> " + pathname)
-        common.log("Firmware get ... %d of %d" % (file_index, file_count))
+        oled.oleds_log("Firmware get ... %d of %d" % (file_index, file_count))
         aiko.web_client.http_get_file(file_url, pathname)
 # TODO: Verify actual file size versus size stated in the "manifest"
 # TODO: Verify actual file checksum
@@ -80,7 +81,7 @@ def upgrade_thread():
     shutil.file_copy("configuration/net.py",  "configuration_new/net.py")
     shutil.file_copy("configuration/keys.db", "configuration_new/keys.db")
 
-    common.log("Firmware install")
+    oled.oleds_log("Firmware install")
     for file in top_level_files:
       try:
         print("Rename %s to %s" % (file + "_new", file))
@@ -89,13 +90,14 @@ def upgrade_thread():
       except OSError:
         print("OSError")
 
-    common.log("Firmware upgrade success !")
-    common.log("Please reboot :)")
+    oled.oleds_log("Firmware upgrade success !")
+    oled.oleds_log("Please reboot :)")
   except Exception as exception:
-    common.log("Firmware upgrade failed :(")
+    oled.oleds_log("Firmware upgrade failed :(")
     import sys
     sys.print_exception(exception)
   finally:
+    oled.oleds_system_use(False)
     in_progress = False
     version = None
 
@@ -112,7 +114,7 @@ def on_upgrade_message(topic, payload_in):
       file_count = int(tokens[4])
       common.annunicator_log_symbol = "F"
       oled.set_annunciator(common.ANNUNCIATOR_LOG, common.annunicator_log_symbol, True)
-      common.log("Firmware upgrade available: " + version)
+      oled.oleds_log("Firmware upgrade available: " + version)
     return True
 
 def initialise(settings=configuration.mqtt.settings):
