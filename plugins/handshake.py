@@ -40,7 +40,7 @@ shake_GPIO = 25   # For SwagBadge2021, GPIO25 maps to IO2 on SAO4
 shake_CMD = "shake"
 shake_TARGET = "public/esp32_10521c5de398/0/in"   # Default Target: Ender's Hand -  See https://twitter.com/Enderboi/status/1352807738707857408
 shake_lastSliderVal = 0
-shake_SOURCE = binascii.hexlify(machine.unique_id())
+shake_SOURCE = binascii.hexlify(machine.unique_id()).decode('ascii')
 
 # on_shake_message() - Receive Badge Handshake and trigger a GPIO in response (this is the server part of the example)
 def on_shake_message(topic, payload_in):
@@ -48,8 +48,12 @@ def on_shake_message(topic, payload_in):
         tokens = payload_in[1:-1].split()
     if tokens[0] == "shake":
         motor = Pin(shake_GPIO, Pin.OUT, Pin.PULL_UP)
-        print("[Shake] Received Shake Command. Triggering GPIO {} for {}ms".format(shake_GPIO, int(tokens[1])))
-        aiko.mqtt.client.publish(topic, "Shake Intensity: {}".format(int(tokens[1])))
+        reply_topic = aiko.mqtt.get_topic_path("public") + "/shake"
+
+        print("[Shake] Received Shake Command from {}. Triggering GPIO {} for {}ms".format(tokens[2], shake_GPIO, int(tokens[1])))
+        aiko.mqtt.client.publish(reply_topic, "Level {} Handshake! (From: {})".format (int(tokens[1]), tokens[2]))
+#        aiko.mqtt.client.publish(topic, "Shake Intensity: {}".format(int(tokens[1])))
+
         motor.on()
         sleep_ms(int(tokens[1]))
         motor.off()
