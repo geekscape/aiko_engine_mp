@@ -30,6 +30,7 @@ socket = None
 topic_in = None
 topic_log = None
 topic_out = None
+topic_hugs = None
 topic_path = None
 topic_service = None
 topic_state = None
@@ -83,7 +84,7 @@ def on_services_message(topic, payload_in):
 
 def initialise(settings=configuration.services.settings):
   global protocol, username, topic_in, topic_log
-  global topic_path, topic_out, topic_service, topic_state
+  global topic_path, topic_out, topic_service, topic_state, topic_hugs
 
   hostname, pid, protocol, username = get_configuration(settings)
   mqtt_host, mqtt_port, namespace = bootstrap()
@@ -93,6 +94,7 @@ def initialise(settings=configuration.services.settings):
   topic_out = topic_path + "/out"
   topic_service = namespace + "/manager/service"
   topic_state = topic_path + "/state"
+  topic_hugs = topic_path + "/hugs"
 
   settings = configuration.mqtt.settings
   settings["host"] = mqtt_host

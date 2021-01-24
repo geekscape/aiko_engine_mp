@@ -9,6 +9,8 @@
 import aiko.button
 from aiko.common import map_value
 import aiko.oled as oled
+import aiko.mqtt as mqtt
+import aiko.services as services
 import aiko.upgrade
 
 import configuration.system_ui
@@ -91,11 +93,13 @@ def console_log_feature():
   oled.oleds_show_log()
   oled.oleds_system_use(False)
 
-hugs_message = [ "", "hey Leon,", "Let's figure", "something out ?", "... andyg :)" ]
+hugs_message = [ "", "hey Andy,", "I figured", "something out !", "... techman83 :)" ]
 
 def hugs_feature():
   oled.oleds_system_use(True)
   oled.oleds_show_log(hugs_message)
+  # TODO: Make recipient configurable?
+  mqtt.client.publish(services.topic_hugs, "Leon")
   oled.oleds_system_use(False)
 
 features = [
