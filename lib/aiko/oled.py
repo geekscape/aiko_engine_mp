@@ -20,6 +20,8 @@
 #              (oled:log This is a test !)
 #              (oled:pixel x y)
 #              (oled:text x y This is a test !)
+#              (oled:blit0 {base64 bits} {base64 bits} ...)
+#              (oled:blit1 {base64 bits} {base64 bits} ...)
 #              oled.bg=1; oled.fg=0
 #
 # Topic: /in   (oled:traits)
@@ -244,16 +246,10 @@ def on_oled_message(topic, payload_in):
     oleds_show()
     return True
 
-  if payload_in.startswith("(oled:npixel "):
-    tokens = [int(token) for token in payload_in[12:-1].split()]
-    for oled in oleds:
-      oled.pixel(tokens[0], height - tokens[1] - 1, BG)
-    oleds_show()
-    return True
-
-  if payload_in.startswith("(oled:blit "):
-    blit = payload_in[11:-1].split()
-    out = 1
+  if (payload_in.startswith("(oled:blit0 ") or
+    payload_in.startswith("(oled:blit1 ")):
+    blit = payload_in[12:-1].split()
+    out = ord(payload_in[10])-0x30
     image = bytearray(128//8*64+1)
     line = 0
     for blitline in blit:
