@@ -14,7 +14,7 @@ settings = {
   "denye_pins":       [12, 14],  # If touch_pins pressed, don't run "main.py"
   "logger_enabled":   False,     # Display everyone's log output
   "oled_enabled":     True,      # OLED attached
-  "services_enabled": False      # Use Aiko Services infrastructure
+  "services_enabled": False,     # Use Aiko Services infrastructure
   "plugins_enabled":  False      # Autoload additional code from the 'plugins/' folder
 }
 
