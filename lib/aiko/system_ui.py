@@ -99,7 +99,7 @@ def hugs_feature():
   oled.oleds_system_use(True)
   oled.oleds_show_log(hugs_message)
   # TODO: Make recipient configurable?
-  mqtt.client.publish(services.topic_hugs, "Leon")
+  mqtt.client.publish(services.topic_out + "/hugs", "Leon")
   oled.oleds_system_use(False)
 
 features = [
