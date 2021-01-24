@@ -2,9 +2,9 @@
 #
 # Usage
 # ~~~~~
-# import aiko.led
-# aiko.led.initialise()
-# aiko.led.pixel(aiko.led.red, 0, True)
+# from lib.aiko import led
+# led.initialise()
+# led.pixel(aiko.led.red, 0, True)
 #
 # MQTT commands
 # ~~~~~~~~~~~~~
@@ -34,6 +34,7 @@ from machine  import Pin
 from neopixel import NeoPixel
 
 import configuration.led
+import configuration.main
 
 import urandom
 apa106   = False
@@ -72,6 +73,11 @@ def apply_dim(color, dimmer=None):
 
 def fill(color):
   np.fill(apply_dim((color[0], color[1], color[2])))
+
+# write is needed if you use fill() or lots of pixel writes
+# and then you decide to push the result.
+def write():
+  np.write()
 
 # Bresenham's line algorithm
 def line(color, x0, y0, x1, y1):
@@ -129,6 +135,9 @@ def pixel_get(x=0):
   if zigzag and (x // length_x) % 2:
     x = length_x * (x // length_x + 1) - (x - length_x * (x // length_x)) - 1
   return np[x]
+
+def length_get():
+    return length
 
 def random_pixel(write=False):
   pixel(random_color(), random_position(), write)
