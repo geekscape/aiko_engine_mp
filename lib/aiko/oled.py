@@ -234,6 +234,41 @@ def on_oled_message(topic, payload_in):
     oleds_show()
     return True
 
+  if payload_in.startswith("(oled:npixel "):
+    tokens = [int(token) for token in payload_in[12:-1].split()]
+    for oled in oleds:
+      oled.pixel(tokens[0], height - tokens[1] - 1, BG)
+    oleds_show()
+    return True
+
+  if payload_in.startswith("(oled:blit "):
+    blit = payload_in[11:-1].split()
+    line = 0
+    for blitline in blit:
+      column = 0
+      for c in blitline:
+        bits = 0
+        nh = ord(c) & 0x60
+        nl = ord(c) & 0x1F
+        if nh == 0x20:
+          bits = nl-0x10+52
+          if nl == 0x0B:
+            bits = 0x3E
+          elif nl == 0x0F:
+            bits = 0x3F
+        elif nh == 0x40:
+          bits = nl-1+0
+        elif nh == 0x60:
+          bits = nl-1+26
+        m = 32
+        while m > 0:
+          oleds[1].pixel(column, line, int(bits&m == m))
+          column = column + 1
+          m = m >> 1
+      line = line + 1
+    oleds_show()
+    return True
+
   # (oled:text x y message)
   if payload_in.startswith("(oled:text "):
     tokens = payload_in[11:-1].split()
