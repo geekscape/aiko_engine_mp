@@ -198,7 +198,7 @@ def set_system_title(save=False, restore=False):
   global title, title_saved
   if save:
     title_saved = title
-  set_title(title_saved if restore else "ENHANCED " + common.AIKO_VERSION)
+  set_title(title_saved if restore else "Aiko " + common.AIKO_VERSION)
 
 def set_title(new_title):
   global title
