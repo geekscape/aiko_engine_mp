@@ -15,6 +15,7 @@ settings = {
   "logger_enabled":   False,     # Display everyone's log output
   "oled_enabled":     True,      # OLED attached
   "services_enabled": False      # Use Aiko Services infrastructure
+  "plugins_enabled":  False      # Autoload additional code from the 'plugins/' folder
 }
 
 def parameter(name, settings=settings):
