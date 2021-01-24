@@ -75,6 +75,16 @@ font_size = None
 bottom_row = None
 BG = 0
 FG = 1
+base64 = bytearray(b'\
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
+\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x00\x00\x3F\
+\x34\x35\x36\x37\x38\x39\x3A\x3B\x3C\x3D\x00\x00\x00\x00\x00\x00\
+\x00\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\
+\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x00\x00\x00\x00\x00\
+\x00\x1A\x1B\x1C\x1D\x1E\x1F\x20\x21\x22\x23\x24\x25\x26\x27\x28\
+\x29\x2A\x2B\x2C\x2D\x2E\x2F\x30\x31\x32\x33\x00\x00\x00\x00\x00\
+')
 
 annunciators = "    "
 log_annunciator = False
@@ -243,29 +253,19 @@ def on_oled_message(topic, payload_in):
 
   if payload_in.startswith("(oled:blit "):
     blit = payload_in[11:-1].split()
+    out = 1
+    image = bytearray(128//8*64+1)
     line = 0
     for blitline in blit:
-      column = 0
-      for c in blitline:
-        bits = 0
-        nh = ord(c) & 0x60
-        nl = ord(c) & 0x1F
-        if nh == 0x20:
-          bits = nl-0x10+52
-          if nl == 0x0B:
-            bits = 0x3E
-          elif nl == 0x0F:
-            bits = 0x3F
-        elif nh == 0x40:
-          bits = nl-1+0
-        elif nh == 0x60:
-          bits = nl-1+26
-        m = 32
-        while m > 0:
-          oleds[1].pixel(column, line, int(bits&m == m))
-          column = column + 1
-          m = m >> 1
-      line = line + 1
+      column = line
+      for c in bytearray(blitline):
+        bits = base64[c&0x7F] << (10-column%8)
+        image[column//8] |= bits>>8
+        image[column//8+1] |= bits;
+        column += 6
+      line += 128
+    fbuf = framebuf.FrameBuffer(image, 128, 64, framebuf.MONO_HLSB)
+    oleds[out].blit(fbuf, 0, 0)
     oleds_show()
     return True
 
