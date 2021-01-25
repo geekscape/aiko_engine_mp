@@ -65,6 +65,7 @@ import framebuf
 import gc
 from machine import Pin
 import machine, ssd1306
+import binascii
 
 import aiko.common as common
 
@@ -77,16 +78,6 @@ font_size = None
 bottom_row = None
 BG = 0
 FG = 1
-base64 = bytearray(b'\
-\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
-\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x3E\x00\x00\x00\x3F\
-\x34\x35\x36\x37\x38\x39\x3A\x3B\x3C\x3D\x00\x00\x00\x00\x00\x00\
-\x00\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0A\x0B\x0C\x0D\x0E\
-\x0F\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x00\x00\x00\x00\x00\
-\x00\x1A\x1B\x1C\x1D\x1E\x1F\x20\x21\x22\x23\x24\x25\x26\x27\x28\
-\x29\x2A\x2B\x2C\x2D\x2E\x2F\x30\x31\x32\x33\x00\x00\x00\x00\x00\
-')
 
 annunciators = "    "
 log_annunciator = False
@@ -250,17 +241,15 @@ def on_oled_message(topic, payload_in):
     payload_in.startswith("(oled:blit1 ")):
     blit = payload_in[12:-1].split()
     out = ord(payload_in[10])-0x30
-    image = bytearray(128//8*64+1)
+    row = 128//8
+    image = bytearray(row*len(blit)+2)
+    padding = "AAAA"
     line = 0
     for blitline in blit:
-      column = line
-      for c in bytearray(blitline):
-        bits = base64[c&0x7F] << (10-column%8)
-        image[column//8] |= bits>>8
-        image[column//8+1] |= bits;
-        column += 6
-      line += 128
-    fbuf = framebuf.FrameBuffer(image, 128, 64, framebuf.MONO_HLSB)
+      bin = binascii.a2b_base64(blitline+padding[(len(blitline)-1)%4+1:])
+      image[line:len(bin)] = bin
+      line += row
+    fbuf = framebuf.FrameBuffer(image, 128, len(blit), framebuf.MONO_HLSB)
     oleds[out].blit(fbuf, 0, 0)
     oleds_show()
     return True
