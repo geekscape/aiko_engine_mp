@@ -136,8 +136,13 @@ def oleds_system_use(system_use):
 
 def load_image(filename):
   with open(filename, 'rb') as file:
-    file.readline()  # magic number: P4
-    file.readline()  # creator comment
+    # pbm formats: http://netpbm.sourceforge.net/doc/pbm.html
+    # P4 format is P4 [ whitespace ] [width] [height] [whitespace] [image data]
+    # P1 format is P1 [whitespace] # creator comment [whitespace] [width] [height] [image data]
+    
+    line = file.readline()  # read magic number (P4 or P1)
+    if "P1" in line:
+        file.readline()  # skip the creator comment
     width, height = [int(value) for value in file.readline().split()]
     image = bytearray(file.read())
   return framebuf.FrameBuffer(image, width, height, framebuf.MONO_HLSB)
