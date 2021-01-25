@@ -50,8 +50,11 @@ def button_handler(number, state):
 
 def slider_handler(number, state, value):
   if value:
-    menu_item = menu_items - int(map_value(value, 0, 100, 0, menu_items-1)) - 1
-    menu_item_select(menu_item)
+    menu_item_select(slider_zone(value, menu_items))
+
+def slider_zone(value, zones):
+  # return zone integer in range(0, zones - 1) given value integer in range (0, 100)
+  return zones - min(int(map_value(value, 0, 100, 0, zones)), zones - 1) - 1
 
 def system_features_menu():
   oled.oleds_system_use(True)
