@@ -11,6 +11,8 @@
 #
 # Hardware instructions
 # ~~~~~~~~~~~~~~~~~~~~~
+# - Before and after images ...
+#     http://www.openhardwareconf.org/wiki/File:Tux_sao_touch_hack.jpg
 # - Solder 3x2 male header pins onto the Tux SAO (Simple Add On) PCB
 # - On the Tux SAO PCB, carefully make a solder bridge between the
 #   IO32 hole (Touch 9) and the gold pad immediately to the right of
