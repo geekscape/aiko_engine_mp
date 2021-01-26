@@ -261,8 +261,8 @@ class OLEDProxy:
   def blit(self, *args):
     if oleds_enabled: self.oled.blit(*args)
 
-  def constrast(self, constrast):
-    if oleds_enabled: self.oled.constrast(constrast)
+  def contrast(self, contrast):
+    if oleds_enabled: self.oled.contrast(contrast)
 
   def fill(self, c):
     if oleds_enabled: self.oled.fill(c)
