@@ -13,7 +13,7 @@ settings = {
   "topic_path":      "$me",
 # "topic_subscribe": [ "$me/in", "$me/exec", upgrade_topic ],
 # "topic_subscribe": [ "$me/in", "$me/exec", upgrade_topic, "$all/log" ],
-  "topic_subscribe": [ "$me/in", "$me/exec", lca_schedule_topic, upgrade_topic ],
+  "topic_subscribe": [ "$me/in", "$me/exec", lca_schedule_topic, upgrade_topic, 'public/+/0/out' ],
   "lca_schedule_topic": lca_schedule_topic,
   "upgrade_topic":   upgrade_topic,
 

@@ -17,6 +17,7 @@ mkdir $RELEASE_PATHNAME/configuration
 mkdir $RELEASE_PATHNAME/examples
 mkdir $RELEASE_PATHNAME/lib
 mkdir $RELEASE_PATHNAME/lib/aiko
+mkdir $RELEASE_PATHNAME/plugins
 
 cp applications/default.py     $RELEASE_PATHNAME/applications
 cp applications/schedule/schedule.py  $RELEASE_PATHNAME/applications/schedule
@@ -50,6 +51,8 @@ cp lib/mpu9250.py              $RELEASE_PATHNAME/lib
 cp lib/shutil.py               $RELEASE_PATHNAME/lib
 cp lib/ssd1306.py              $RELEASE_PATHNAME/lib
 cp lib/threading.py            $RELEASE_PATHNAME/lib
+
+cp plugins/__init__.py         $RELEASE_PATHNAME/plugins
 
 cp main.py                     $RELEASE_PATHNAME
 
