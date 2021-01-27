@@ -63,7 +63,6 @@ blue = colors["blue"]
 yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
-  global dim
   if dimmer == None: dimmer = dim
   red   = int(color[0] * dimmer)
   green = int(color[1] * dimmer)
@@ -72,8 +71,17 @@ def apply_dim(color, dimmer=None):
 # TODO: Now fails when called by exec(), see lib/aiko/mqtt.py
 # return tuple([int(element * dimmer) for element in color])
 
-def fill(color):
+# Allow setting dim from code or MQTT
+def set_dim(dimmer):
+    global dim
+    dim = dimmer
+
+def print_dim():
+    print("Dim: ",dim)
+
+def fill(color, write=True):
   np.fill(apply_dim((color[0], color[1], color[2])))
+  if write: np.write()
 
 # write is needed if you use fill() or lots of pixel writes
 # and then you decide to push the result.
@@ -137,9 +145,6 @@ def pixel_get(x=0):
     x = length_x * (x // length_x + 1) - (x - length_x * (x // length_x)) - 1
   return np[x]
 
-def length_get():
-    return length
-
 def random_pixel(write=False):
   pixel(random_color(), random_position(), write)
 
@@ -167,10 +172,12 @@ def on_led_message(topic, payload_in):
     return True
 
   if payload_in.startswith("(led:dim "):
-    global dim
     tokens = [float(token) for token in payload_in[9:-1].split()]
-    dim = tokens[0]
+    set_dim(tokens[0])
     return True
+
+  if payload_in == "(led:debug)":
+    print_dim()
 
   if payload_in.startswith("(led:fill "):
     tokens = [int(token) for token in payload_in[10:-1].split()]
