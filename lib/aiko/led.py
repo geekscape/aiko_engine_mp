@@ -62,6 +62,7 @@ blue = colors["blue"]
 yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
+  global dim
   if dimmer == None: dimmer = dim
   red   = int(color[0] * dimmer)
   green = int(color[1] * dimmer)

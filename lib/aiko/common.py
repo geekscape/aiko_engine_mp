@@ -8,7 +8,7 @@
 from machine import Pin, TouchPad, unique_id
 import os
 
-AIKO_VERSION = "v05"
+AIKO_VERSION = "v06"
 ANNUNCIATOR_LOG  = 1
 ANNUNCIATOR_MQTT = 2
 ANNUNCIATOR_WIFI = 3

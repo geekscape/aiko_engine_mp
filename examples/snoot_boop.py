@@ -11,11 +11,14 @@
 #
 # Hardware instructions
 # ~~~~~~~~~~~~~~~~~~~~~
+# - Before and after images ...
+#     http://www.openhardwareconf.org/wiki/File:Tux_sao_touch_hack.jpg
 # - Solder 3x2 male header pins onto the Tux SAO (Simple Add On) PCB
-# - Carefully make a solder bridge between IO32 pin (Touch 9)
-#   and the gold pad immediately to the right of IO32 pin
-# - Take care not to short IO32 and IO33 pins together
-# - Connect Tux SAO to #swagbadge SAO_2 (only)
+# - On the Tux SAO PCB, carefully make a solder bridge between the
+#   IO32 hole (Touch 9) and the gold pad immediately to the right of
+#   that IO32 hole
+# - Take care not to short those IO32 and IO33 holes together
+# - Connect Tux SAO to #swagbadge SAO_2 (the only SAO connector with touch)
 #
 # Usage
 # ~~~~~

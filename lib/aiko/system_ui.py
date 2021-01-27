@@ -22,14 +22,11 @@ def system_features_handler(pin_numbers):
   system_ui_active = not system_ui_active
 
   if system_ui_active:
-    aiko.button.add_button_handler(button_handler, [14, 27])
-    aiko.button.add_slider_handler(slider_handler, 12, 15)
-    oled.set_system_title(save=True)
-    oled.oleds_clear(write=False)
-    menu_show()
-    menu_item_select(0)
+    system_features_menu()
+    aiko.button.add_touch_handler(button_handler, [14, 27])
     oled.oleds_enable(False)
   else:
+    aiko.button.remove_handler(button_handler)
     aiko.button.remove_handler(slider_handler)
     oled.oleds_enable(True)
     oled.set_system_title(restore=True)
@@ -43,13 +40,27 @@ def initialise(settings=configuration.system_ui.settings):
 
 def button_handler(number, state):
   global menu_item_selected
-  if state and number == 14:
-    features[menu_item_selected][HANDLER]()
+  if state:
+    if number == 14:
+# TODO: button and multibutton handlers are still active !
+      aiko.button.remove_handler(slider_handler)
+      features[menu_item_selected][HANDLER]()
+    if number == 27:
+      system_features_menu()
 
 def slider_handler(number, state, value):
   if value:
     menu_item = menu_items - int(map_value(value, 0, 100, 0, menu_items-1)) - 1
     menu_item_select(menu_item)
+
+def system_features_menu():
+  oled.oleds_system_use(True)
+  aiko.button.add_slider_handler(slider_handler, 12, 15)
+  oled.set_system_title(save=True)
+  oled.oleds_clear(write=False)
+  menu_show()
+  menu_item_select(0)
+  oled.oleds_system_use(False)
 
 def menu_item_select(menu_item):
   global menu_item_selected
@@ -76,11 +87,21 @@ def menu_show():
     oled.oleds[1].text("Version: " + version, 0, 21, oled.FG)
 
 def console_log_feature():
-  print("console_log_feature")
+  oled.oleds_system_use(True)
+  oled.oleds_show_log()
+  oled.oleds_system_use(False)
+
+hugs_message = [ "", "hey Leon,", "Let's figure", "something out ?", "... andyg :)" ]
+
+def hugs_feature():
+  oled.oleds_system_use(True)
+  oled.oleds_show_log(hugs_message)
+  oled.oleds_system_use(False)
 
 features = [
   ("Console log", console_log_feature),
-  ("Firmware upgrade", aiko.upgrade.upgrade_handler)
+  ("Firmware upgrade", aiko.upgrade.upgrade_handler),
+  ("Hugs ???", hugs_feature),
 ]
 
 NAME = 0
