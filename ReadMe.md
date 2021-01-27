@@ -33,7 +33,12 @@ Installation is a three stage process:
 2. Download and install MicroPython onto your ESP32 development board
 3. Install the Aiko software onto your ESP32 development board
 
-### SETUP
+**Notes**:
+
+* If you are using Linux or macOS then you will be using a Posix shell (e.g. [Bash](https://www.gnu.org/software/bash/) or [zsh](http://zsh.sourceforge.net/))
+* If you are on Windows then we assume you are using [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview)
+
+### 1. Setup
 
 - Make sure you have a current version of [Python3](https://www.python.org/) available on your workstation
 
@@ -41,44 +46,55 @@ Installation is a three stage process:
 
 ```
     git clone https://github.com/geekscape/aiko_engine_mp
+```
+**Note**: If you don't have Git installed you can download a zip file from https://github.com/geekscape/aiko_engine_mp and unpack it
+
+
+```
     cd aiko_engine_mp
 ```
 
-  Note: If you don't have Git installed you download a zip file from https://github.com/geekscape/aiko_engine_mp
+**Note**: All commands below assume that `.../aiko_engine_mp` is your current directory.
 
-- Setup a [virtual Python environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment) for your badge project
 
-- Make sure your Python virtual environment is active
+- Setup a [virtual Python environment](https://packaging.python.org/guides/installing-using-pip-and-virtual-environments/#creating-a-virtual-environment) for your badge project. e.g.
+
+```
+python3 -m venv .venv
+```
+
+- Make sure your Python virtual environment is active. **Note**: Do this every time a new terminal session is started
+
+```
+. .venv/bin/activate # Linux and macOS
+. .venv\Scripts\activate.ps1 # Windows
+```
 
 - Install Python packages [`esptool`](https://github.com/espressif/esptool/blob/master/README.md) and [`mpfshell`](https://github.com/wendlers/mpfshell/blob/master/README.md)
+
 ```
-    pip install esptool
-    pip install -U mpfshell
+pip install -r requirements.txt
 ```
 
-Note: For `mpfshell` (version v0.9.1 and earlier) on Mac OS X or Windows, this
-problem may be fixed via this [patch](https://github.com/wendlers/mpfshell/commit/52b0636c82b06a07daa5731550f86b0d7ebc7608). You may find it easier to install `mpfshell`
-manually from the [source](https://github.com/wendlers/mpfshell/blob/master/README.md#from-source)
+### 2. Download and install MicroPython
 
-### Download and install MicroPython
-
-- Download the latest MicroPython binary for your ESP32 boardfrom https://micropython.org/download/
+- Download the latest MicroPython binary for your ESP32 board from https://micropython.org/download/
 
   Note that you must have a
     [compatible hardware board](https://github.com/micropython/micropython/wiki/Boards-Summary) or
     [compatible microPython port](https://github.com/micropython/micropython/tree/master/ports)
 
-
 - Plug in your ESP32 device and make sure you can see it. For example on
   - macOS or Linux:
   `ls /dev/tty.*` provides something similar to `/dev/tty.wchserial1410`
-  - On Windows, use the device manager to discover the COM port
+  - On Windows, use the [device manager](https://support.microsoft.com/en-us/windows/open-device-manager-a7f2db46-faaf-24f0-8b7b-9e4a6032fc8c) to discover the COM port
 
 ![Example of using the Windows Device manager](/Windows-Device-Manager-Example.png)
 
-- Export the serial port to an environment variable, so `mpfshell` can use it,
+- Export the serial port to an environment variable, so helpder sripts can use it,
   e.g `export AMPY_PORT=<port>` or  `$env:AMPY_PORT = <port>` where `port` is the device address shown
-  by the `ls` command above, or in the Windows device manager
+  by the `ls` command above, or in the Windows device manager.  **Note**: Do this every time a new terminal session is started
+
 - Flash microPython. Helper scripts are provided
 
 ```
@@ -86,13 +102,13 @@ manually from the [source](https://github.com/wendlers/mpfshell/blob/master/READ
     .\scripts\windows\flash_micropython.ps1
 ```
 
-### Install the Aiko software
+### 3. Install the Aiko software
 
 - Run the Aiko Engine MP flash script
 
 ```
-    ./scripts/mpf_script.sh ./scripts/aiko.mpf
-    .\scripts\windows\mpf_script.ps1 scripts\aiko.mpf
+    ./scripts/mpf_script.sh ./scripts/aiko.mpf # Linux or macOS
+    .\scripts\windows\mpf_script.ps1 .\scripts\aiko.mpf # Windows
 ```
 
 Note: For Lolin32-Lite boards, the serial port can be notoriously problematic
