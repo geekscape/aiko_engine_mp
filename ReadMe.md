@@ -31,12 +31,12 @@ Installation is a three stage process:
 
 1. Setup the correct tooling on your workstation
 2. Download and install MicroPython onto your ESP32 development board
-3. Install the Aiko software onto your ESP32 development board
+3. Install the Aiko software onto your ESP32 development board.
 
 **Notes**:
 
 * If you are using Linux or macOS then you will be using a Posix shell (e.g. [Bash](https://www.gnu.org/software/bash/) or [zsh](http://zsh.sourceforge.net/))
-* If you are on Windows then we assume you are using [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview)
+* If you are on Windows then we assume you are using [PowerShell](https://docs.microsoft.com/en-us/powershell/scripting/overview) on Windows 10.
 
 ### 1. Setup
 
@@ -87,13 +87,11 @@ pip install -r requirements.txt
 - Plug in your ESP32 device and make sure you can see it. For example on
   - macOS or Linux:
   `ls /dev/tty.*` provides something similar to `/dev/tty.wchserial1410`
-  - On Windows, use the [device manager](https://support.microsoft.com/en-us/windows/open-device-manager-a7f2db46-faaf-24f0-8b7b-9e4a6032fc8c) to discover the COM port
-
-![Example of using the Windows Device manager](/Windows-Device-Manager-Example.png)
+  - On Windows, use the command `chgport /query` to discover the COM port.
 
 - Export the serial port to an environment variable, so helpder sripts can use it,
-  e.g `export AMPY_PORT=<port>` or  `$env:AMPY_PORT = <port>` where `port` is the device address shown
-  by the `ls` command above, or in the Windows device manager.  **Note**: Do this every time a new terminal session is started
+  e.g `export AMPY_PORT=<port>` or  `$env:AMPY_PORT = COM<n>` where `port` is the device address shown
+  by the `ls` command above, or `COM<n>` is the port show by the command `chgport` above.  **Note**: Do this every time a new terminal session is started
 
 - Flash microPython. Helper scripts are provided
 
