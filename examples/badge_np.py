@@ -5,7 +5,6 @@ import aiko.event
 import time
 from threading import Thread
 
-
 # from examples.badge_np import run; run()
 
 # this is set by aiko/led.py and configured in configuration/led.py
@@ -111,11 +110,12 @@ def right_tux_touch():
         print("DOESNT WORK: Changing title to", title)
         oled.set_title(title)
         oled.write_title()
-        # setting this does not affect dim value seen by MQTT "(led:debug)". Why?
-        led.set_dim(0.4)
+        # Debug to make sure we get the correct dim value from MQTT
+        print("tux_touch:"); led.print_dim()
+        #led.set_dim(0.4)
 
 
-# edit configuration/main.py "application":     "examples/badge_np"
+# Set configuration/main.py "application":     "examples/badge_np"
 def initialise():
     global badge_np_init
     print("Init badge_np")
@@ -138,9 +138,9 @@ def run(thread=False):
     num_np = led.length
 
     while True:
-        print("loop1:",led.dim); led.print_dim()
+        # Debug to make sure we get the correct dim value from MQTT
+        print("loop1:"); led.print_dim()
         color_chase(BLACK, 0.01)
-        print("loop2:",led.dim); led.print_dim()
         color_chase(RED, 0.01)
         color_chase(YELLOW, 0.01)
         color_chase(GREEN, 0.01)
@@ -148,6 +148,5 @@ def run(thread=False):
         color_chase(BLUE, 0.01)
         color_chase(PURPLE, 0.01)
      
-        print("loop3:",led.dim); led.print_dim()
         rainbow_cycle(0.005, 200)  # rainbow cycle with 1ms delay per step
 

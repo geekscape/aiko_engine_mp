@@ -38,7 +38,10 @@ import configuration.main
 
 import urandom
 apa106   = False
-dim      = 0.1  # 100% = 1.0
+# for dim to be visible in different threads (the aiko background network thread
+# and the main thread, it needs to be pulled from a namespace visible from main.py
+# before the threads were started)
+#dim      = 0.1  # 100% = 1.0
 full     = 255
 length   = None
 length_x = None
@@ -63,7 +66,7 @@ blue = colors["blue"]
 yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
-  if dimmer == None: dimmer = dim
+  if dimmer == None: dimmer = configuration.main.dim
   red   = int(color[0] * dimmer)
   green = int(color[1] * dimmer)
   blue  = int(color[2] * dimmer)
@@ -73,11 +76,10 @@ def apply_dim(color, dimmer=None):
 
 # Allow setting dim from code or MQTT
 def set_dim(dimmer):
-    global dim
-    dim = dimmer
+    configuration.main.dim = dimmer
 
 def print_dim():
-    print("Dim: ",dim)
+    print("Dim: ", configuration.main.dim)
 
 def fill(color, write=True):
   np.fill(apply_dim((color[0], color[1], color[2])))
@@ -157,6 +159,11 @@ def initialise(settings=configuration.led.settings):
   parameter = configuration.main.parameter
   apa106 = parameter("apa106", settings)
   zigzag = parameter("zigzag", settings)
+  dim = parameter("dim", settings)
+  # because of global variables in this module, not being shared across
+  # threads, save dim in the global configuration which was included before
+  # threads were spun out
+  configuration.main.dim = dim
 
   length = linear(settings["dimension"])
   length_x = settings["dimension"][0]

@@ -12,5 +12,6 @@ settings = {    # LED panel or string
   "neopixel_pin": 19,     # swagbadge SAO 1 bpttom row
 # "neopixel_pin": 15,     # Wemos OLED
 # "neopixel_pin": 23,     # IoTuz
-  "zigzag":       False   # For 2D panels
+  "zigzag":       False,  # For 2D panels
+  "dim":          0.2,    # default dim to save batteries/power over USB
 }
