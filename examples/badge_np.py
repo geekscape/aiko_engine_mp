@@ -64,7 +64,7 @@ badge_np_init = False
 # GPIO 19 (used for WS2812). This shows the control commands
 # by blinking the red led.
 # left tux also has one green LED plugged into GPIO22 and GND
-ledpin1=Pin(22, Pin.OUT)
+leftTuxLedPin=Pin(22, Pin.OUT)
 
 # right tux has 2 low power green eye LEDs plugged into SDA
 # green is important as red/yellow is too low voltage and
@@ -83,13 +83,14 @@ tux_front = TouchPad(Pin(33))
 tux_rear  = TouchPad(Pin(32))
 
 
-left_tux_led = True
-def left_tux_led():
-    global left_tux_led
+left_tux_led_state = True
+def toggle_left_tux_led():
+    global left_tux_led_state
     if tux_front.read() < 100 or tux_rear.read() < 100:
-        left_tux_led = True
+        left_tux_led_state = True
     else:
-        left_tux_led = not left_tux_led
+        left_tux_led_state = not left_tux_led_state
+    leftTuxLedPin.value(left_tux_led_state)
 
 last_title=""
 title=""
@@ -118,12 +119,11 @@ def right_tux_touch():
 def initialise():
     global badge_np_init
     print("Init badge_np")
-    ledpin1.value(left_tux_led)
     # Does not work
     oled.set_title("Test Title")
     oled.write_title()
     led.initialise()
-    aiko.event.add_timer_handler(left_tux_led, 300, immediate=False)
+    aiko.event.add_timer_handler(toggle_left_tux_led, 300, immediate=False)
     aiko.event.add_timer_handler(right_tux_touch, 1000, immediate=False)
     badge_np_init = True
     # https://pymotw.com/2/threading/
