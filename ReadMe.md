@@ -87,11 +87,11 @@ pip install -r requirements.txt
 - Plug in your ESP32 device and make sure you can see it. For example on
   - macOS or Linux:
   `ls /dev/tty.*` provides something similar to `/dev/tty.wchserial1410`
-  - On Windows, use the command `chgport /query` to discover the COM port.
+  - On Windows, use the command `change port /query` to discover the COM port.
 
 - Export the serial port to an environment variable, so helpder sripts can use it,
   e.g `export AMPY_PORT=<port>` or  `$env:AMPY_PORT = COM<n>` where `port` is the device address shown
-  by the `ls` command above, or `COM<n>` is the port show by the command `chgport` above.  **Note**: Do this every time a new terminal session is started
+  by the `ls` command above, or `COM<n>` is the serial port show by the command `change port` above.  **Note**: Do this every time a new terminal session is started
 
 - Flash microPython. Helper scripts are provided
 
