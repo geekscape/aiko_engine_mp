@@ -1,5 +1,5 @@
 
-from lib.aiko import led,oled
+from aiko import led,oled
 from machine import Pin, TouchPad
 import aiko.event
 import time
@@ -102,16 +102,16 @@ def right_tux_touch():
     if tux_rear.read()  < 100:
         print("Rear tux touched")
         if title:
-            title = "Front+Rear Touch"
+            title = "Front+Rear"
         else:
             title = "Rear Touch"
     if title != last_title:
         last_title = title
-        print("DOESNT WORK: Changing title to", title)
+        print("Changing title to", title)
         oled.set_title(title)
         oled.write_title()
         # Debug to make sure we get the correct dim value from MQTT
-        print("tux_touch:"); led.print_dim()
+        #print("tux_touch:"); led.print_dim()
         #led.set_dim(0.4)
 
 
@@ -120,14 +120,15 @@ def initialise():
     global badge_np_init
     print("Init badge_np")
     # Does not work
-    oled.set_title("Test Title")
+    oled.set_title("Init BadgeNP")
     oled.write_title()
     led.initialise()
     aiko.event.add_timer_handler(toggle_left_tux_led, 300, immediate=False)
-    aiko.event.add_timer_handler(right_tux_touch, 1000, immediate=False)
+    aiko.event.add_timer_handler(right_tux_touch, 500, immediate=False)
     badge_np_init = True
     # https://pymotw.com/2/threading/
     # https://realpython.com/intro-to-python-threading/
+    # run never returns, so run it in its own thread
     Thread(target=run, args=(True, )).start()
 
 def run(thread=False):
@@ -139,7 +140,7 @@ def run(thread=False):
 
     while True:
         # Debug to make sure we get the correct dim value from MQTT
-        print("loop1:"); led.print_dim()
+        #print("loop1:"); led.print_dim()
         color_chase(BLACK, 0.01)
         color_chase(RED, 0.01)
         color_chase(YELLOW, 0.01)

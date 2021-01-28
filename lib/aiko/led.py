@@ -2,7 +2,7 @@
 #
 # Usage
 # ~~~~~
-# from lib.aiko import led
+# from aiko import led
 # led.initialise()
 # led.pixel(aiko.led.red, 0, True)
 #
@@ -38,10 +38,8 @@ import configuration.main
 
 import urandom
 apa106   = False
-# for dim to be visible in different threads (the aiko background network thread
-# and the main thread, it needs to be pulled from a namespace visible from main.py
-# before the threads were started)
-#dim      = 0.1  # 100% = 1.0
+# this is overrriden by value read from settings at init time
+dim      = 0.1  # 100% = 1.0
 full     = 255
 length   = None
 length_x = None
@@ -66,7 +64,7 @@ blue = colors["blue"]
 yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
-  if dimmer == None: dimmer = configuration.main.dim
+  if dimmer == None: dimmer = dim
   red   = int(color[0] * dimmer)
   green = int(color[1] * dimmer)
   blue  = int(color[2] * dimmer)
@@ -76,10 +74,11 @@ def apply_dim(color, dimmer=None):
 
 # Allow setting dim from code or MQTT
 def set_dim(dimmer):
-    configuration.main.dim = dimmer
+    global dim
+    dim = dimmer
 
 def print_dim():
-    print("Dim: ", configuration.main.dim)
+    print("Dim: ", dim)
 
 def fill(color, write=True):
   np.fill(apply_dim((color[0], color[1], color[2])))
@@ -159,11 +158,7 @@ def initialise(settings=configuration.led.settings):
   parameter = configuration.main.parameter
   apa106 = parameter("apa106", settings)
   zigzag = parameter("zigzag", settings)
-  dim = parameter("dim", settings)
-  # because of global variables in this module, not being shared across
-  # threads, save dim in the global configuration which was included before
-  # threads were spun out
-  configuration.main.dim = dim
+  set_dim(parameter("dim", settings))
 
   length = linear(settings["dimension"])
   length_x = settings["dimension"][0]
@@ -183,8 +178,10 @@ def on_led_message(topic, payload_in):
     set_dim(tokens[0])
     return True
 
+  # When I send one debug message, this gets printed twice. Why?
   if payload_in == "(led:debug)":
     print_dim()
+    print("length: ", length)
 
   if payload_in.startswith("(led:fill "):
     tokens = [int(token) for token in payload_in[10:-1].split()]
