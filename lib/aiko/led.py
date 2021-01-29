@@ -77,6 +77,19 @@ def set_dim(dimmer):
     global dim
     dim = dimmer
 
+# this is used to turn the neopixels back on to default brightness
+def reset_dim():
+  parameter = configuration.main.parameter
+  set_dim(parameter("dim", configuration.led.settings))
+
+# Take from -0.9 to 0.9 (+-0.1 is more typical) and adjust diming
+# value. Make sure it stays within 0 to 1
+def change_dim(change):
+    global dim
+    dim += change
+    if dim<0: dim=0
+    if dim>1: dim=1
+
 def print_dim():
     print("Dim: ", dim)
 
@@ -158,7 +171,7 @@ def initialise(settings=configuration.led.settings):
   parameter = configuration.main.parameter
   apa106 = parameter("apa106", settings)
   zigzag = parameter("zigzag", settings)
-  set_dim(parameter("dim", settings))
+  reset_dim()
 
   length = linear(settings["dimension"])
   length_x = settings["dimension"][0]

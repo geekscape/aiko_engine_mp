@@ -39,6 +39,7 @@ def rainbow_cycle(wait, loopcnt):
     for j in range(loopcnt):
         for i in range(num_np):
             pixel_index = (i * 256 // num_np) + j
+            
             led.pixel(wheel(pixel_index & 255), i)
         led.write()
         time.sleep(wait)
@@ -93,23 +94,35 @@ def toggle_left_tux_led():
 
 last_title=""
 title=""
+np_on = True
 def right_tux_touch():
-    global title, last_title
+    global title, last_title, np_on
     title=""
-    if tux_front.read() < 100:
-        print("Front tux touched")
-        title = "Front Touch"
-    if tux_rear.read()  < 100:
-        print("Rear tux touched")
-        if title:
-            title = "Front+Rear"
+    front_touch = tux_front.read() < 100
+    rear_touch  = tux_rear.read() < 100
+    if front_touch and rear_touch:
+        title = "Front+Rear"
+        if np_on:
+            print("Both Front and rear tux touched, toggle LEDs off")
+            led.set_dim(0)
+            np_on = False
         else:
-            title = "Rear Touch"
+            print("Both Front and rear tux touched, toggle LEDs on")
+            led.reset_dim()
+            np_on = True
+    elif front_touch:
+        print("Front tux touched, brighten")
+        title = "Front Touch"
+        led.change_dim(0.1)
+    elif rear_touch:
+        print("Rear tux touched, darken")
+        title = "Rear Touch"
+        led.change_dim(-0.1)
     if title != last_title:
         last_title = title
         print("Changing title to", title)
         oled.set_title(title)
-        oled.write_title()
+        oled.oleds_show()
         # Debug to make sure we get the correct dim value from MQTT
         #print("tux_touch:"); led.print_dim()
         #led.set_dim(0.4)
@@ -121,7 +134,7 @@ def initialise():
     print("Init badge_np")
     # Does not work
     oled.set_title("Init BadgeNP")
-    oled.write_title()
+    oled.oleds_show()
     led.initialise()
     aiko.event.add_timer_handler(toggle_left_tux_led, 300, immediate=False)
     aiko.event.add_timer_handler(right_tux_touch, 500, immediate=False)
@@ -132,7 +145,9 @@ def initialise():
     Thread(target=run, args=(True, )).start()
 
 def run(thread=False):
-    if thread: print("Start badge_np thread")
+    if thread: 
+        print("Start badge_np thread")
+        oled.set_title("")
     if not badge_np_init: initialise()
 
     global num_np
