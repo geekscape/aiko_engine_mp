@@ -7,6 +7,8 @@ md examples
 md lib
 md lib/aiko
 # md lib/umqtt
+md plugins
+# md plugins/test2
 
 exec print("### Copy applications/*.py ###")
 # put applications/nodebots.py
@@ -16,6 +18,11 @@ put applications/default.py
 # put applications/step_patterns/skipping_girl.py
 put applications/schedule/schedule.py
 put applications/swagbadge.py
+
+exec print("### Copy plugins/*.py ###")
+put plugins/__init__.py
+# put plugins/auto_shake.py
+# put plugins/test2/__init__.py
 
 exec print("### Copy configuration/*.py ###")
 put configuration/keys.db
