@@ -21,8 +21,6 @@ def on_message(topic, payload_in):
   return False
 
 def initialise():
-  print("plugins.test.initialise()...")
   # TODO broadcast message to indicate badge can be shook
   # TODO shake only badges that broadcast that message
   aiko.mqtt.add_message_handler(on_message, "$all/out")
-  print("plugins.test.initialise() done")
