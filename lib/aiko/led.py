@@ -86,9 +86,7 @@ def reset_dim():
 # value. Make sure it stays within 0 to 1
 def change_dim(change):
     global dim
-    dim += change
-    if dim<0: dim=0
-    if dim>1: dim=1
+    dim = max(min(dim + change, 1), 0)
 
 def print_dim():
     print("Dim: ", dim)
