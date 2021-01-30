@@ -74,8 +74,8 @@ def apply_dim(color, dimmer=None):
 
 # Allow setting dim from code or MQTT
 def set_dim(dimmer):
-    global dim
-    dim = dimmer
+  global dim
+  dim = max(min(dimmer, 1), 0)
 
 # this is used to turn the neopixels back on to default brightness
 def reset_dim():
@@ -85,11 +85,10 @@ def reset_dim():
 # Take from -0.9 to 0.9 (+-0.1 is more typical) and adjust diming
 # value. Make sure it stays within 0 to 1
 def change_dim(change):
-    global dim
-    dim = max(min(dim + change, 1), 0)
+  set_dim(dim + change)
 
 def print_dim():
-    print("Dim: ", dim)
+  print("Dim: ", dim)
 
 def fill(color, write=True):
   np.fill(apply_dim((color[0], color[1], color[2])))
