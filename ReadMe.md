@@ -76,6 +76,16 @@ python3 -m venv .venv
 pip install -r requirements.txt
 ```
 
+**Notes**:
+
+1. Some environments may need to install additional tools and libraries. e.g. on Debian or Ubuntu
+
+```
+sudo apt-get install -y libpython3-dev libffi-dev libssl-dev
+```
+
+2. You might find it useful to install an MQTT client for later use. There are packages [here](https://hivemq.github.io/mqtt-cli/docs/installation/packages.html).
+
 ### 2. Download and install MicroPython
 
 - Download the latest MicroPython binary for your ESP32 board from https://micropython.org/download/
