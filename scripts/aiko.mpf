@@ -22,6 +22,7 @@ put applications/swagbadge.py
 exec print("### Copy plugins/*.py ###")
 put plugins/__init__.py
 # put plugins/auto_shake.py
+# put plugins/flash_leds_on_boot.py
 # put plugins/test2/__init__.py
 
 exec print("### Copy configuration/*.py ###")
