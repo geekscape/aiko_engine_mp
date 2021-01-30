@@ -2,14 +2,14 @@
 #
 # Usage
 # ~~~~~
-# import aiko.oled
-# aiko.oled.initialise()
+# from aiko import oled
+# oled.initialise()
 # oled.set_title("Title")
 # oled.write_title()
 # oled.log("Log message"))
 #
-# image = aiko.oled.load_image("examples/tux_nice.pbm")
-# oled0 = aiko.oled.oleds[0]
+# image = oled.load_image("examples/tux_nice.pbm")
+# oled0 = oled.oleds[0]
 # oled0.fill(0)
 # oled0.blit(image, 32, 0)
 # oled0.show()

@@ -2,9 +2,9 @@
 #
 # Usage
 # ~~~~~
-# import aiko.led
-# aiko.led.initialise()
-# aiko.led.pixel(aiko.led.red, 0, True)
+# from aiko import led
+# led.initialise()
+# led.pixel(aiko.led.red, 0, True)
 #
 # MQTT commands
 # ~~~~~~~~~~~~~
@@ -34,9 +34,11 @@ from machine  import Pin
 from neopixel import NeoPixel
 
 import configuration.led
+import configuration.main
 
 import urandom
 apa106   = False
+# this is overrriden by value read from settings at init time
 dim      = 0.1  # 100% = 1.0
 full     = 255
 length   = None
@@ -62,7 +64,6 @@ blue = colors["blue"]
 yellow = colors["yellow"]
 
 def apply_dim(color, dimmer=None):
-  global dim
   if dimmer == None: dimmer = dim
   red   = int(color[0] * dimmer)
   green = int(color[1] * dimmer)
@@ -71,8 +72,32 @@ def apply_dim(color, dimmer=None):
 # TODO: Now fails when called by exec(), see lib/aiko/mqtt.py
 # return tuple([int(element * dimmer) for element in color])
 
-def fill(color):
+# Allow setting dim from code or MQTT
+def set_dim(dimmer):
+  global dim
+  dim = max(min(dimmer, 1), 0)
+
+# this is used to turn the neopixels back on to default brightness
+def reset_dim():
+  parameter = configuration.main.parameter
+  set_dim(parameter("dim", configuration.led.settings))
+
+# Take from -0.9 to 0.9 (+-0.1 is more typical) and adjust diming
+# value. Make sure it stays within 0 to 1
+def change_dim(change):
+  set_dim(dim + change)
+
+def print_dim():
+  print("Dim: ", dim)
+
+def fill(color, write=True):
   np.fill(apply_dim((color[0], color[1], color[2])))
+  if write: np.write()
+
+# write is needed if you use fill() or lots of pixel writes
+# and then you decide to push the result.
+def write():
+  np.write()
 
 # Bresenham's line algorithm
 def line(color, x0, y0, x1, y1):
@@ -143,6 +168,7 @@ def initialise(settings=configuration.led.settings):
   parameter = configuration.main.parameter
   apa106 = parameter("apa106", settings)
   zigzag = parameter("zigzag", settings)
+  reset_dim()
 
   length = linear(settings["dimension"])
   length_x = settings["dimension"][0]
@@ -158,10 +184,14 @@ def on_led_message(topic, payload_in):
     return True
 
   if payload_in.startswith("(led:dim "):
-    global dim
     tokens = [float(token) for token in payload_in[9:-1].split()]
-    dim = tokens[0]
+    set_dim(tokens[0])
     return True
+
+  # When I send one debug message, this gets printed twice. Why?
+  if payload_in == "(led:debug)":
+    print_dim()
+    print("length: ", length)
 
   if payload_in.startswith("(led:fill "):
     tokens = [int(token) for token in payload_in[10:-1].split()]
