@@ -20,6 +20,7 @@
 #              (oled:log This is a test !)
 #              (oled:pixel x y)
 #              (oled:pixels x y x y ...)
+#              (oled:blitm x y width height base64_data)
 #              (oled:text x y This is a test !)
 #              oled.bg=1; oled.fg=0
 #
@@ -68,6 +69,7 @@ import machine, ssd1306
 import aiko.common as common
 
 import configuration.oled
+import binascii
 
 oleds = []
 width = None
@@ -242,6 +244,22 @@ def on_oled_message(topic, payload_in):
       for x, y in token_pairs:
         oled.pixel(x, height - y - 1, FG)
     oleds_show()
+    return True
+
+  if payload_in.startswith("(oled:blitm "):
+    param = payload_in[12:-1].split()
+    try:
+      x = int(param[0])
+      y = int(param[1])
+      w = int(param[2])
+      h = int(param[3])
+      image = bytearray(binascii.a2b_base64(param[4]))
+      fbuf = framebuf.FrameBuffer(image, w, h, framebuf.MONO_HLSB)
+      out = x//width
+      oleds[out].blit(fbuf, x%width, y)
+      oleds_show()
+    except Exception:
+      print("Error: Expected (oled:blitm x y w h data) where data is a padded base64 mono image")
     return True
 
   # (oled:text x y message)
