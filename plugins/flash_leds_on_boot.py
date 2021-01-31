@@ -1,43 +1,61 @@
 # Flash configured LEDs on boot.
+# Tested with 235X pixels on SAO_1, data to IO19, and configuration.led.settings =
+# {'zigzag': False, 'dimension': (235,), 'apa106': False, 'neopixel_pin': 19}
 
 import aiko.led
-import time
-import binascii
+from binascii import unhexlify, b2a_base64
+from gc import collect
+from time import sleep_us, ticks_us, ticks_diff
 
-DURATION_MS = 100
-COLOURS = ["e40303", "ff8c00", "ffed00", "008026", "004dff", "750787"]
-GAMMAS = [v for v in binascii.a2b_base64(b"".join([
-  # Overkill, but I wanted the orange to look orange.
-  # https://learn.adafruit.com/led-tricks-gamma-correction/the-quick-fix
-  b"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEBAQEBAQEBAQEBAQECAgICAgICAgMDA",
-  b"wMDAwMEBAQEBAUFBQUGBgYGBwcHBwgICAkJCQoKCgsLCwwMDQ0NDg4PDxAQERESEhMTFB",
-  b"QVFRYWFxgYGRkaGxscHR0eHyAgISIjIyQlJicnKCkqKywtLi8wMTIyMzQ2Nzg5Ojs8PT4",
-  b"/QEJDREVGSElKS01OT1FSU1VWV1laXF1fYGJjZWZoaWttbnByc3V3eHp8fn+Bg4WHiYqM",
-  b"jpCSlJaYmpyeoKKkp6mrra+xtLa4ur2/wcTGyMvN0NLV19rc3+Hk5+ns7/H09/n8/w=="
-]))]
-
-def gammify(colour):
-  return tuple(GAMMAS[v] for v in colour)
+DURATION_MS = 250
+COLOURS = ["000000", "e40303", "ff8c00", "ffed00", "008026", "004dff", "750787", "000000"]
+COMPENSATION_MEASUREMENTS = 5
 
 def h2c(hex):
-  return tuple(v for v in binascii.unhexlify(hex))
+  return tuple(v for v in unhexlify(hex))
+
+def measure_write_time_us(write):
+  collect()
+  before_us = ticks_us()
+  for _ in range(0, COMPENSATION_MEASUREMENTS): write()
+  return ticks_diff(ticks_us(), before_us) // COMPENSATION_MEASUREMENTS
+
+def noop(): pass
+
+def swipe(buf, cbuf, step, callback=noop):
+  lcbuf = len(cbuf)
+  lbuf = len(buf)
+  for head in range(0 - lcbuf, lbuf, step):
+    lt = 0 - min(0, head)
+    rt = min(0, lbuf - (head + lcbuf))
+    w = lcbuf - lt + rt
+    buf[head + lt : head + lt + w] = cbuf[lt : lcbuf + rt]
+    callback()
+
+def make_cbuf(hex_colours, colour_width=1):
+  ncolours = len(hex_colours)
+  colours = [aiko.led.apply_dim(h2c(hex)) for hex in hex_colours]
+  cbuf = bytearray(3 * ncolours * colour_width)
+  for c in range(ncolours):
+    colour = bytearray(colours[c])
+    for s in range(colour_width):
+      offset = (c * colour_width + s) * 3
+      cbuf[offset:offset+3] = colour
+  return memoryview(cbuf)
 
 def initialise():
-  colours = [aiko.led.black] + [gammify(h2c(hex)) for hex in COLOURS] + [aiko.led.black]
-  ncolours = len(colours)
-  npixels = aiko.led.np.n
-  delay = max(1, DURATION_MS // (ncolours + npixels))
-
-  aiko.led.fill(aiko.led.black)
-  aiko.led.np.write()
-
-  for offset in range(0 - ncolours, npixels):
-    for index in range(ncolours):
-      pixel = offset + index
-      if 0 <= pixel < npixels:
-        aiko.led.np[pixel] = colours[index]
-    aiko.led.np.write()
-    time.sleep_ms(delay)
-
-  aiko.led.fill(aiko.led.black)
-  aiko.led.np.write()
+  ncolours = len(COLOURS)
+  pixel = aiko.led.np
+  write = aiko.led.np.write
+  write_time_us = measure_write_time_us(write)
+  colour_width = 1
+  while write_time_us * (ncolours * colour_width + pixel.n) // colour_width > DURATION_MS * 1000:
+    colour_width += 1
+  cbuf = make_cbuf(COLOURS, colour_width)
+  expected_steps = (len(cbuf) + len(pixel.buf) + 3) // (colour_width * 3)
+  delay_us = max(0, DURATION_MS * 1000 // expected_steps - write_time_us)
+  def callback():
+    write()
+    sleep_us(delay_us)
+  collect()
+  swipe(pixel.buf, cbuf, colour_width * 3, callback)
