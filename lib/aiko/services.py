@@ -71,11 +71,13 @@ def get_configuration(settings):
   return hostname, pid, protocol, username
 
 def on_services_message(topic, payload_in):
+  print("MESSAGE:", payload_in)
   if topic == topic_service:
     if payload_in != "nil":
       tokens = payload_in[1:-1].split()
-      if tokens[0] == "topic":
-        service_manager_topic = tokens[1] + "/in"
+#     if tokens[0] == "topic":
+      if tokens[0] == "primary" and tokens[1] == "started":
+        service_manager_topic = tokens[2] + "/in"
         payload_out  = "(add " + topic_path
         payload_out += " " + protocol + " " + username + " ())"
         aiko.mqtt.client.publish(service_manager_topic, payload_out)
@@ -91,7 +93,7 @@ def initialise(settings=configuration.services.settings):
   topic_in = topic_path + "/in"
   topic_log = topic_path + "/log"
   topic_out = topic_path + "/out"
-  topic_service = namespace + "/manager/service"
+  topic_service = namespace + "/service/registrar"
   topic_state = topic_path + "/state"
 
   settings = configuration.mqtt.settings
