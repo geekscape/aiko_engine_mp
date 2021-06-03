@@ -83,6 +83,8 @@ Resources
 ---------
 Associated open-source ESP32 hardware projects ...
 
+- [Das Labor's](https://das-labor.org/) -
+  [2021 Badge](https://github.com/das-labor/badge-2021)
 - [OHMC team's](https://twitter.com/swagbadge2021) -
   [LCA2021 SwagBadge](http://www.openhardwareconf.org/wiki/Swagbadge2021)
 - [John Spencer's](https://twitter.com/mage0r) -
