@@ -46,6 +46,7 @@ cp lib/aiko/upgrade.py         $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/web_client.py      $RELEASE_PATHNAME/lib/aiko
 cp lib/aiko/web_server.py      $RELEASE_PATHNAME/lib/aiko
 
+cp lib/ili9341.py              $RELEASE_PATHNAME/lib
 cp lib/mpu9250.py              $RELEASE_PATHNAME/lib
 cp lib/shutil.py               $RELEASE_PATHNAME/lib
 cp lib/ssd1306.py              $RELEASE_PATHNAME/lib

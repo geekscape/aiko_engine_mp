@@ -4,10 +4,10 @@ lca_schedule_topic = "public/lca/schedule/#"
 upgrade_topic = "upgrade/aiko_00"
 
 settings = {
-  "host":            "101.181.46.180",  # LCA2021 #swagbadge
+# "host":            "101.181.27.196",  # LCA2021 #swagbadge
 # "host":            "mqtt.eclipse.org",
 # "host":            "mqtt.fluux.io",
-# "host":            "test.mosquitto.org",
+  "host":            "test.mosquitto.org",
   "keepalive":       60,
   "port":            1883,
   "topic_path":      "$me",

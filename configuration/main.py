@@ -7,6 +7,7 @@ settings = {
 # "application":     "applications/nodebots",
   "application":     "applications/schedule/schedule",
 # "application":     "applications/step_controller",
+# "application":     "applications/stylophone",
 # "application":     "applications/squirrel",
 # "application":     "applications/swagbadge",
 # "application":     "lolibot",

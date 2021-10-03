@@ -49,6 +49,7 @@ put lib/aiko/web_server.py
 # put lib/lolibot.py
 
 exec print("### Copy lib/*.py ###")
+put lib/ili9341.py
 put lib/mpu9250.py
 put lib/shutil.py
 put lib/ssd1306.py
