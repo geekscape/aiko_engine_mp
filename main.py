@@ -45,4 +45,7 @@ if parameter("application"):
   application = __import__(application_name)
   application.initialise()
 
+import plugins
+plugins.initialise()
+
 aiko.event.loop_thread()
