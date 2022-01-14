@@ -61,6 +61,13 @@ def set_status(color):
 #
 # Returns sta_if: Wi-Fi Station reference
 
+def report_connected(sta_if):
+  global connected
+  print(W + "Connected: " + sta_if.ifconfig()[0])
+  common.log("WiFi connected: " + sta_if.ifconfig()[0])
+  connected = True
+  return sta_if
+
 def wifi_connect(wifi):
   global connected
   sta_if = network.WLAN(network.STA_IF)
@@ -78,17 +85,13 @@ def wifi_connect(wifi):
         sta_if.connect(ssid[0], ssid[1])
         for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
           if sta_if.isconnected():
-            print(W + "Connected: " + sta_if.ifconfig()[0])
-            common.log("WiFi connected: " + sta_if.ifconfig()[0])
-            connected = True
             wifi_configuration_update(wifi)
-            break   # for retry
-#         print(W + "Waiting")
+            return report_connected(sta_if)
           sleep_ms(WIFI_CONNECTING_CLIENT_PERIOD)
-        if sta_if.isconnected(): break  # for ssid
         print(W + "Timeout: Bad password ?")
         common.log("Timeout:        Bad password ?")
-    if sta_if.isconnected(): break  # for ap
+    if sta_if.isconnected():  # ap or soft-reboot with WiFi enabled
+      return report_connected(sta_if)
   return sta_if
 
 def wifi_configuration_update(wifi):
