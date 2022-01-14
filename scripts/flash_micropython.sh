@@ -9,6 +9,11 @@
 # AMPY_PORT=/dev/tty.usbmodem14621  # Freetronics USB Serial adaptor
 # AMPY_PORT=/dev/tty.SLAB_USBtoUART
 
+if [ -z "$AMPY_PORT" ]; then
+    echo "Please set AMPY_PORT."
+    exit 1
+fi
+
 # BAUDRATE=115200
 BAUDRATE=460800
 
