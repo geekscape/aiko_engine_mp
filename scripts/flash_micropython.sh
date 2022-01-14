@@ -15,6 +15,11 @@ BAUDRATE=460800
 # ESP32_MICROPYTHON=firmware/esp32-idf4-20200902-v1.13.bin
 ESP32_MICROPYTHON=firmware/esp32-20210623-v1.16.bin
 
+if [ ! -f firmware/$ESP32_MICROPYTHON ]; then
+    mkdir -p firmware
+    curl -Lo $ESP32_MICROPYTHON https://micropython.org/resources/$ESP32_MICROPYTHON
+fi
+
 echo '### Erase flash ###'
 esptool.py --chip esp32 --port $AMPY_PORT erase_flash
 
