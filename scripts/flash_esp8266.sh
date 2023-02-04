@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 AMPY_PORT=/dev/tty.usbmodem14621  # Freetronics USB Serial adaptor
 # BAUDRATE=115200

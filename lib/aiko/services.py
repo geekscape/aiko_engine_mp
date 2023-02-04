@@ -1,4 +1,4 @@
-# lib/aiko/services.py: version: 2020-12-27 14:00 v05
+# lib/aiko/services.py: version: 2023-02-04 07:00 v06
 #
 # Usage
 # ~~~~~
@@ -25,6 +25,8 @@ import configuration.mqtt
 
 import configuration.services
 
+name = None
+namespace = None
 protocol = None
 socket = None
 topic_in = None
@@ -33,6 +35,7 @@ topic_out = None
 topic_path = None
 topic_service = None
 topic_state = None
+transport = "mqtt"
 username = None
 
 def bootstrap():
@@ -45,6 +48,7 @@ def bootstrap():
     socket.bind((ip_address, 4154))
   request = b"boot? " + ip_address + " 4154"
   address = ("255.255.255.255", 4153)
+  print("bootstrap request: " + request)
   socket.sendto(request, address)
 
   socket.setblocking(False)
@@ -53,22 +57,24 @@ def bootstrap():
   while tokens[0] != "boot":
     try:
       response, addr = socket.recvfrom(1024)
+      print("bootstrap response: " + response)
       tokens = response.decode("utf-8").split()
     except OSError:
       sleep_ms(1)
       counter -= 1
       if counter == 0:
+        print("bootstrap request: " + request)
         socket.sendto(request, address)
         counter = 5000
   return tokens[1], tokens[2], tokens[3]
 #        MQTT host, MQTT port, Namespace
 
 def get_configuration(settings):
-  hostname = aiko.common.hostname()
-  pid = settings["pid"]
+  name = settings["name"]
   protocol = settings["protocol"]
+  topic_path = aiko.mqtt.get_topic_path(namespace)
   username = settings["username"]
-  return hostname, pid, protocol, username
+  return name, protocol, topic_path, username
 
 def on_services_message(topic, payload_in):
   print("MESSAGE:", payload_in)
@@ -76,20 +82,20 @@ def on_services_message(topic, payload_in):
     if payload_in != "nil":
       tokens = payload_in[1:-1].split()
 #     if tokens[0] == "topic":
-      if tokens[0] == "primary" and tokens[1] == "started":
+      if tokens[0] == "primary" and tokens[1] == "found":
         service_manager_topic = tokens[2] + "/in"
-        payload_out  = "(add " + topic_path
-        payload_out += " " + protocol + " " + username + " ())"
+        payload_out  = "(add " + topic_path + " " + name + " "
+        payload_out += protocol + " " + transport + " " + username + " ())"
         aiko.mqtt.client.publish(service_manager_topic, payload_out)
     return True
 
 def initialise(settings=configuration.services.settings):
-  global protocol, username, topic_in, topic_log
+  global name, namespace, protocol, username, topic_in, topic_log
   global topic_path, topic_out, topic_service, topic_state
 
-  hostname, pid, protocol, username = get_configuration(settings)
-  mqtt_host, mqtt_port, namespace = bootstrap()
-  topic_path = namespace + "/" + hostname + "/" + str(pid)
+# mqtt_host, mqtt_port, namespace = bootstrap()
+  mqtt_host, mqtt_port, namespace = "geekscape.freeddns.org", 1883, "aiko"
+  name, protocol, topic_path, username =  get_configuration(settings)
   topic_in = topic_path + "/in"
   topic_log = topic_path + "/log"
   topic_out = topic_path + "/out"

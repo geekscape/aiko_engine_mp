@@ -1,4 +1,4 @@
-# lib/aiko/mqtt.py: version: 2020-12-27 14:00 v05
+# lib/aiko/mqtt.py: version: 2023-02-04 07:00 v06
 #
 # Usage
 # ~~~~~
@@ -45,7 +45,7 @@ def add_message_handler(message_handler, topic_filter=None):
   message_handlers.append((message_handler, topic_filter))
 
 def get_topic_path(namespace):
-  return namespace + "/" + common.hostname() + "/0"
+  return namespace + "/" + common.hostname() + "/0/0"
 
 def is_connected():
   global connected
@@ -124,7 +124,7 @@ def connect(settings=configuration.mqtt.settings):
     settings["host"], settings["port"], keepalive=keepalive)
 
   client.set_callback(on_message)
-  client.set_last_will(topic_path + "/state", "nil")
+  client.set_last_will(topic_path + "/state", "(absent)")
   try:
     client.connect()
     aiko.event.add_timer_handler(mqtt_ping_handler, keepalive * 1000)

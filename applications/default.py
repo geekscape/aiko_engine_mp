@@ -33,8 +33,8 @@ def set_handler(demonstration_handler):
   demonstration = demonstration_handler
 
 def initialise():
-# set_handler(pattern_0)
-  set_handler(pattern_1)
+  set_handler(pattern_0)
+# set_handler(pattern_1)
   event.add_timer_handler(handler, 100)
 
 # pattern_0(): Colour cycle
