@@ -6,7 +6,7 @@
 # aiko.oled.initialise()
 # oled.set_title("Title")
 # oled.write_title()
-# oled.log("Log message"))
+# oled.log("Log message")
 #
 # image = aiko.oled.load_image("examples/tux_nice.pbm")
 # oled0 = aiko.oled.oleds[0]
@@ -62,10 +62,11 @@ ol.contrast(0 .. 255)
 
 import framebuf
 import gc
-from machine import Pin
+from machine import ADC, Pin
 import machine, ssd1306
 
 import aiko.common as common
+import aiko.event as event
 
 import configuration.oled
 
@@ -78,6 +79,8 @@ BG = 0
 FG = 1
 
 annunciators = "    "
+battery_adc = None
+battery_voltage = 0
 log_annunciator = False
 log_buffer = []
 oleds_enabled = True
@@ -88,7 +91,7 @@ title = ""
 title_saved = ""
 
 def initialise(settings=configuration.oled.settings):
-  global show_title, width, height, font_size, bottom_row
+  global battery_adc, show_title, width, height, font_size, bottom_row
   parameter = configuration.main.parameter
 
   Pin(int(settings["enable_pin"]), Pin.OUT).value(1)
@@ -114,10 +117,22 @@ def initialise(settings=configuration.oled.settings):
   oleds_clear()
   common.set_handler("log", log)
 
+  battery_adc = ADC(Pin(35))
+  battery_adc.atten(ADC.ATTN_6DB)
+  battery_adc.width(ADC.WIDTH_12BIT)
+# event.add_timer_handler(battery_handler, 60000, immediate=True)
+
   import aiko.mqtt
   aiko.mqtt.add_message_handler(on_oled_message, "$me/in")
   if parameter("logger_enabled"):
     aiko.mqtt.add_message_handler(on_oled_log_message, "$all/log")
+
+def battery_handler():
+  global battery_adc, battery_voltage, title
+  battery_voltage = (battery_adc.read() - 2190) / 844.0 + 2.9
+  print("BATTERY: " + str(battery_voltage))
+  set_title(title)
+  oleds_show()
 
 def oleds_enable(enabled):
   global oleds_enabled
@@ -202,10 +217,9 @@ def set_system_title(save=False, restore=False):
   set_title(title_saved if restore else "Aiko " + common.AIKO_VERSION)
 
 def set_title(new_title):
-  global title
+  global battery_voltage, title
   if oleds_enabled:
-    memory_free_text = "Free:" + str(gc.mem_free())
-    title = (new_title + ' '*12)[:12] + annunciators + memory_free_text
+    title = "{:12s}{:4s}Free:{:5d}  {:0.1f}V".format(new_title[:12], annunciators, gc.mem_free(), battery_voltage)
 
 def test(text="Line "):
   for oled in oleds:
