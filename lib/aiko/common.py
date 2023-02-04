@@ -73,6 +73,6 @@ def touch_pins_check(touch_pins):
   return False
 
 def serial_id():
-  id = unique_id()  # 6 bytes
+  id = unique_id()[3:]  # Device specific: Least significant 24-bits
   id = "".join(hex(digit)[-2:] for digit in id)
   return id  # 12 hexadecimal digits
