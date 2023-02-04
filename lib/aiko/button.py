@@ -52,7 +52,7 @@ slider_handlers = []  # [(handler, lower_button, upper_button), ...]
 HANDLER = 0  # same as multibutton_handlers !
 LOWER_BUTTON = 1
 UPPER_BUTTON = 2
-TOUCH_THRESHOLD = 150
+TOUCH_THRESHOLD = 200
 
 class Button:
   def __init__(self, driver, pin_number, continuous=False):
