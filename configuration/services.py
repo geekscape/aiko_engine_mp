@@ -1,10 +1,10 @@
-# configuration/services.py: version: 2023-02-04 07:00 v05
+# configuration/services.py: version: 2023-03-11 14:00 v06
 
 settings = {
-  "name":     "test",
+  "name":     "default",
   "pid":       0,
 # "protocol": "github.com/geekscape/aiko_services/protocol/leds:0",
 # "protocol": "github.com/geekscape/aiko_services/protocol/joysticks:0",
   "protocol": "github.com/geekscape/aiko_services/protocol/test:0",
-  "username": "test"
+  "username": "root"
 }

@@ -6,7 +6,7 @@ md configuration
 md examples
 md lib
 md lib/aiko
-md lib/fonts
+# md lib/fonts
 md lib/umqtt
 
 exec print("### Copy applications/*.py ###")
@@ -39,6 +39,7 @@ put lib/aiko/mqtt.py
 put lib/aiko/net.py
 put lib/aiko/oled.py
 put lib/aiko/queue.py
+# put lib/aiko/screen.py
 put lib/aiko/services.py
 put lib/aiko/system_ui.py
 put lib/aiko/test.py
@@ -50,14 +51,14 @@ put lib/aiko/web_server.py
 # put lib/lolibot.py
 
 exec print("### Copy lib/*.py ###")
-put lib/ili9341.py
+# put lib/ili9341.py
 put lib/micropyGPS.py
 put lib/mpu9250.py
 put lib/shutil.py
 put lib/ssd1306.py
 put lib/threading.py
-put lib/xglcd_font.py
-put lib/fonts/Bally7x9.c
+# put lib/xglcd_font.py
+# put lib/fonts/Bally7x9.c
 
 # exec print("### Copy lib/umqtt ###")
 put lib/umqtt/simple.py

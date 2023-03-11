@@ -1,3 +1,6 @@
+env/
 firmware/
 micropython-lib/
+*_andyg
+*_cchs
 z_*

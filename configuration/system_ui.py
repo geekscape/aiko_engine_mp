@@ -2,4 +2,5 @@
 
 settings = {
   "system_ui_pins": [12, 14]  # If touch_pins pressed, bring up system menu
+# "system_ui_pins": [12, 13]  # If touch_pins pressed, bring up system menu
 }
