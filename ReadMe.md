@@ -23,8 +23,9 @@ The Aiko Engine MP provides ...
 - End user Wi-Fi configuration via a Wi-Fi Access Port and web server
 - Application firmware OTA (Over The Air) upgrader
 - Low-level LED panel graphics functions
-- Multiple OLED screens
+- Multiple OLED screens or color TFT LCD screen
 - Integrates MQTT and distributed services
+- Supports [LCA2022 SwagBadge project](http://www.openhardwareconf.org/wiki/OHMC2022_Swagbadge)
 - Supports [LCA2021 SwagBadge project](http://www.openhardwareconf.org/wiki/Swagbadge2021)
 - Supports [LCA2018 LoliBot robotics project](https://github.com/CCHS-Melbourne/LoliBot)
 - Supports [LCA2017 IoTuz project](http://www.openhardwareconf.org/wiki/OHC2017)
@@ -40,6 +41,13 @@ Installation
     git clone https://github.com/geekscape/aiko_engine_mp
     cd aiko_engine_mp
 ```
+
+- The `master` branch supports the majority of hardware options.
+  However, the [SwagBadge 2022](http://www.openhardwareconf.org/wiki/OHMC2022_Swagbadge) is currently supported on the `swagbadge_2022` branch
+```
+    git branch swagbadge_2022
+```
+
 - Ensure you have a
   [compatible hardware board](https://github.com/micropython/micropython/wiki/Boards-Summary) or
   [compatible microPython port](https://github.com/micropython/micropython/tree/master/ports)
@@ -83,6 +91,8 @@ Resources
 ---------
 Associated open-source ESP32 hardware projects ...
 
+- [OHMC team's](https://twitter.com/OpenHWConf) -
+  [LCA2022 SwagBadge](http://www.openhardwareconf.org/wiki/OHMC2022_Swagbadge)
 - [OHMC team's](https://twitter.com/swagbadge2021) -
   [LCA2021 SwagBadge](http://www.openhardwareconf.org/wiki/Swagbadge2021)
 - [John Spencer's](https://twitter.com/mage0r) -

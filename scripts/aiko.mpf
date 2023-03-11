@@ -1,15 +1,15 @@
-exec print("### Make directories ###")
+exec print("### Make directories        ###")
 md applications
 md applications/schedule
 # md applications/step_patterns
 md configuration
 md examples
+md fonts
 md lib
 md lib/aiko
-# md lib/fonts
 md lib/umqtt
 
-exec print("### Copy applications/*.py ###")
+exec print("### Copy applications/*.py  ###")
 # put applications/nodebots.py
 put applications/default.py
 # put applications/step_controller.py
@@ -30,7 +30,10 @@ put configuration/schedule.py
 put configuration/services.py
 put configuration/system_ui.py
 
-exec print("### Copy lib/aiko/*.py ###")
+exec print("### Copy fonts/*            ###")
+put fonts/Bally7x9.c
+
+exec print("### Copy lib/aiko/*.py      ###")
 put lib/aiko/button.py
 put lib/aiko/common.py
 put lib/aiko/event.py
@@ -47,27 +50,26 @@ put lib/aiko/upgrade.py
 put lib/aiko/web_client.py
 put lib/aiko/web_server.py
 
-# exec print("### Copy lolibot.py ###")
+# exec print("### Copy lolibot.py         ###")
 # put lib/lolibot.py
 
-exec print("### Copy lib/*.py ###")
-# put lib/ili9341.py
+exec print("### Copy lib/*.py           ###")
+put lib/ili9341.py
 put lib/micropyGPS.py
 put lib/mpu9250.py
 put lib/shutil.py
 put lib/ssd1306.py
 put lib/threading.py
-# put lib/xglcd_font.py
-# put lib/fonts/Bally7x9.c
+put lib/xglcd_font.py
 
-# exec print("### Copy lib/umqtt ###")
+# exec print("### Copy lib/umqtt          ###")
 put lib/umqtt/simple.py
 put lib/umqtt/robust.py
 
 # print("### Copy play.py ###")
 # put play.py
 
-exec print("### Copy main.py ###")
+exec print("### Copy main.py            ###")
 put main.py
 
-exec print("### Complete ###")
+exec print("### Complete                ###")

@@ -1,4 +1,4 @@
-# examples/buttons_sliders.py: version: 2020-10-17 04:00
+# examples/buttons_sliders.py: version: 2023-03-11 14:00 v1
 #
 # ESP32 Touch slider example
 #
@@ -38,14 +38,27 @@ from aiko.common import map_value
 import aiko.event
 import aiko.oled
 
+swagbadge = 2022  # Select SwagBadge 2022 GPIO pin mapping
+
+if swagbadge == 2021:
+    LHS_1 = 12
+    LHS_2 = 15
+    RHS_1 = 14
+    RHS_2 = 27
+else:
+    LHS_1 = 13
+    LHS_2 = 15
+    RHS_1 = 12
+    RHS_2 = 27
+
 aiko.button.initialise(poll_rate=100)  # 10 Hz (default is 5 Hz)
 
 def button_handler(pin_number, state):
     print("Button {}: {}".format(pin_number, "press" if state else "release"))
 
     screen = None
-    if pin_number == 16: screen = aiko.oled.oleds[0]
-    if pin_number == 17: screen = aiko.oled.oleds[1]
+#   if pin_number == 16: screen = aiko.oled.oleds[0]
+#   if pin_number == 17: screen = aiko.oled.oleds[1]
 
     if screen:
         screen.fill_rect(0, 16, 128, 8, 0)
@@ -57,8 +70,8 @@ def slider_handler(pin_number, state, value):
     print("Slider {}: {} {}".format(pin_number, state, value))
 
     screen = None
-    if pin_number == 12: screen = aiko.oled.oleds[0]
-    if pin_number == 14: screen = aiko.oled.oleds[1]
+#   if pin_number == 12: screen = aiko.oled.oleds[0]
+#   if pin_number == 14: screen = aiko.oled.oleds[1]
 
     if screen:
         screen.fill_rect(0, 32, 128, 8, 0)
@@ -71,9 +84,9 @@ def slider_handler(pin_number, state, value):
         screen.show()
 
 def run():
-    aiko.oled.oleds_clear(0)
+#   aiko.oled.oleds_clear(0)
     aiko.button.add_button_handler(button_handler, [16, 17])
-#   aiko.button.add_touch_handler(button_handler, [12, 14, 15, 27])
+    aiko.button.add_touch_handler(button_handler, [LHS_1, LHS_2, RHS_1, RHS_2])
 
-    aiko.button.add_slider_handler(slider_handler, 12, 15)
-    aiko.button.add_slider_handler(slider_handler, 14, 27)
+    aiko.button.add_slider_handler(slider_handler, LHS_1, LHS_2)
+    aiko.button.add_slider_handler(slider_handler, RHS_1, RHS_2)

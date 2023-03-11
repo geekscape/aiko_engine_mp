@@ -1,4 +1,4 @@
-# configuration/main.py: version: 2023-02-04 07:00 v06
+# configuration/main.py: version: 2023-03-11 14:00 v07
 
 settings = {
 # "application":     "applications/default",  # Application to run
@@ -10,14 +10,14 @@ settings = {
 # "application":     "applications/stream_train",
 # "application":     "applications/stylophone",
 # "application":     "applications/squirrel",
-# "application":     "applications/swagbadge",
+  "application":     "applications/swagbadge",
 # "application":     "lolibot",
 
-  "denye_pins":       [12, 14],  # If touch_pins pressed, don't run "main.py"
-# "denye_pins":       [12, 13],  # If touch_pins pressed, don't run "main.py"
+  "denye_pins":       [12, 13],  # If touch_pins pressed, don't run "main.py"
+# "denye_pins":       [12, 14],  # If touch_pins pressed, don't run "main.py"
   "led_enabled":      False,     # WS2812B LEDs attached
   "logger_enabled":   False,     # Display everyone's log output
-  "oled_enabled":     True,      # OLED attached
+  "oled_enabled":     False,     # OLED attached
   "services_enabled": True       # Use Aiko Services infrastructure
 }
 

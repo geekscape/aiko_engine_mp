@@ -22,23 +22,26 @@ import aiko.common as common
 if common.touch_pins_check(denye_pins):
   raise Exception("Exit to repl")
 
+### Initialise display and font, clear screen and gc.collect() first ###
+
 import aiko.event
 import aiko.net
 import aiko.mqtt
-import aiko.system_ui
-aiko.system_ui.initialise()
+# import aiko.system_ui
+# aiko.system_ui.initialise()
 
-import aiko.led
-aiko.led.initialise()
+if parameter("led_enabled"):
+  import aiko.led
+  aiko.led.initialise()
 
 if parameter("oled_enabled"):
   import aiko.oled
   aiko.oled.initialise()
 
-import aiko.upgrade
-aiko.upgrade.initialise()
+# import aiko.upgrade
+# aiko.upgrade.initialise()
 
-aiko.net.initialise()
+# aiko.net.initialise()
 
 if parameter("application"):
   application_name = parameter("application")
