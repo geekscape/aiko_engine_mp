@@ -48,7 +48,8 @@ Installation
 
 - The `master` branch supports the majority of hardware options.  However, the
 [SwagBadge 2022](http://www.openhardwareconf.org/wiki/OHMC2022_Swagbadge)
-is currently supported on the `swagbadge_2022` development branch
+is currently supported on the
+[`swagbadge_2022` development branch](https://github.com/geekscape/aiko_engine_mp/tree/swagbadge_2022)
 ```
     git checkout swagbadge_2022
 ```
