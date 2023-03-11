@@ -31,7 +31,13 @@ ESP32_MICROPYTHON=$CHIP-20220618-v1.19.1.bin
 # ESP32_MICROPYTHON=firmware/micropython_camera_feeeb5ea3_esp32_idf4_4.bin
 
 echo "### Erase flash: $CHIP ###"
-esptool.py --chip $CHIP --no-stub --port $AMPY_PORT erase_flash
+if [ "x$CHIP" == "xesp32s3" ]; then
+# ESP32 S3
+  esptool.py --chip $CHIP --no-stub --port $AMPY_PORT erase_flash
+else
+# ESP32
+  esptool.py --chip $CHIP --port $AMPY_PORT erase_flash
+fi
 
 echo "### Flash microPython: $CHIP: $ESP32_MICROPYTHON ###"
 
