@@ -1,4 +1,4 @@
-# lib/aiko/led.py: version: 2020-12-27 14:00 v05
+# lib/aiko/led.py: version: 2023-07-30 04:00 v06
 #
 # Usage
 # ~~~~~
@@ -146,7 +146,7 @@ def initialise(settings=configuration.led.settings):
 
   length = linear(settings["dimension"])
   length_x = settings["dimension"][0]
-  np = NeoPixel(Pin(settings["neopixel_pin"]), length, timing=True)
+  np = NeoPixel(Pin(settings["neopixel_pin"]), length)  # timing=True
 
   import aiko.mqtt
   aiko.mqtt.add_message_handler(on_led_message, "$me/in")
