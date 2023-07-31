@@ -1,4 +1,4 @@
-# lib/aiko/led.py: version: 2023-07-30 04:00 v06
+# lib/aiko/led.py: version: 2023-08-01 00:00 v06
 #
 # Usage
 # ~~~~~
@@ -37,7 +37,7 @@ import configuration.led
 
 import urandom
 apa106   = False
-dim      = 0.1  # 100% = 1.0
+dim      = 0.2  # 100% = 1.0
 full     = 255
 length   = None
 length_x = None
@@ -122,7 +122,7 @@ def pixel0(color):
   np[0] = color
   saved_buffer = np.buf
   np.buf = bytearray(3)
-  np[0] = color
+  np[0] = apply_dim(color)
   np.write()
   np.buf = saved_buffer
 
