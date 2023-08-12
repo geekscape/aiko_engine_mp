@@ -59,7 +59,9 @@ black = colors["black"]
 red = colors["red"]
 green = colors["green"]
 blue = colors["blue"]
+purple = colors["purple"]
 yellow = colors["yellow"]
+white = colors["white"]
 
 def apply_dim(color, dimmer=None):
   global dim
