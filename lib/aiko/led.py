@@ -50,11 +50,13 @@ colors = {
   "red":    (full,    0,    0),
   "green":  (   0, full,    0),
   "blue":   (   0,    0, full),
-  "purple": (full,    0, full),
   "yellow": (full, full,    0),
+  "purple": (full,    0, full),
+  "aqua":   (   0, full, full),
   "white":  (full, full, full)
 }
 
+aqua = colors["aqua"]
 black = colors["black"]
 red = colors["red"]
 green = colors["green"]

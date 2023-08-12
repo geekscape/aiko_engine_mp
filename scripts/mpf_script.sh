@@ -8,6 +8,6 @@
 
 MPF_SCRIPT=$1
 
-$RESET=--reset
+RESET=--reset
 
 mpfshell $RESET -o ${AMPY_PORT:4} -s $MPF_SCRIPT
