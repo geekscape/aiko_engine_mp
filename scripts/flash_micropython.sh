@@ -35,6 +35,7 @@ BAUDRATE=460800
 CHIP=${1:-esp32}
 
 # ESP32_MICROPYTHON=firmware/esp32-20210623-v1.16.bin
+# ESP32_MICROPYTHON=firmware/esp32-20210902-v1.17.bin
 # ESP32_MICROPYTHON=$CHIP-20220618-v1.19.1.bin
 ESP32_MICROPYTHON=$CHIP-20230426-v1.20.0.bin
 
@@ -42,8 +43,8 @@ ESP32_MICROPYTHON=$CHIP-20230426-v1.20.0.bin
 # ESP32_MICROPYTHON=esp32s3-generic-spiram-20230426-v1.20.0-327-gd14ddcbdb.bin
 
 # ESP32-CAM
-#### ESP32_MICROPYTHON=firmware/micropython_cmake_9fef1c0bd_esp32_idf4.x_ble_camera.bin
-# ESP32_MICROPYTHON=firmware/micropython_camera_feeeb5ea3_esp32_idf4_4.bin
+#### ESP32_MICROPYTHON=micropython_cmake_9fef1c0bd_esp32_idf4.x_ble_camera.bin
+# ESP32_MICROPYTHON=micropython_camera_feeeb5ea3_esp32_idf4_4.bin
 
 echo "### Erase flash: $CHIP ###"
 if [ "x$CHIP" == "xesp32s3" ]; then
