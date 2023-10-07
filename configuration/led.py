@@ -1,4 +1,4 @@
-# configuration/led.py: version: 2020-12-13 18:30 v04
+# configuration/led.py: version: 2023-08-01 00:00 v05
 
 settings = {    # LED panel or string
   "apa106":       False,  # IoTuz and LoliBot use APA106 RGB LEDs
@@ -11,5 +11,6 @@ settings = {    # LED panel or string
   "neopixel_pin": 13,     # Usually
 # "neopixel_pin": 15,     # Wemos OLED
 # "neopixel_pin": 23,     # IoTuz
+# "neopixel_pin": 48,     # Banana Pi Leaf S3
   "zigzag":       False   # For 2D panels
 }

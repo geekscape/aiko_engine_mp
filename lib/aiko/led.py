@@ -1,4 +1,4 @@
-# lib/aiko/led.py: version: 2020-12-27 14:00 v05
+# lib/aiko/led.py: version: 2023-08-01 00:00 v06
 #
 # Usage
 # ~~~~~
@@ -37,7 +37,7 @@ import configuration.led
 
 import urandom
 apa106   = False
-dim      = 0.1  # 100% = 1.0
+dim      = 0.2  # 100% = 1.0
 full     = 255
 length   = None
 length_x = None
@@ -50,16 +50,20 @@ colors = {
   "red":    (full,    0,    0),
   "green":  (   0, full,    0),
   "blue":   (   0,    0, full),
-  "purple": (full,    0, full),
   "yellow": (full, full,    0),
+  "purple": (full,    0, full),
+  "aqua":   (   0, full, full),
   "white":  (full, full, full)
 }
 
+aqua = colors["aqua"]
 black = colors["black"]
 red = colors["red"]
 green = colors["green"]
 blue = colors["blue"]
+purple = colors["purple"]
 yellow = colors["yellow"]
+white = colors["white"]
 
 def apply_dim(color, dimmer=None):
   global dim
@@ -122,7 +126,7 @@ def pixel0(color):
   np[0] = color
   saved_buffer = np.buf
   np.buf = bytearray(3)
-  np[0] = color
+  np[0] = apply_dim(color)
   np.write()
   np.buf = saved_buffer
 
@@ -146,7 +150,7 @@ def initialise(settings=configuration.led.settings):
 
   length = linear(settings["dimension"])
   length_x = settings["dimension"][0]
-  np = NeoPixel(Pin(settings["neopixel_pin"]), length, timing=True)
+  np = NeoPixel(Pin(settings["neopixel_pin"]), length)  # timing=True
 
   import aiko.mqtt
   aiko.mqtt.add_message_handler(on_led_message, "$me/in")

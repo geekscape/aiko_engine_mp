@@ -1,4 +1,4 @@
-# lib/aiko/net.py: version: 2020-12-27 14:00 v05
+# lib/aiko/net.py: version: 2023-08-13 00:00 v06
 #
 # Usage
 # ~~~~~
@@ -46,50 +46,64 @@ led_max = 0.2
 
 W = "### WiFi: "
 
+def initialise():
+  event.add_timer_handler(net_led_handler, 100)  # 10 Hz
+  Thread(target=net_thread).start()
+
+  parameter = configuration.main.parameter
+  if parameter("services_enabled"):
+    import aiko.services as services
+    services.initialise()
+  else:
+    import aiko.mqtt
+    aiko.mqtt.initialise()
+
 def is_connected():
   global connected
   return connected
+
+def net_led_handler():
+  global led_counter
+  led_counter += led_delta
+  led_dim = led_max - abs(led_counter % (led_max * 2) - led_max)
+  led.pixel0(tuple([int(element * led_dim) for element in led_color]))
+
+def net_thread():
+  global connected, wifi_configuration_updated
+
+  wifi = configuration.net.wifi
+  while True:
+    set_status(led.red)
+    oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
+    if len(wifi):
+      print(W + "Checking WiFi configuration with available networks")
+      for retry in range(WIFI_CONNECT_RETRY_LIMIT):
+        sta_if = wifi_connect(wifi)
+        if sta_if.isconnected(): break
+        sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
+      if sta_if.isconnected():        # TODO: Consolidate Wi-FI and MQTT status
+        set_status(led.blue)
+        print(W + "Connected: " + sta_if.ifconfig()[0])
+        common.log("WiFi connected: " + sta_if.ifconfig()[0])
+        connected = True
+        wifi_configuration_update(wifi)
+      while sta_if.isconnected():
+        oled.set_annunciator(common.ANNUNCIATOR_WIFI, "W", True)
+        sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
+      wifi_disconnect(sta_if)
+      set_status(led.red)
+      oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
+# TODO: If Wi-Fi disconnect, then retry Wi-Fi before going to Wi-Fi AP mode
+    ssid_password = aiko.web_server.wifi_configure(wifi)
+    if len(ssid_password[0]):
+      wifi.insert(0, ssid_password)
+      wifi_configuration_updated = True
 
 # TODO: Replace "color" parameter with network status enum --> LED color
 
 def set_status(color):
   global led_color
   led_color = color
-
-# Parameter(s)
-#   wifi: List of tuples, each one containing the Wi-Fi AP SSID and password
-#
-# Returns sta_if: Wi-Fi Station reference
-
-def wifi_connect(wifi):
-  global connected
-  sta_if = network.WLAN(network.STA_IF)
-  sta_if.active(True)
-  oled.set_annunciator(common.ANNUNCIATOR_WIFI, "s", True)
-  common.log("WiFi scan")
-  aps = sta_if.scan()
-
-  for ap in aps:  # Note 1
-    for ssid in wifi:
-      if ssid[0].encode() in ap:
-        print(W + "Connecting: " +  ssid[0])
-        oled.set_annunciator(common.ANNUNCIATOR_WIFI, "c", True)
-        common.log("WiFi connecting:" +  ssid[0])
-        sta_if.connect(ssid[0], ssid[1])
-        for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
-          if sta_if.isconnected():
-            print(W + "Connected: " + sta_if.ifconfig()[0])
-            common.log("WiFi connected: " + sta_if.ifconfig()[0])
-            connected = True
-            wifi_configuration_update(wifi)
-            break   # for retry
-#         print(W + "Waiting")
-          sleep_ms(WIFI_CONNECTING_CLIENT_PERIOD)
-        if sta_if.isconnected(): break  # for ssid
-        print(W + "Timeout: Bad password ?")
-        common.log("Timeout:        Bad password ?")
-    if sta_if.isconnected(): break  # for ap
-  return sta_if
 
 def wifi_configuration_update(wifi):
   global wifi_configuration_updated
@@ -106,52 +120,37 @@ def wifi_configuration_update(wifi):
     common.log("WiFi configuration updated")
   wifi_configuration_updated = False
 
+# Parameter(s)
+#   wifi: List of tuples, each one containing the Wi-Fi AP SSID and password
+#
+# Returns sta_if: Wi-Fi Station reference
+
+def wifi_connect(wifi):
+  sta_if = network.WLAN(network.STA_IF)
+  sta_if.active(True)
+  oled.set_annunciator(common.ANNUNCIATOR_WIFI, "s", True)
+  common.log("WiFi scan")
+  aps = sta_if.scan()
+
+  for ap in aps:  # Note 1
+    for ssid in wifi:
+      if ssid[0].encode() in ap:
+        print(W + "Connecting: " +  ssid[0])
+        oled.set_annunciator(common.ANNUNCIATOR_WIFI, "c", True)
+        common.log("WiFi connecting:" +  ssid[0])
+        sta_if.connect(ssid[0], ssid[1])
+        for retry in range(WIFI_CONNECTING_RETRY_LIMIT):
+          if sta_if.isconnected():
+            break   # for retry
+#         print(W + "Waiting")
+          sleep_ms(WIFI_CONNECTING_CLIENT_PERIOD)
+        if sta_if.isconnected(): break  # for ssid
+        print(W + "Timeout: Bad password ?")
+        common.log("Timeout:        Bad password ?")
+    if sta_if.isconnected(): break  # for ap
+  return sta_if
+
 def wifi_disconnect(sta_if):
   sta_if.disconnect()
   print(W + "Disconnected")
   connected = False
-
-def net_led_handler():
-  global led_counter
-  led_counter += led_delta
-  led_dim = led_max - abs(led_counter % (led_max * 2) - led_max)
-  led.pixel0(tuple([int(element * led_dim) for element in led_color]))
-
-def net_thread():
-  global wifi_configuration_updated
-
-  wifi = configuration.net.wifi
-  while True:
-    set_status(led.red)
-    oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
-    if len(wifi):
-      print(W + "Checking WiFi configuration with available networks")
-      for retry in range(WIFI_CONNECT_RETRY_LIMIT):
-        sta_if = wifi_connect(wifi)
-        if sta_if.isconnected(): break
-        sleep_ms(WIFI_CONNECTED_CHECK_PERIOD)
-      if sta_if.isconnected():        # TODO: Consolidate Wi-FI and MQTT status
-        set_status(led.blue)
-      while sta_if.isconnected():
-        oled.set_annunciator(common.ANNUNCIATOR_WIFI, "W", True)
-        sleep_ms(WIFI_CONNECTED_CLIENT_PERIOD)
-      wifi_disconnect(sta_if)
-      set_status(led.red)
-      oled.set_annunciator(common.ANNUNCIATOR_WIFI, " ", True)
-# TODO: If Wi-Fi disconnect, then retry Wi-Fi before going to Wi-Fi AP mode
-    ssid_password = aiko.web_server.wifi_configure(wifi)
-    if len(ssid_password[0]):
-      wifi.insert(0, ssid_password)
-      wifi_configuration_updated = True
-
-def initialise():
-# event.add_timer_handler(net_led_handler, 100)  # 10 Hz
-  Thread(target=net_thread).start()
-
-  parameter = configuration.main.parameter
-  if parameter("services_enabled"):
-    import aiko.services as services
-    services.initialise()
-  else:
-    import aiko.mqtt
-    aiko.mqtt.initialise()
