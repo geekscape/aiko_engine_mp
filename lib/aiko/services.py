@@ -1,4 +1,4 @@
-# lib/aiko/services.py: version: 2023-02-04 07:00 v06
+# lib/aiko/services.py: version: 2023-10-07 17:00 v07
 #
 # Usage
 # ~~~~~
@@ -94,7 +94,7 @@ def initialise(settings=configuration.services.settings):
   global topic_path, topic_out, topic_service, topic_state
 
 # mqtt_host, mqtt_port, namespace = bootstrap()
-  mqtt_host, mqtt_port, namespace = "geekscape.freeddns.org", 1883, "aiko"
+  namespace = "aiko"
   name, protocol, topic_path, username =  get_configuration(settings)
   topic_in = topic_path + "/in"
   topic_log = topic_path + "/log"
@@ -103,8 +103,8 @@ def initialise(settings=configuration.services.settings):
   topic_state = topic_path + "/state"
 
   settings = configuration.mqtt.settings
-  settings["host"] = mqtt_host
-  settings["port"] = mqtt_port
+# settings["host"] = mqtt_host
+# settings["port"] = mqtt_port
   settings["topic_path"] = topic_path
   settings["topic_subscribe"].append(settings["topic_path"] + "/in")
   settings["topic_subscribe"].append(topic_service)
