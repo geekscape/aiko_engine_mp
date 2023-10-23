@@ -24,15 +24,18 @@
 
 import uos
 
+from datetime import datetime
 import aiko.event as event
 import aiko.oled as oled
 
+print("v001")
+oled.initialise()
 oled0 = oled.oleds[0]  # Game screen
 oled1 = oled.oleds[1]  # Score, status, instructions, diagnostics
 
 offset = oled.font_size
-height = oled0.height - offset
-width = oled0.width
+height = oled0.oled.height - offset
+width = oled0.oled.width
 
 allowed_headings = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
@@ -40,6 +43,9 @@ score = 0
 snake_heading = None           # (delta_x, delta_y)
 snake_heading_duration = None  # frame count
 snake_position = None          # (x, y)
+snake_alive = False
+time_of_death = 0           # Will be a timestamp when you die
+NEW_GAME_DELAY = 30         # After you die, restart a new game in this many seconds
 
 def display_snake():
     oled0.pixel(snake_position[0], snake_position[1] + offset, 1)
@@ -48,7 +54,6 @@ def display_snake():
 def display_snake_dead():
     oled1.text("OUCH !", 0, offset + 3 * oled.font_size)
     oled1.show()
-    print("Snake dead !")
 
 def position_check(position):
     position_okay = True
@@ -72,12 +77,19 @@ def random_position(limit):
     return random(limit, limit * 3)
 
 def snake_dead():
+    global time_of_death, snake_alive
+    if snake_alive:
+        # Print out this just once
+        print("Snake dead !")
+    snake_alive = False
+    time_of_death = datetime.now().timestamp()
     display_snake_dead()
     event.terminate()
 # TODO: Wait 5 seconds and start again
 
 def snake_new():
-    global score, snake_heading, snake_heading_duration, snake_position
+    global score, snake_heading, snake_heading_duration, snake_position, snake_alive
+    snake_alive = True
     score = 0
     snake_position = (random_position(width), random_position(height))
     snake_heading, snake_heading_duration = snake_new_heading()
@@ -99,13 +111,21 @@ def snake_new_heading():
 def snake_update():
     global snake_heading, snake_heading_duration, snake_position
 #   print("sp: " + str(snake_position) + ", sh: " + str(snake_heading) + ", shd: " + str(snake_heading_duration))
-    snake_position = tuple(map(sum, zip(snake_position, snake_heading)))
+    if snake_alive:
+        # only move snake if its alive
+        snake_position = tuple(map(sum, zip(snake_position, snake_heading)))
     if not position_check(snake_position):
         snake_dead()
     display_snake()
     snake_heading_duration -= 1
     if snake_heading_duration == 0:
         snake_heading, snake_heading_duration = snake_new_heading()
+
+    if not snake_alive:
+        # new game?
+        if datetime.now().timestamp() - time_of_death > NEW_GAME_DELAY:
+            snake_new()
+
 
 def timer_handler():
     snake_update()
@@ -119,7 +139,7 @@ def update_score():
     score += 1
 
 def run(period=50):
-    oled.title = "Snake 0.0"
+    oled.title = "Snake 0.2"
     oled.oleds_clear(0)
     snake_new()
     display_snake()
