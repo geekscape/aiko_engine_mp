@@ -29,6 +29,11 @@
 # AMPY_PORT-/dev/ttyACM0             # Linux  ESP32 S3 Banana Pi Leaf S3
 # AMPY_PORT-/dev/ttyUSB0             # Linux: ESP32 Wemos Lolin32 Lite
 
+if [ -z "$AMPY_PORT" ]; then
+    echo "Please set AMPY_PORT."
+    exit 1
+fi
+
 # BAUDRATE=115200
 BAUDRATE=460800
 
