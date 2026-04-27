@@ -9,6 +9,8 @@
 ### Installation
 
 * Download and flash correct ESP32-CAM microPython version (needs specific camera support)
+* Edit `server.py` and set your WiFi credentials at line 44.
+* Edit `server.py` and set your camera type to "9" at line 84 to select "640x480" resolution. Other resolutions are also available.
 * Copy `boot.py`,`main.py` and `server.py` into microPython flash file-system top-level
 * Reboot ESP32-CAM
 
